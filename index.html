@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Lemcoden">
+<meta property="og:url" content="https://lemcoden.github.io/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="Lemcoden">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-spark源码分析RPC篇-1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/" class="article-date">
+  <time class="dt-published" datetime="2021-05-26T11:30:26.000Z" itemprop="datePublished">2021-05-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="spark-core源码分析01-RPC环境"><a href="#spark-core源码分析01-RPC环境" class="headerlink" title="spark-core源码分析01(RPC环境)"></a>spark-core源码分析01(RPC环境)</h1><p>本篇源码分析,主要就Spark Standlone(spark2.3.4版本)资源管理的RPC调用部分进行总结</p>
+<h3 id="RPC调用概述"><a href="#RPC调用概述" class="headerlink" title="RPC调用概述"></a>RPC调用概述</h3><p>RPC调用其实并不是很高深,它特指某类通信技术,它的应用其实特别广泛,我们经常所说的http协议也是一种特殊RPC调用,http协议就定义了请求的方式方法post,get,delete,update</p>
+<p>而通过看源码我们会发现,spark中Master和Worker之间也定义了相似的消息投递规则即<font color= #FFA500>send,ask,answer,recive,reciveAndReply</font></p>
+<p>RPC的原理很简单,但是落地到实际生产环境中需要做的细活很多,比如拆包粘包问题,动态代理库的使用,线程池,链接池,传输层的封装等等</p>
+<p>这里简单给出RPC框架的简单架构</p>
+<p><img src="http://picture.lemcoden.xyz/spark/spark_rpc.png" alt="http://picture.lemcoden.xyz/spark/spark_rpc.png"></p>
+<p>client将实体类封装为inbox通过分发器分发到队列当中,然后传输层连接池,线程池拉取队列数据,通过网络发送二进制数据</p>
+<p>server端按照client端数据反向操作</p>
+<h3 id="从shell脚本开始追踪"><a href="#从shell脚本开始追踪" class="headerlink" title="从shell脚本开始追踪"></a>从shell脚本开始追踪</h3><p>源码文件这个不用说直接从github下载下来就可以,我下载的是基于2.3.4版本的spark,比较经典</p>
+<p>下载完成之后导入到IDEA当中</p>
+<p>那么从哪里开始呢?我们需要个开始,我们从shell启动脚本开始,里面一定有java的启动类,首先从start-all.sh开始,下面是伪代码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load the Spark configuration</span></span><br><span class="line">. <span class="string">&quot;<span class="variable">$&#123;SPARK_HOME&#125;</span>/sbin/spark-config.sh&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Master</span></span><br><span class="line"><span class="string">&quot;<span class="variable">$&#123;SPARK_HOME&#125;</span>/sbin&quot;</span>/start-master.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Workers</span></span><br><span class="line"><span class="string">&quot;<span class="variable">$&#123;SPARK_HOME&#125;</span>/sbin&quot;</span>/start-slaves.sh</span><br></pre></td></tr></table></figure>
+
+<p>分别调用<font color= #FFA500>start-master.sh</font>和<font color= #FFA500>start-slaves.sh</font>(start-slaves.sh 中启动了 start-slave.sh)接下来我们看一下Master里面有什么</p>
+<p>在个start-master.sh 这个shell脚本当中我们分别看到了两个java 类路径,分别是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CLASS=<span class="string">&quot;org.apache.spark.deploy.master.Master&quot;</span></span><br><span class="line">CLASS=<span class="string">&quot;org.apache.spark.deploy.worker.Worker&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="简单的端点对象"><a href="#简单的端点对象" class="headerlink" title="简单的端点对象"></a>简单的端点对象</h3><p>那我们看java源码就直接从此处入手,在java源码中找到spark-core 这个module,然后根据包我们首先找到了Master类</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[deploy] <span class="class"><span class="keyword">class</span> <span class="title">Master</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="class">    override val rpcEnv: <span class="type">RpcEnv</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    address: <span class="type">RpcAddress</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    webUiPort: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    val securityMgr: <span class="type">SecurityManager</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    val conf: <span class="type">SparkConf</span></span>)</span></span><br><span class="line">→  <span class="keyword">extends</span> <span class="type">ThreadSafeRpcEndpoint</span> <span class="keyword">with</span> <span class="type">Logging</span> <span class="keyword">with</span> <span class="type">LeaderElectableprivate</span>[deploy]</span><br></pre></td></tr></table></figure>
+
+<p>首先看我们的参数,其中就有一个<font color= #FFA500>RPCEnv</font>,即Master进程的RPC调用环境,然后Master本身继承自</p>
+<p><font color= #FFA500><strong>ThreadSafeRpcEndpoint</strong></font></p>
+<p>安全的RPC线程调用的端点,我们向上回溯Master到它的顶级父类<font color= #FFA500><strong>RpcEndpoint</strong></font></p>
+<p>这个就是对所有RPC角色的抽象,在spark中所有要进行RPC调用的角色进程都要实现这个类</p>
+<p>我们浏览一下其中的方法,除了必要的onConnect,onDisconnect,onNetworkError</p>
+<p>还有两个比较特殊的方法即</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Process messages from `RpcEndpointRef.send` or `RpcCallContext.reply`. If receiving a</span></span><br><span class="line"><span class="comment">   * unmatched message, `SparkException` will be thrown and sent to `onError`.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">→  <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">PartialFunction</span>[<span class="type">Any</span>, <span class="type">Unit</span>] = &#123;</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">SparkException</span>(self + <span class="string">&quot; does not implement &#x27;receive&#x27;&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Process messages from `RpcEndpointRef.ask`. If receiving a unmatched message,</span></span><br><span class="line"><span class="comment">   * `SparkException` will be thrown and sent to `onError`.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">→  <span class="function"><span class="keyword">def</span> <span class="title">receiveAndReply</span></span>(context: <span class="type">RpcCallContext</span>): <span class="type">PartialFunction</span>[<span class="type">Any</span>, <span class="type">Unit</span>] = &#123;</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; context.sendFailure(<span class="keyword">new</span> <span class="type">SparkException</span>(self + <span class="string">&quot; won&#x27;t reply anything&quot;</span>))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两个方法是主要的,端点类通过这两个方法接受数据</p>
+<p>有了接收数据的方法,必定有发送数据的方法,我们从上面方法的注释当中发现对应的发送方法</p>
+<p><font color= #FFA500><strong>RpcEndpointRef.send</strong></font></p>
+<p><font color= #FFA500><strong>RpcEndpointRef.ask</strong></font></p>
+<p>我们看到后面跟了一个后缀,即Ref(Reference的缩写),这就像我们Java中的对象一样,我们new一个对象就会产生一个引用给我们的变量赋值,而实际真正的对象是在jvm的堆存储结构当中,同理RPC环境中,作为客户端我们持有一个端点的引用,用来发送信息,而实际真正的端点是在服务器当中,用来接受,反馈信息.</p>
+<h3 id="RPC通信环境"><a href="#RPC通信环境" class="headerlink" title="RPC通信环境"></a>RPC通信环境</h3><p>好的,先收,我们从Master的main入口方法开始研究</p>
+<ul>
+<li><p>main方法</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(argStrings: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="type">Thread</span>.setDefaultUncaughtExceptionHandler(<span class="keyword">new</span> <span class="type">SparkUncaughtExceptionHandler</span>(</span><br><span class="line">      exitOnUncaughtException = <span class="literal">false</span>))</span><br><span class="line">    <span class="type">Utils</span>.initDaemon(log)</span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span></span><br><span class="line">    <span class="keyword">val</span> args = <span class="keyword">new</span> <span class="type">MasterArguments</span>(argStrings, conf)</span><br><span class="line">→    <span class="keyword">val</span> (rpcEnv, _, _) = startRpcEnvAndEndpoint(args.host, args.port, args.webUiPort, conf)</span><br><span class="line">    rpcEnv.awaitTermination()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>在main方法中我们重点关注<font color= #FFA500>startRpcEnvAndEndpoint</font>,我们主要观其RPC的环境是如何启动的</p>
+<ul>
+<li><p>startRpcEnvAndEndpoint</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Start the Master and return a three tuple of:</span></span><br><span class="line"><span class="comment">   *   (1) The Master RpcEnv</span></span><br><span class="line"><span class="comment">   *   (2) The web UI bound port</span></span><br><span class="line"><span class="comment">   *   (3) The REST server bound port, if any</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">startRpcEnvAndEndpoint</span></span>(</span><br><span class="line">      host: <span class="type">String</span>,</span><br><span class="line">      port: <span class="type">Int</span>,</span><br><span class="line">      webUiPort: <span class="type">Int</span>,</span><br><span class="line">      conf: <span class="type">SparkConf</span>): (<span class="type">RpcEnv</span>, <span class="type">Int</span>, <span class="type">Option</span>[<span class="type">Int</span>]) = &#123;</span><br><span class="line">    <span class="keyword">val</span> securityMgr = <span class="keyword">new</span> <span class="type">SecurityManager</span>(conf)</span><br><span class="line">→    <span class="keyword">val</span> rpcEnv = <span class="type">RpcEnv</span>.create(<span class="type">SYSTEM_NAME</span>, host, port, conf, securityMgr)</span><br><span class="line">    <span class="keyword">val</span> masterEndpoint = rpcEnv.setupEndpoint(<span class="type">ENDPOINT_NAME</span>,</span><br><span class="line">      <span class="keyword">new</span> <span class="type">Master</span>(rpcEnv, rpcEnv.address, webUiPort, securityMgr, conf))</span><br><span class="line">    <span class="keyword">val</span> portsResponse = masterEndpoint.askSync[<span class="type">BoundPortsResponse</span>](<span class="type">BoundPortsRequest</span>)</span><br><span class="line">    (rpcEnv, portsResponse.webUIPort, portsResponse.restPort)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>有rpcEnv的创建方法,创建完之后,会把Master作为EndPoint注册到RPC环境当中,但是有个问题</p>
+<p>Master好像没有执行?也就是说它并没有作为端点来调用recive或者reciveAndReply方法来传输数据?</p>
+<p>我们记住这个问题,继续往下走,后面会聊到.</p>
+<p>我们先来看以下RpcEnv对象里面有什么</p>
+<p>点进create方法,盯着代码看几秒</p>
+<ul>
+<li><p>create</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create</span></span>(</span><br><span class="line">      name: <span class="type">String</span>,</span><br><span class="line">      bindAddress: <span class="type">String</span>,</span><br><span class="line">      advertiseAddress: <span class="type">String</span>,</span><br><span class="line">      port: <span class="type">Int</span>,</span><br><span class="line">      conf: <span class="type">SparkConf</span>,</span><br><span class="line">      securityManager: <span class="type">SecurityManager</span>,</span><br><span class="line">      numUsableCores: <span class="type">Int</span>,</span><br><span class="line">      clientMode: <span class="type">Boolean</span>): <span class="type">RpcEnv</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> config = <span class="type">RpcEnvConfig</span>(conf, name, bindAddress, advertiseAddress, port, securityManager,</span><br><span class="line">      numUsableCores, clientMode)</span><br><span class="line">→    <span class="keyword">new</span> <span class="type">NettyRpcEnvFactory</span>().create(config)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>发现是通过工厂模式返回了<font color= #FFA500>NettyRpcEnv</font>的对象,那我们再具体看看子类对象有什么</p>
+<ul>
+<li>  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create</span></span>(config: <span class="type">RpcEnvConfig</span>): <span class="type">RpcEnv</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> sparkConf = config.conf</span><br><span class="line">    <span class="comment">// Use JavaSerializerInstance in multiple threads is safe. However, if we plan to support</span></span><br><span class="line">    <span class="comment">// KryoSerializer in future, we have to use ThreadLocal to store SerializerInstance</span></span><br><span class="line">→    <span class="keyword">val</span> javaSerializerInstance =</span><br><span class="line">      <span class="keyword">new</span> <span class="type">JavaSerializer</span>(sparkConf).newInstance().asInstanceOf[<span class="type">JavaSerializerInstance</span>]</span><br><span class="line">    <span class="keyword">val</span> nettyEnv =</span><br><span class="line">→      <span class="keyword">new</span> <span class="type">NettyRpcEnv</span>(sparkConf, javaSerializerInstance, config.advertiseAddress,</span><br><span class="line">        config.securityManager, config.numUsableCores)</span><br><span class="line">    <span class="keyword">if</span> (!config.clientMode) &#123;</span><br><span class="line">→      <span class="keyword">val</span> startNettyRpcEnv: <span class="type">Int</span> =&gt; (<span class="type">NettyRpcEnv</span>, <span class="type">Int</span>) = &#123; actualPort =&gt;</span><br><span class="line">        nettyEnv.startServer(config.bindAddress, actualPort)</span><br><span class="line">        (nettyEnv, nettyEnv.address.port)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">→        <span class="type">Utils</span>.startServiceOnPort(config.port, startNettyRpcEnv, sparkConf, config.name)._1</span><br><span class="line">      &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">NonFatal</span>(e) =&gt;</span><br><span class="line">          nettyEnv.shutdown()</span><br><span class="line">          <span class="keyword">throw</span> e</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    nettyEnv</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>spark做RPC传数据数据时,序列化器使用的是标准的Java序列化器,因为代码算是比较旧了,估计新的版本真如注释所说,改成了Kryo序列化器,不过这个我们只要知道搭建RPC架构时,序列化部分是必不可少的就可以</p>
+<p>我们看到下面new一个NettyRpcEnv,然后再下面一句需要注意的一点是,<font color= #FFA500>startNettyRpcEnv</font>这个变量是一个函数,我们看到它的类型是用函数字面量表示的,也就是说,它并不会立即执行,而是作为变量传到startServiceOnPort方法当中,等待在将来的某一时刻调启,而startServiceOnPort方法执行,就意味着此刻的传输层服务就已经启动了</p>
+<p>然后我们粗略的看一下NettyRpcEnv对象中,有两个主要的变量,对应我们最开始所画出的两个角色</p>
+<p>一个是<font color= #FFA500>dispatcher</font>分发器,另一个是<font color= #FFA500>transportServer</font>传输层服务</p>
+<h3 id="传输层技术"><a href="#传输层技术" class="headerlink" title="传输层技术"></a>传输层技术</h3><p>分发器等一下再说,我们先看一下transportServer长什么样子,点进去,直接看init方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> void init(<span class="type">String</span> hostToBind, int portToBind) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">IOMode</span> ioMode = <span class="type">IOMode</span>.valueOf(conf.ioMode());</span><br><span class="line">    <span class="type">EventLoopGroup</span> bossGroup =</span><br><span class="line">      <span class="type">NettyUtils</span>.createEventLoop(ioMode, conf.serverThreads(), conf.getModuleName() + <span class="string">&quot;-server&quot;</span>);</span><br><span class="line">    <span class="type">EventLoopGroup</span> workerGroup = bossGroup;</span><br><span class="line"></span><br><span class="line">    <span class="type">PooledByteBufAllocator</span> allocator = <span class="type">NettyUtils</span>.createPooledByteBufAllocator(</span><br><span class="line">      conf.preferDirectBufs(), <span class="literal">true</span> <span class="comment">/* allowCache */</span>, conf.serverThreads());</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">    bootstrap = <span class="keyword">new</span> <span class="type">ServerBootstrap</span>()</span><br><span class="line">      .group(bossGroup, workerGroup)</span><br><span class="line">      .channel(<span class="type">NettyUtils</span>.getServerChannelClass(ioMode))</span><br><span class="line">      .option(<span class="type">ChannelOption</span>.<span class="type">ALLOCATOR</span>, allocator)</span><br><span class="line">      .childOption(<span class="type">ChannelOption</span>.<span class="type">ALLOCATOR</span>, allocator);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">    bootstrap.childHandler(<span class="keyword">new</span> <span class="type">ChannelInitializer</span>&lt;<span class="type">SocketChannel</span>&gt;() &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="keyword">protected</span> void initChannel(<span class="type">SocketChannel</span> ch) &#123;</span><br><span class="line">        <span class="type">RpcHandler</span> rpcHandler = appRpcHandler;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">TransportServerBootstrap</span> bootstrap : bootstraps) &#123;</span><br><span class="line">          rpcHandler = bootstrap.doBootstrap(ch, rpcHandler);</span><br><span class="line">        &#125;</span><br><span class="line">        context.initializePipeline(ch, rpcHandler);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为代码过多,所以这里进行了删减,看到这里做过Netty开发的同学一定觉得亲切且熟悉(其实笔者对这方面理解还很浅显,回头会专门出一篇博客,熟悉一下Netty)</p>
+<p>原来Spark所用的传输层技术,也是我们常用的Netty框架.</p>
+<p>走到这里,我们先停一停,思考一下,代码中有一个<font color= #FFA500>createEventLoop</font>方法,重点是Loop这个单词,它是轮询的意思,也就是说,我们一看到带Loop这个字眼的对象,就条件反射知道这对象中一定藏着类似while(true)的循环逻辑,让线程阻塞住,不断的接收或者拉取数据</p>
+<p>然后,往下走有个<font color= #FFA500>channel</font>方法,这个聊一聊,我们都知道linux是使用文件描述符进行IO操作(广义上的不仅仅指磁盘IO),文件描述符不仅可以读,还可以写,但是最开始的java的IO框架不一样,他必须分为输出流和输入流,但是java依赖于JVM,JVM又依赖于操作系统,之后JVM 的NIO 框架当中,就出现了既可读又可写的Channel,从某些方面来说java反璞归真了.</p>
+<p>最后我们看最下面的,<font color= #FFA500>childHandler</font>方法,我们需要通过Handler类来处理和接收数据,我们进入initalizePipeline方法.里面有<font color= #FFA500>createChannelHandler</font>方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">createChannelHandler(channel, channelRpcHandler);</span><br></pre></td></tr></table></figure>
+
+<p>再进入</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">TransportChannelHandler</span> createChannelHandler(<span class="type">Channel</span> channel, <span class="type">RpcHandler</span> rpcHandler) &#123;</span><br><span class="line">    <span class="type">TransportResponseHandler</span> responseHandler = <span class="keyword">new</span> <span class="type">TransportResponseHandler</span>(channel);</span><br><span class="line">    <span class="type">TransportClient</span> client = <span class="keyword">new</span> <span class="type">TransportClient</span>(channel, responseHandler);</span><br><span class="line">    <span class="type">TransportRequestHandler</span> requestHandler = <span class="keyword">new</span> <span class="type">TransportRequestHandler</span>(channel, client,</span><br><span class="line">      rpcHandler, conf.maxChunksBeingTransferred());</span><br><span class="line">→    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">TransportChannelHandler</span>(client, responseHandler, requestHandler,</span><br><span class="line">      conf.connectionTimeoutMs(), closeIdleConnections);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到了有请求的handler也有响应的,然后再进入TransportChannelHandler,有一个<font color= #FFA500>channelRead</font>方法,</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">→  public void channelRead(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">Object</span> request) <span class="keyword">throws</span> <span class="type">Exception</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (request instanceof <span class="type">RequestMessage</span>) &#123;</span><br><span class="line">      requestHandler.handle((<span class="type">RequestMessage</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request instanceof <span class="type">ResponseMessage</span>) &#123;</span><br><span class="line">      responseHandler.handle((<span class="type">ResponseMessage</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      ctx.fireChannelRead(request);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再进入handle.rquestMessage的方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  public void handle(<span class="type">RequestMessage</span> request) &#123;</span><br><span class="line">    <span class="keyword">if</span> (request instanceof <span class="type">ChunkFetchRequest</span>) &#123;</span><br><span class="line">      processFetchRequest((<span class="type">ChunkFetchRequest</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request instanceof <span class="type">RpcRequest</span>) &#123;</span><br><span class="line">→      processRpcRequest((<span class="type">RpcRequest</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request instanceof <span class="type">OneWayMessage</span>) &#123;</span><br><span class="line">      processOneWayMessage((<span class="type">OneWayMessage</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (request instanceof <span class="type">StreamRequest</span>) &#123;</span><br><span class="line">      processStreamRequest((<span class="type">StreamRequest</span>) request);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">&quot;Unknown request type: &quot;</span> + request);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再进入processRpcRequest方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> void processRpcRequest(<span class="keyword">final</span> <span class="type">RpcRequest</span> req) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">→      rpcHandler.receive(reverseClient, req.body().nioByteBuffer(), <span class="keyword">new</span> <span class="type">RpcResponseCallback</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        public void onSuccess(<span class="type">ByteBuffer</span> response) &#123;</span><br><span class="line">          respond(<span class="keyword">new</span> <span class="type">RpcResponse</span>(req.requestId, <span class="keyword">new</span> <span class="type">NioManagedBuffer</span>(response)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        public void onFailure(<span class="type">Throwable</span> e) &#123;</span><br><span class="line">          respond(<span class="keyword">new</span> <span class="type">RpcFailure</span>(req.requestId, <span class="type">Throwables</span>.getStackTraceAsString(e)));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="type">Exception</span> e) &#123;</span><br><span class="line">      logger.error(<span class="string">&quot;Error while invoking RpcHandler#receive() on RPC id &quot;</span> + req.requestId, e);</span><br><span class="line">      respond(<span class="keyword">new</span> <span class="type">RpcFailure</span>(req.requestId, <span class="type">Throwables</span>.getStackTraceAsString(e)));</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      req.body().release();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再进入<font color= #FFA500>receive</font>方法(NettyRpcHandler中)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>(</span><br><span class="line">      client: <span class="type">TransportClient</span>,</span><br><span class="line">      message: <span class="type">ByteBuffer</span>,</span><br><span class="line">      callback: <span class="type">RpcResponseCallback</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> messageToDispatch = internalReceive(client, message)</span><br><span class="line">→    dispatcher.postRemoteMessage(messageToDispatch, callback)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>哎??我们看到了dispatcher,也就是说RPC环境当中服务端接收到请求信息的时候,会首先交给dispatcher进行分发,这正好对应我们刚开始的架构</p>
+<p>接下来就<font color= #FFA500>postRemoteMessage</font>一路向下点,点到最后dispatcher的postMessage</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> endpoints: <span class="type">ConcurrentMap</span>[<span class="type">String</span>, <span class="type">EndpointData</span>] =</span><br><span class="line">    <span class="keyword">new</span> <span class="type">ConcurrentHashMap</span>[<span class="type">String</span>, <span class="type">EndpointData</span>]</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> receivers = <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>[<span class="type">EndpointData</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">postMessage</span></span>(</span><br><span class="line">      endpointName: <span class="type">String</span>,</span><br><span class="line">      message: <span class="type">InboxMessage</span>,</span><br><span class="line">      callbackIfStopped: (<span class="type">Exception</span>) =&gt; <span class="type">Unit</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> error = synchronized &#123;</span><br><span class="line">→      <span class="keyword">val</span> data = endpoints.get(endpointName)</span><br><span class="line">      <span class="keyword">if</span> (stopped) &#123;</span><br><span class="line">        <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">RpcEnvStoppedException</span>())</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (data == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">SparkException</span>(<span class="string">s&quot;Could not find <span class="subst">$endpointName</span>.&quot;</span>))</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">→        data.inbox.post(message)</span><br><span class="line">→        receivers.offer(data)</span><br><span class="line">        <span class="type">None</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// We don&#x27;t need to call `onStop` in the `synchronized` block</span></span><br><span class="line">    error.foreach(callbackIfStopped)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到endpoints,这是一个ConcurrentHashMap,并发的哈希表结构,这个JDK的包的源码(JUC)值得一看,不过本篇博客主要目的在于通过源码讲述RPC的主脉络,也不多做拓展</p>
+<p>我们通过端点名字获取端点对象,并通过<font color= #FFA500>inbox</font>信箱投递消息(投递可没有发送的意思,inbox其实维护了一个集合,我们将message信息添加到这个集合里面).</p>
+<p>然后是recivers,这是一个队列,我们接收到的消息,会封装成<font color= #FFA500>EndPointData</font>最终通过分发器,分发到队列里面.</p>
+<p>那我们什么时候从队列中拿这个EndPointData呢?</p>
+<p>这个问题,我们先保留,因为这个需要从另一条源码路径进行分析才能得到答案.</p>
+<h3 id="端点注册"><a href="#端点注册" class="headerlink" title="端点注册"></a>端点注册</h3><p>在讲另一条源码脉络之前,我们先回溯之前看到的源码,根据以上一条的脉络分析我们得出以下几点</p>
+<ol>
+<li>Master是一种EndPoint</li>
+<li>RpcEnv由主要由dipatcher分发器和server: TransportServer传输层服务组成</li>
+<li>传输层服务默认由Netty(RpcEnv默认也是NettyRpcEnv)实现,并且接收信息后,会交给dispatcher分发</li>
+<li>dipatcher会把字节类型的信息放到inbox信箱中,然后再封装进EndPoint,放到本地的队列里面等待被拿起</li>
+</ol>
+<p>好了,我们再回到最开始的方法即,Master main中的startRpcEnvAndEndpoint方法</p>
+<ul>
+<li><p>startRpcEnvAndEndpoint</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Start the Master and return a three tuple of:</span></span><br><span class="line"><span class="comment">   *   (1) The Master RpcEnv</span></span><br><span class="line"><span class="comment">   *   (2) The web UI bound port</span></span><br><span class="line"><span class="comment">   *   (3) The REST server bound port, if any</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">startRpcEnvAndEndpoint</span></span>(</span><br><span class="line">      host: <span class="type">String</span>,</span><br><span class="line">      port: <span class="type">Int</span>,</span><br><span class="line">      webUiPort: <span class="type">Int</span>,</span><br><span class="line">      conf: <span class="type">SparkConf</span>): (<span class="type">RpcEnv</span>, <span class="type">Int</span>, <span class="type">Option</span>[<span class="type">Int</span>]) = &#123;</span><br><span class="line">    <span class="keyword">val</span> securityMgr = <span class="keyword">new</span> <span class="type">SecurityManager</span>(conf)</span><br><span class="line">    <span class="keyword">val</span> rpcEnv = <span class="type">RpcEnv</span>.create(<span class="type">SYSTEM_NAME</span>, host, port, conf, securityMgr)</span><br><span class="line">→    <span class="keyword">val</span> masterEndpoint = rpcEnv.setupEndpoint(<span class="type">ENDPOINT_NAME</span>,</span><br><span class="line">      <span class="keyword">new</span> <span class="type">Master</span>(rpcEnv, rpcEnv.address, webUiPort, securityMgr, conf))</span><br><span class="line">    <span class="keyword">val</span> portsResponse = masterEndpoint.askSync[<span class="type">BoundPortsResponse</span>](<span class="type">BoundPortsRequest</span>)</span><br><span class="line">    (rpcEnv, portsResponse.webUIPort, portsResponse.restPort)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>进入到注册方法中,发现是个抽象类,唯一实现的是NettyRpcEnv继续往下追踪,发现</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">setupEndpoint</span></span>(name: <span class="type">String</span>, endpoint: <span class="type">RpcEndpoint</span>): <span class="type">RpcEndpointRef</span> = &#123;</span><br><span class="line">→    dispatcher.registerRpcEndpoint(name, endpoint)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这边写了一个分发器在里面,我们继续往下走</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">registerRpcEndpoint</span></span>(name: <span class="type">String</span>, endpoint: <span class="type">RpcEndpoint</span>): <span class="type">NettyRpcEndpointRef</span> = &#123;</span><br><span class="line">→    <span class="keyword">val</span> addr = <span class="type">RpcEndpointAddress</span>(nettyEnv.address, name)</span><br><span class="line">    <span class="keyword">val</span> endpointRef = <span class="keyword">new</span> <span class="type">NettyRpcEndpointRef</span>(nettyEnv.conf, addr, nettyEnv)</span><br><span class="line">    synchronized &#123;</span><br><span class="line">      <span class="keyword">if</span> (stopped) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalStateException</span>(<span class="string">&quot;RpcEnv has been stopped&quot;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (endpoints.putIfAbsent(name, <span class="keyword">new</span> <span class="type">EndpointData</span>(name, endpoint, endpointRef)) != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">s&quot;There is already an RpcEndpoint called <span class="subst">$name</span>&quot;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">val</span> data = endpoints.get(name)</span><br><span class="line">      endpointRefs.put(data.endpoint, data.ref)</span><br><span class="line">      receivers.offer(data)  <span class="comment">// for the OnStart message</span></span><br><span class="line">    &#125;</span><br><span class="line">    endpointRef</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就有要说明的地方了,这里的<font color= #FFA500>nettyEnv.address</font>是直接输入了,其实一般的RPC调用框架都会给地址封装一层注册中心,注册发现的一个功能,但是这里为什么没做呢?问题很简单,因为spark的RPC调用环境中就Master和Worker俩角色,不像其他的RPC的环境,节点很多,且可能发生变动.(PS:聊一些题外话,一些军方的后台项目,都是直接用servlet进行的开发,而不是Spring这些,因为Spring也是封装的servlet,直接用servlet做开发,代码的调用路径最短,实际运行效率是最高的),所以有些时候不能为了架构而架构,为了需求而架构.</p>
+<p>接下来的步骤是将Master的EndPoint对象封装到EndPointData里,并加入到receviers的队列当中.</p>
+<h3 id="角色启动"><a href="#角色启动" class="headerlink" title="角色启动"></a>角色启动</h3><p>我们来看一下EndPointData里面是什么,先进入构造方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">EndpointData</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="class">      val name: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">      val endpoint: <span class="type">RpcEndpoint</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">      val ref: <span class="type">NettyRpcEndpointRef</span></span>) </span>&#123;</span><br><span class="line">→    <span class="keyword">val</span> inbox = <span class="keyword">new</span> <span class="type">Inbox</span>(ref, endpoint)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个EndPointData当中会对应new一个inbox,并且把EndPoint,EndPointRef对象放到inbox当中.</p>
+<p>我们再看信箱当中,重点是同步的代码块</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">val</span> messages = <span class="keyword">new</span> java.util.<span class="type">LinkedList</span>[<span class="type">InboxMessage</span>]()</span><br><span class="line">inbox =&gt; <span class="comment">//给this起了个别名</span></span><br><span class="line"><span class="comment">//在Inbox对象new的时候,会同步执行此代码块</span></span><br><span class="line">→ inbox.synchronized &#123;</span><br><span class="line">    messages.add(<span class="type">OnStart</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Inbox在new的时候,会在消息链表(注意这个不是dispatcher里面的消息队列)当中添加一个OnStart消息,这个消息是什么?</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[netty] <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">OneWayMessage</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="class">    senderAddress: <span class="type">RpcAddress</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    content: <span class="type">Any</span></span>) <span class="keyword">extends</span> <span class="title">InboxMessage</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>[netty] <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcMessage</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="class">    senderAddress: <span class="type">RpcAddress</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    content: <span class="type">Any</span>,</span></span></span><br><span class="line"><span class="params"><span class="class">    context: <span class="type">NettyRpcCallContext</span></span>) <span class="keyword">extends</span> <span class="title">InboxMessage</span></span></span><br><span class="line"></span><br><span class="line">→ <span class="keyword">private</span>[netty] <span class="keyword">case</span> <span class="class"><span class="keyword">object</span> <span class="title">OnStart</span> <span class="keyword">extends</span> <span class="title">InboxMessage</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>[netty] <span class="keyword">case</span> <span class="class"><span class="keyword">object</span> <span class="title">OnStop</span> <span class="keyword">extends</span> <span class="title">InboxMessage</span></span></span><br></pre></td></tr></table></figure>
+
+<p>到这里我们看到,这个消息仅仅是一个样例类,用来和其他消息做区分,那这个消息怎么做的处理?</p>
+<p>我们看Inbox的<font color= #FFA500>procees</font>方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(dispatcher: <span class="type">Dispatcher</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">var</span> message: <span class="type">InboxMessage</span> = <span class="literal">null</span></span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      safelyCall(endpoint) &#123;</span><br><span class="line">        message <span class="keyword">match</span> &#123;</span><br><span class="line">          ....</span><br><span class="line">          <span class="keyword">case</span> <span class="type">OneWayMessage</span>(_sender, content) =&gt;</span><br><span class="line">					....</span><br><span class="line">  →       <span class="keyword">case</span> <span class="type">OnStart</span> =&gt;</span><br><span class="line">            endpoint.onStart()</span><br><span class="line">            <span class="keyword">if</span> (!endpoint.isInstanceOf[<span class="type">ThreadSafeRpcEndpoint</span>]) &#123;</span><br><span class="line">              inbox.synchronized &#123;</span><br><span class="line">                <span class="keyword">if</span> (!stopped) &#123;</span><br><span class="line">                  enableConcurrent = <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          <span class="keyword">case</span> <span class="type">OnStop</span> =&gt;</span><br><span class="line">					....</span><br><span class="line">          <span class="keyword">case</span> <span class="type">RemoteProcessConnected</span>(remoteAddress) =&gt;</span><br><span class="line">            endpoint.onConnected(remoteAddress)</span><br><span class="line"></span><br><span class="line">          <span class="keyword">case</span> <span class="type">RemoteProcessDisconnected</span>(remoteAddress) =&gt;</span><br><span class="line">            endpoint.onDisconnected(remoteAddress)</span><br><span class="line"></span><br><span class="line">          <span class="keyword">case</span> <span class="type">RemoteProcessConnectionError</span>(cause, remoteAddress) =&gt;</span><br><span class="line">            endpoint.onNetworkError(cause, remoteAddress)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">		....</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里会对消息类型进行匹配,不得不说一句,scala语法真是好,如果这里换成Java的话,肯定一堆的if else instanceof 的判断.</p>
+<p>那么,匹配到<font color= #FFA500>OnStart</font>方法,会执行endPoint的onStart的方法…………等等!!!!!!!!</p>
+<p>Master就是一种EndPoint的,那么…….</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[deploy] <span class="class"><span class="keyword">class</span> <span class="title">Master</span> ....</span></span><br><span class="line">  <span class="keyword">extends</span> <span class="type">ThreadSafeRpcEndpoint</span> <span class="keyword">with</span> <span class="type">Logging</span> <span class="keyword">with</span> <span class="type">LeaderElectable</span> &#123;</span><br><span class="line">....</span><br><span class="line"> →		<span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">onStart</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">			    logInfo(<span class="string">&quot;Starting Spark master at &quot;</span> + masterUrl)</span><br><span class="line">			    logInfo(<span class="string">s&quot;Running Spark version <span class="subst">$&#123;org.apache.spark.SPARK_VERSION&#125;</span>&quot;</span>)</span><br><span class="line">			    webUi = <span class="keyword">new</span> <span class="type">MasterWebUI</span>(<span class="keyword">this</span>, webUiPort)</span><br><span class="line">			    webUi.bind()</span><br><span class="line">			    masterWebUiUrl = <span class="string">&quot;http://&quot;</span> + masterPublicAddress + <span class="string">&quot;:&quot;</span> + webUi.boundPort</span><br><span class="line">				   ...........</span><br><span class="line">			  &#125;</span><br><span class="line">....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font color= #FFA500>果然,Master中有onStart方法的实现,也就是说当我们new一个EndPointData的时候,会new一个Inbox,而Inbox在new的时候,会默认投递一个OnStart消息,这个消息处理时,会调用EndPoint的OnStart方法启动相应的角色</font></p>
+<p>好了,分析到这里,我们的问题好像还有一个问题没解决,对!我们只是往队列里面塞数据了,什么时候拿给inbox做的处理?</p>
+<p>首先我们知道,所有的配置设置都已经完成,随着RpcEnv的创建,他的成员Dispacher,TransportServer也跟着一起创建,并且传输层服务已经启动,Master已经作为Endpoint注册到Dispathcer当中并且预埋了启动逻辑.</p>
+<h3 id="线程池的启动"><a href="#线程池的启动" class="headerlink" title="线程池的启动"></a>线程池的启动</h3><p>那么我们再回头细看一下Dispatcher这个对象,发现了一个线程池创建,执行方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> threadpool: <span class="type">ThreadPoolExecutor</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> availableCores =</span><br><span class="line">      <span class="keyword">if</span> (numUsableCores &gt; <span class="number">0</span>) numUsableCores <span class="keyword">else</span> <span class="type">Runtime</span>.getRuntime.availableProcessors()</span><br><span class="line">→   <span class="keyword">val</span> numThreads = nettyEnv.conf.getInt(<span class="string">&quot;spark.rpc.netty.dispatcher.numThreads&quot;</span>,</span><br><span class="line">		      math.max(<span class="number">2</span>, availableCores))</span><br><span class="line">    <span class="keyword">val</span> pool = <span class="type">ThreadUtils</span>.newDaemonFixedThreadPool(numThreads, <span class="string">&quot;dispatcher-event-loop&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">0</span> until numThreads) &#123;</span><br><span class="line">→      pool.execute(<span class="keyword">new</span> <span class="type">MessageLoop</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    pool</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>线程池启动的线程数的逻辑这里就不再多说了,重点在于,它会启动线程数个MessageLoop线程,上面已经说过,凡是带Loop的绝对中间有While(true)的轮询逻辑,我们这里就细看一下</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Message loop used for dispatching messages. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageLoop</span> <span class="keyword">extends</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">run</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">→           <span class="keyword">val</span> data = receivers.take()</span><br><span class="line">→           <span class="keyword">if</span> (data == <span class="type">PoisonPill</span>) &#123;</span><br><span class="line">              <span class="comment">// Put PoisonPill back so that other MessageLoops can see it.</span></span><br><span class="line">              receivers.offer(<span class="type">PoisonPill</span>)</span><br><span class="line">              <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">→           data.inbox.process(<span class="type">Dispatcher</span>.<span class="keyword">this</span>)</span><br><span class="line">          &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="type">NonFatal</span>(e) =&gt; logError(e.getMessage, e)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> _: <span class="type">InterruptedException</span> =&gt; <span class="comment">// exit</span></span><br><span class="line">        <span class="keyword">case</span> t: <span class="type">Throwable</span> =&gt;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Re-submit a MessageLoop so that Dispatcher will still work if</span></span><br><span class="line">            <span class="comment">// UncaughtExceptionHandler decides to not kill JVM.</span></span><br><span class="line">            threadpool.execute(<span class="keyword">new</span> <span class="type">MessageLoop</span>)</span><br><span class="line">          &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> t</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后就是这里,Dipatcher在创建的时候就创建了线程池,并且线程池当中执行着的都是无限轮询着从消息队列中拉取并处理的Loop线程.这就解答了我们开始的问题———-是谁拿了消息队列里的消息?</p>
+<p>好了,现在Spark中Rpc环境的基本角色,以及他们的调用链路已经介绍清楚了.下一篇博客见,Bye,Bye</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/" data-id="ckp6jsm2x004wz0n07s97cqoc" data-title="spark源码分析RPC篇-1" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ubuntu20-04LTS-amule低ID问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2021-05-09T08:29:15.000Z" itemprop="datePublished">2021-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>作为ubuntu开源爱好者,迅雷那样的流氓软件当然能不使用就不使用</p>
+<p>那么,我们使用什么开源软件的进行下载呢?</p>
+<p>首先我们看一下都有哪些下载协议</p>
+<p><strong>第一种thunder://QUFtYWduZXQ6P3h0PXVybjpidGloOjAzRjYxODA0RTFFQzFCMTQyQzU0RERCNUQ3QjhCRUQ2OUIxREY2MzhaWg==</strong></p>
+<p>不得不说这完全是迅雷自己yy出来的一种协议,其实就是其他协议中包了个壳子,只要将协议后面的等号去掉,将中间的一堆乱码,base64解码一下就可以出来,比如上面的协议解码出来是这样子</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//在unbuntu中通过base64命令,将代码解码,解码出来的数据去掉开头的AA和结尾的ZZ就是真正的下载url</span><br><span class="line">lemcoden@unbuntu:~$ <span class="built_in">echo</span> <span class="string">&quot;QUFtYWduZXQ6P3h0PXVybjpidGloOjAzRjYxODA0RTFFQzFCMTQyQzU0RERCNUQ3QjhCRUQ2OUIxREY2MzhaWg==&quot;</span> | base64 -d </span><br><span class="line">AAmagnet:?xt=urn:btih:03F61804E1EC1B142C54DDB5D7B8BED69B1DF638ZZ</span><br></pre></td></tr></table></figure>
+
+<p>解码出来如果是http就用浏览器直接下载,如果不是,像上面这种的BT种子协议,我们用trasmission</p>
+<p><strong>第二种</strong></p>
+<p><strong>magnet:?xt=urn:btih:03F61804E1EC1B142C54DDB5D7B8BED69B1DF638</strong></p>
+<p>这是种子协议,我们一般是用transmission下载,不过一开始用绝对下载速度很慢,因为BT的种子协议是基于分享的,也就是说,我下载文件的同时,将自己作为在这个下载文件的服务器,提供给他人下载,所以我们会经常看到,BT种子协议在下载时,还会产生很大的上传流量,不过我们贡献的上传流量不是白白贡献的,协议会根据我们上传的流量,提高我们下载的优先级.所以会出现一开始下载很慢,之后速度就开始起飞</p>
+<p>什么?你说迅雷为啥下载那么快?</p>
+<p>迅雷有自己的服务器,我们请求下载,我们客户端会在迅雷的服务器首先查询文件,有时候不用走BT协议,不需要自己上传,直接从迅雷服务器拉下来,你说快不快?如果服务器没有,服务器就作为第二个客户端和你一起下载,就像用多线程.</p>
+<p>当然如果觉得transmission颜值差的,还可以试试<strong>motrix</strong></p>
+<p><strong>第三种</strong></p>
+<p><strong><a href="ftp://10.8.153.10:2121/dysms_python/">ftp://10.8.153.10:2121/dysms_python/</a></strong></p>
+<p>ftp协议,这没什么说的,浏览器,ftp,wget命令都可以直接下载</p>
+<p><strong>第四种</strong></p>
+<p><strong>ed2k://|file|Doctor.Who.2005.S07E05.1080p.BluRay.x264-BiA.mkv|3521946964|9C15418762B1A492712FE390F0736F49|h=RSLPVYLUGGEN5472VPVABZXTVJW6CFWF|/</strong></p>
+<p>ed2k的协议,看似不常用的协议,但是遇到了还真就很难找到除了迅雷的其他软件,找到了也很难用,比如edonkey,emule,amule,对,就是现在的标题,amule的低ID问题</p>
+<h3 id="进入正题"><a href="#进入正题" class="headerlink" title="进入正题"></a>进入正题</h3><p>首先说amule的界面没有我们想像的那么简单,即傻瓜式的一键下载,因为ed2k的协议也是基于共享的,即会把自己的电脑当作文件服务器上传文件数据流,但是比较坑的点在于,我们需要能够被别人访问的公网IP</p>
+<p>首先我们先从amule的界面下手,</p>
+<p><img src="http://picture.lemcoden.xyz/ubuntu/amule.png" alt="http://picture.lemcoden.xyz/ubuntu/amule.png"></p>
+<p>如上图的界面,amule需要连接特定的下载服务器,我们可以通过左上角的播放键查询服务器列表,然后双击对应服务器进行连接,一般选择延迟低并且连接人数多的</p>
+<p>但是这就产生了一个问题,往往你的界面左下角会出现</p>
+<p>警告:你收到一个低ID的字样.</p>
+<p>如果是低ID的话,下载速度是很慢的,因为你没有办法被别人的服务器直连,而是通过公共的服务器进行中转.</p>
+<p>首先,我们需要公网IP,即别人可以对你的电脑进行直接访问,这时候你是否意识到,唉?原来我的电脑没办法被别人直接访问?</p>
+<p>对,事实确实如此,因为IPV4地址资源的短缺,再加上网络提供商为了维护便利,他们一般是提供路由过的内网IP,如果是这种就需要给运营商打电话了,得申请自己的公网IP</p>
+<p>如果你有一个公网IP,也会出现低ID的问题,还需要在光猫设置 端口映射,DMZ主机或者upnp(3选1),然而博主是最倒霉的,光猫屏蔽了超级管理员界面,这些东西我在 192.168.1.1的网页上面什么也看不到</p>
+<p>还有一个办法是设置桥接模式,打电话给运营商客服,让他们转换成桥接模式,将光猫的功能桥接到路由器上,通过路由器设置这些功能.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/" data-id="ckp6jsm27002cz0n02bwg4v4d" data-title="ubuntu20.04LTS:amule低ID问题" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis笔记05" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/" class="article-date">
+  <time class="dt-published" datetime="2020-11-23T14:32:48.000Z" itemprop="datePublished">2020-11-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="redis常见问题"><a href="#redis常见问题" class="headerlink" title="redis常见问题"></a>redis常见问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jedis,luttce,springboot:low/high level</span><br></pre></td></tr></table></figure>
+
+<h4 id="击穿"><a href="#击穿" class="headerlink" title="击穿"></a>击穿</h4><p><strong><font color=MediumVioletRed>key过期造成并发访问数据库</font></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id0((用户&lt;br/&gt;client)) --&gt; id2</span><br><span class="line">	id2[nginx] --&gt; id3[ ]</span><br><span class="line">	id3 --&gt; id4</span><br><span class="line">	id4((client&lt;br/&gt;server)) --1.null--&gt; id5[redis&lt;br/&gt;缓存&lt;br/&gt;key过期时间,LRU,LFU]</span><br><span class="line">	id4 --2.setInx--&gt; id5</span><br><span class="line">	id4 --3.只有获得锁的去访问DB--&gt; id1[DBMySQL]</span><br><span class="line">	id4 --&gt; id1</span><br><span class="line">	before[before&lt;br/&gt;肯定发生了高并发]</span><br></pre></td></tr></table></figure>
+
+<p>解决:</p>
+<p>并发有了:阻止并发到达DB,redis又没有key</p>
+<p>redis是单进程单实例</p>
+<p>setInx() -&gt; 锁</p>
+<p>setInx() -&gt; 锁</p>
+<p>1.get key</p>
+<p>2.setInx</p>
+<p>3-1. ok ,去DB</p>
+<p>3-2.false,sleep -&gt; 1</p>
+<p>问题:</p>
+<ol>
+<li><p>如果第一个人挂了?发生死锁</p>
+<p>可以设置锁的过期时间</p>
+</li>
+<li><p>没挂,但是,锁超时了…..</p>
+<p>多线程,一个线程取库,一个线程监控,并延长时间</p>
+</li>
+</ol>
+<p><strong>自己实现分布式协调很麻烦</strong></p>
+<h4 id="穿透"><a href="#穿透" class="headerlink" title="穿透"></a>穿透</h4><p><strong><font color=MediumVioletRed>从业务接受查询的是你系统根本不存在的数据</font></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	</span><br><span class="line"> 	id4[布隆过滤器] --&gt; id5[client包含]</span><br><span class="line"> 	id4 --&gt; id6[client只包含算法&lt;br/&gt; bitmap-&gt;redis&lt;br/&gt;无状态]</span><br><span class="line"> 	id4 --&gt; id7[redis 集成布隆]</span><br></pre></td></tr></table></figure>
+
+<p>bloom过滤器问题:</p>
+<ul>
+<li><p><input checked="" disabled="" type="checkbox">  只能增加,不能删除</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox">  布谷鸟过滤器</p>
+</li>
+<li><p><input disabled="" type="checkbox">  空key</p>
+</li>
+</ul>
+<h4 id="雪崩"><a href="#雪崩" class="headerlink" title="雪崩"></a>雪崩</h4><p><strong><font color=MediumVioletRed>大量的key同时失效,间接的造成大量的访问到达DB</font></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	id4[随机过期时间] -.-&gt; id5&#123;零点&#125;</span><br><span class="line"> 	id4 --&gt; id6[时点性无关]</span><br><span class="line"> 	id5 --&gt; id7[强依赖击穿方案]</span><br><span class="line"> 	id5 --&gt; id8[业务层加判断,零点延时...]</span><br><span class="line"> 	style id5 fill:#0f0,stroke-width:2px,fill-opacity:0.5</span><br></pre></td></tr></table></figure>
+
+<h4 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h4><p>1setnx</p>
+<p>2.过期时间</p>
+<p>3.多线程(守护线程)延长过期</p>
+<p>redisson</p>
+<p>zookeeper 做分布式锁!</p>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; CONFIG GET *</span><br><span class="line">127.0.0.1:6379&gt; CONFIG SET protected-mode no</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/23/redis%E7%AC%94%E8%AE%B005/" data-id="ckp6jsm220021z0n09ia81gwt" data-title="redis笔记05" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis笔记04" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/" class="article-date">
+  <time class="dt-published" datetime="2020-11-21T14:32:48.000Z" itemprop="datePublished">2020-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="AKF概述"><a href="#AKF概述" class="headerlink" title="AKF概述"></a>AKF概述</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	subgraph single</span><br><span class="line">	id1[redis 单机 单进程 缓存 数据库]</span><br><span class="line">	id1 --&gt; id((RDB AOF))</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
+
+<p>单机,单节点,单实例</p>
+<p>1.单点故障</p>
+<p>2.容量有限</p>
+<p>3.压力</p>
+<p><strong>AKF =&gt; xyz</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph LR	</span><br><span class="line">	subgraph redis:x</span><br><span class="line">	id&#123;client&#125; --&gt; id1((redis:rw))</span><br><span class="line">	id1 -- x --&gt; id2((redis:r))</span><br><span class="line">	id2 --&gt; id3((redis:r))</span><br><span class="line">	id --&gt; id2</span><br><span class="line">	id --&gt; id3</span><br><span class="line">	style id1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis2</span><br><span class="line">	bu3[redis:rw] --y--- id1</span><br><span class="line">	bu3 --- id11[redis]</span><br><span class="line">	id11 --- id12[redis]</span><br><span class="line">	style bu3 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis1</span><br><span class="line">	bu2[redis:rw] --- bu3</span><br><span class="line">	bu2 --- id21[redis]</span><br><span class="line">	id21 --- id22[redis]</span><br><span class="line">	style bu2 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis</span><br><span class="line">	bu1[redis:rw] --- bu2</span><br><span class="line">	bu1 --- id31[redis]</span><br><span class="line">	id31 --- id32[redis]</span><br><span class="line">	style bu1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	id1 --z--&gt; id11</span><br></pre></td></tr></table></figure>
+
+<p><strong>AKF一变多</strong></p>
+<p>数据一致性问题</p>
+<p>所有节点阻塞直到数据全部一致</p>
+<ul>
+<li>同步方式</li>
+</ul>
+<p>强一致性</p>
+<p>极其容易破坏可用性!反问自己:为什么一边多? 解决可用性</p>
+<ul>
+<li>通过异步方式</li>
+</ul>
+<p>容忍数据丢失一部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --阻塞--&gt; id3((redis))</span><br><span class="line">	sum[强一致性,破坏可用性]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id3((redis))</span><br><span class="line">	sum[弱一致性&lt;br/&gt;丢失数据]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	client --set k1 a--&gt; id1((redis))</span><br><span class="line"> 	id1 --同步阻塞--&gt; id4[kafka &lt;br/&gt; 可靠,集群&lt;br/&gt;响应速度够快]</span><br><span class="line">    id4 --&gt; id2((redis))</span><br><span class="line">	id4 --&gt; id3((redis))</span><br><span class="line">	sum[最终数据会一致&lt;br/&gt; 有可能数据不一致]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>主从:</strong></p>
+<p>主从复制,主机有的数据从机也有</p>
+<p>客户端主从都可以访问</p>
+<p><strong>主备:</strong></p>
+<p>客户端只访问master</p>
+<p>备用机不参业务</p>
+<p><strong>主机</strong></p>
+<p>负责读写</p>
+<p>自己又是一个:单点</p>
+<p><strong><center>一般对主做高可用,自动的故障转移:代替人</center></strong></p>
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>人是怎么做监控的</center>
+
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>由一个技术,程序实现<br/>只要是一个程序就会有单点故障的问题,一变多的集群</center>
+
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>有一些不一样的地方</center>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id((redis)) --&gt; id1[监控]</span><br><span class="line">	id --&gt; id2[监控]</span><br><span class="line">	id --&gt; id3[监控]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">	id1[监控] --&gt; id((redis)) </span><br><span class="line">	id2[监控] --&gt; id</span><br><span class="line">	id3[监控] --&gt; id</span><br></pre></td></tr></table></figure>
+
+<p>都给出 OK</p>
+<p>强一致性</p>
+<p>一部分给出OK</p>
+<p>另一部分不算数</p>
+<p>几个?</p>
+<p>1,2</p>
+<p>推导:</p>
+<p><strong>1</strong>台统计不准确,不够势力范围</p>
+<p>问题:网络分区</p>
+<p>脑裂</p>
+<p><strong>2</strong> 在3个节点成功解决脑裂问题</p>
+<p><strong>3</strong> 在4个节点成功解决脑裂问题</p>
+<p><strong>4</strong> 在5个节点成功解决脑裂问题</p>
+<p>n/2+1 过半!</p>
+<p>使用奇数台!</p>
+<h4 id="x实际操作-主从复制"><a href="#x实际操作-主从复制" class="headerlink" title="x实际操作:主从复制"></a>x实际操作:主从复制</h4><p>启动安装redis-server脚本,6379,6380,6381</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 utils]$ sudo ./install_server.sh </span><br><span class="line">Welcome to the redis service installer</span><br><span class="line">This script will help you easily set up a running redis server</span><br><span class="line"></span><br><span class="line">Please select the redis port for this instance: [6379] 6380</span><br><span class="line">Please select the redis config file name [/etc/redis/6380.conf] </span><br><span class="line">Selected default - /etc/redis/6380.conf</span><br><span class="line">Please select the redis log file name [/var/log/redis_6380.log] </span><br><span class="line">Selected default - /var/log/redis_6380.log</span><br><span class="line">Please select the data directory for this instance [/var/lib/redis/6380] </span><br><span class="line">Selected default - /var/lib/redis/6380</span><br><span class="line">Please select the redis executable path [] /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Selected config:</span><br><span class="line">Port           : 6380</span><br><span class="line">Config file    : /etc/redis/6380.conf</span><br><span class="line">Log file       : /var/log/redis_6380.log</span><br><span class="line">Data dir       : /var/lib/redis/6380</span><br><span class="line">Executable     : /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Cli Executable : /opt/bigdata/module/redis5/bin/redis-cli</span><br><span class="line">Is this ok? Then press ENTER to go on or Ctrl-C to abort.</span><br><span class="line">Copied /tmp/6380.conf =&gt; /etc/init.d/redis_6380</span><br><span class="line">Installing service...</span><br><span class="line">Successfully added to chkconfig!</span><br><span class="line">Successfully added to runlevels 345!</span><br><span class="line">Starting Redis server...</span><br><span class="line">Installation successful!</span><br></pre></td></tr></table></figure>
+
+<p>拷贝配置文件到测试目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ cp /etc/redis/* ./</span><br><span class="line">[lemcoden@hadoop01 test]$ ls</span><br><span class="line">6379.conf  6380.conf  6381.conf</span><br><span class="line">[lemcoden@hadoop01 test]$ vim 6379.conf </span><br><span class="line">daemonize no</span><br><span class="line">#logfile /var/lib/redis/6379.log</span><br><span class="line">appendonly no</span><br></pre></td></tr></table></figure>
+
+<p>启动redis-server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">终端01</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端02</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端03</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br></pre></td></tr></table></figure>
+
+<p>启动redis-cli(略过)</p>
+<p>REPLICAOF命令 降级主机slave</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6380&gt; get k1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6380&gt; set k1 222</span><br><span class="line">(error) READONLY You can&#x27;t write against a read only replica.</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; set key2 ccc</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; get key2</span><br><span class="line">&quot;ccc&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; get key2 </span><br><span class="line">(nil)</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br></pre></td></tr></table></figure>
+
+<p>kill 6381主机后,6379设置多个key,然后启动6381(增量同步)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k3 aaa</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k4 444</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k2 4123313</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k5 141jddpfipj</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k6 sada</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k5&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line">5) &quot;k6&quot;</span><br><span class="line">6) &quot;k2&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果6381开启AOF ,则会产生RDB sync</p>
+<p>!!!!<strong>且RDB文件中不存在replicaID号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379 --appendonly yes</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.820 * Full resync from master: d93b72c43fc1777195b07d7546baf1b34a92fb4f:12772</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: receiving 240 bytes from master</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: Flushing old data</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Loading DB in memory</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Finished with success</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.919 * Background AOF rewrite terminated with success</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 6381]$ vim dump.rdb </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>假如Master宕掉,SLAVE升级为Master</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6381&gt; REPLICAOF no one </span><br><span class="line">OK</span><br><span class="line">16192:M 21 Nov 2020 05:18:36.965 * MASTER MODE enabled</span><br><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6381</span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>关于主从架构,conf文件的一些配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># replicaof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"># masterauth &lt;master-password&gt;</span><br><span class="line">如果redis刚启动,从Master复制数据期间,是否还支持本机old数据查询</span><br><span class="line">replica-serve-stale-data yes</span><br><span class="line">备机是否只支持查询</span><br><span class="line">replica-read-only yes</span><br><span class="line">是否直接使用网络复制</span><br><span class="line">repl-diskless-sync no</span><br><span class="line">增量复制文件大小,salve短时间下线情况发生时</span><br><span class="line"># repl-backlog-size 1mb</span><br><span class="line">最少几个replica写成功</span><br><span class="line"># min-replicas-to-write 3</span><br><span class="line"># min-replicas-max-lag 10</span><br></pre></td></tr></table></figure>
+
+<p>主从复制配置,需要人工维护主的故障问题</p>
+<h4 id="x实际操作-HA哨兵"><a href="#x实际操作-HA哨兵" class="headerlink" title="x实际操作:HA哨兵"></a>x实际操作:HA哨兵</h4><p>新建哨兵conf文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br></pre></td></tr></table></figure>
+
+<p>启动服务器,启动哨兵26379,26380,26381</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/26379.conf --sentinel</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.434 # +monitor master mymaster 127.0.0.1 6379 quorum 2</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.435 * +slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.442 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:34.614 * +sentinel sentinel aea8334513cd9abf6b18c40262915bd337033350 127.0.0.1 26380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:54.877 * +sentinel sentinel f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3 127.0.0.1 26381 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p> 退出6379,master,sentinal推演出新的leader,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">16806:X 21 Nov 2020 06:04:32.642 * +failover-state-send-slaveof-noone slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p><strong>sentinel通过发布订阅知道其他sentinel</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; PSUBSCRIBE *</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26380,aea8334513cd9abf6b18c40262915bd337033350,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26381,f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br></pre></td></tr></table></figure>
+
+<p>sentinel 配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$REDIS_SRC/sentinel.conf</span><br><span class="line">port 26379</span><br><span class="line">daemonize no</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+
+<h4 id="y概述"><a href="#y概述" class="headerlink" title="y概述"></a>y概述</h4><p>单节点副本解决了单点故障和压力的问题,但是容量问题没有解决</p>
+<p>容量client端解决方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-1:client&lt;br/&gt;融入逻辑,业务拆分&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br></pre></td></tr></table></figure>
+
+<p><em>sharding分片方式</em></p>
+<p>hash+取模</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client&lt;br/&gt;算法:hash+取模&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br><span class="line">	id1((弊端:取模的值必须固定,&lt;br/&gt;%3,&lt;br/&gt;%4&lt;br/&gt;影响分布式下的扩展性))</span><br></pre></td></tr></table></figure>
+
+<p>random lpush 适用于消息队列场景</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;random&lt;br/&gt;lpush]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br></pre></td></tr></table></figure>
+
+<p>一致性hash算法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;kemata&lt;br/&gt;一致性hash&lt;br/&gt;没有取模&lt;br/&gt;data,node]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br><span class="line">	id2 --&gt; id4((规划一个环形哈希:虚拟节点))</span><br><span class="line">	subgraph 映射算法</span><br><span class="line">	id1[hash&lt;br/&gt;crc&lt;br/&gt;fmv&lt;br/&gt;md5&lt;br/&gt;]</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
+
+<p>一致性Hash优点:</p>
+<p>你加节点,的确可以分担其他节点的压力,不会造成全局洗牌</p>
+<p>缺点:</p>
+<p>新增节点造成一小部分数据不能命中</p>
+<p>1.问题,缓存击穿,压到mysql</p>
+<p>2.方案,每次取离我最近的2个物理节点</p>
+<p>更倾向于作为缓存,而不是数据库</p>
+<p>弊端:</p>
+<p>3个模式不能做数据库用</p>
+<p>预分区</p>
+<h4 id="twemproxy安装"><a href="#twemproxy安装" class="headerlink" title="twemproxy安装"></a>twemproxy安装</h4><p>大部分直接按照官网的README操作</p>
+<p>编译完成之后,进入scrips目录</p>
+<p>将nutcracker.init copy到/etc/ini.d目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 scripts]$ sudo cp nutcracker.init /etc/init.d/twemproxy</span><br><span class="line">[lemcoden@hadoop01 init.d]$ sudo chmod +x twemproxy </span><br></pre></td></tr></table></figure>
+
+<p>新建/etc/nutcracker/</p>
+<p>将源码的config目录下的所有文件copy过来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 conf]$ sudo mkdir /etc/nutcracker/</span><br><span class="line">[lemcoden@hadoop01 conf]$ ls</span><br><span class="line">nutcracker.leaf.yml  nutcracker.root.yml  nutcracker.yml</span><br><span class="line">[lemcoden@hadoop01 conf]$ cp ./* /etc/nutcracker/</span><br></pre></td></tr></table></figure>
+
+<p>将src文件夹下的nutcracker可执行文件copy到/usr/bin/目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 src]$ sudo cp nutcracker /usr/bin/</span><br></pre></td></tr></table></figure>
+
+<p>新建redis数据文件夹,</p>
+<p>并手动启动redis-server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 nutcracker]$ cd ~</span><br><span class="line">[lemcoden@hadoop01 ~]$ mkdir data</span><br><span class="line">[lemcoden@hadoop01 ~]$ cd data/</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6380</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6380</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6380</span><br><span class="line">启动twemproxy代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ systemctl start twemproxy</span><br><span class="line">客户端链接代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 22121</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; keys *</span><br><span class="line">Error: Server closed the connection</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6380</span><br><span class="line">127.0.0.1:6380&gt; keys * </span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">2) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6379</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:22121&gt; MULTI</span><br><span class="line">Error: Server closed the connection</span><br></pre></td></tr></table></figure>
+
+<h4 id="predixy-安装"><a href="#predixy-安装" class="headerlink" title="predixy 安装"></a>predixy 安装</h4><p>上github,找到release包,下载下来,解压</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/joyieldInc/predixy/releases/download/1.0.5/predixy-1.0.5-bin-amd64-linux.tar.gz</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim predixy.conf</span><br><span class="line">#cluster.conf</span><br><span class="line">Include sentinel.conf</span><br><span class="line">#try.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim sentinel.conf</span><br><span class="line">    Sentinels &#123;</span><br><span class="line">        + 127.0.0.1:26379</span><br><span class="line">        + 127.0.0.1:26380</span><br><span class="line">        + 127.0.0.1:26381</span><br><span class="line">    &#125;</span><br><span class="line">    Group ooxx &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    Group xxoo &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>集群文件配置(sentinel)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26380</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26381</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>集群启动</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ redis-server 26379.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26380.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26381.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36380</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46380</span><br><span class="line">[lemcoden@hadoop01 predixy-1.0.5]$ ./bin/predixy conf/predixy.conf </span><br></pre></td></tr></table></figure>
+
+<p><strong>redis-cli实验</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 7617</span><br><span class="line">127.0.0.1:7617&gt; set k1 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k2</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k1 sdfsdfsdfs</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k2 sdasdasfasfqad</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">(error) ERR forbid transaction in current server pool</span><br><span class="line">127.0.0.1:7617&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p  46379</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;&#123;oo&#125;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;&#123;oo&#125;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli  -p 36379</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; </span><br></pre></td></tr></table></figure>
+
+<p><strong>不支持事务,所以试验单主从</strong></p>
+<p>修改config</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; set k1 sdasfa</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 asdada</span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1 </span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 2222</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; exec</span><br><span class="line">1) &quot;sdasfa&quot;</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
+
+<p>kill掉36379进程,哨兵会自动选择,在代理层是感觉不到的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kill掉36379进程之后</span><br><span class="line">127.0.0.1:7617&gt; get k1</span><br><span class="line">&quot;sdasfa&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="redis官方集群样例"><a href="#redis官方集群样例" class="headerlink" title="redis官方集群样例"></a>redis官方集群样例</h4><p>去redis源码的utils/create-cluster目录下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ vim create-cluster </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">Starting 30001</span><br><span class="line">Starting 30002</span><br><span class="line">Starting 30003</span><br><span class="line">Starting 30004</span><br><span class="line">Starting 30005</span><br><span class="line">Starting 30006</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster create</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:30005 to 127.0.0.1:30001</span><br><span class="line">Adding replica 127.0.0.1:30006 to 127.0.0.1:30002</span><br><span class="line">Adding replica 127.0.0.1:30004 to 127.0.0.1:30003</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">Can I set the above configuration? (type &#x27;yes&#x27; to accept): </span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">..</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">客户端</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -c  -p 30001 (cluster集群模式)</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; get k1</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; set k2 sdfsdsf</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; get k2</span><br><span class="line">&quot;sdfsdsf&quot;</span><br><span class="line">127.0.0.1:30001&gt; get k1</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; WATCH k2</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set k1 232323456</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; set sdfsdf sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; exec</span><br><span class="line">(error) ERR EXEC without MULTI </span><br><span class="line">(事务中重定向不同的进程的命令会失败)</span><br><span class="line"></span><br><span class="line">127.0.0.1:30003&gt; set &#123;oo&#125;k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [1629] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k3 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 234234</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; get  &#123;oo&#125;k3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; exec</span><br><span class="line">1) OK</span><br><span class="line">2) &quot;sdfsdf&quot;</span><br><span class="line">(可以在事务中给key添加相同的前缀)</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端分赃"><a href="#客户端分赃" class="headerlink" title="客户端分赃"></a>客户端分赃</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster create 127.0.0.1:30001 127.0.0.1:30002 127.0.0.1:30003 127.0.0.1:30004 127.0.0.1:30005 127.0.0.1:30006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+
+<p>客户端重新分片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster reshard 127.0.0.1:30001</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">How many slots do you want to move (from 1 to 16384)? 2000</span><br><span class="line">What is the receiving node ID? 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">Please enter all the source node IDs.</span><br><span class="line">  Type &#x27;all&#x27; to use all the nodes as source nodes for the hash slots.</span><br><span class="line">  Type &#x27;done&#x27; once you entered all the source nodes IDs.</span><br><span class="line">Source node #1: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">Source node #2: done</span><br><span class="line"></span><br><span class="line">检查使用info或者check命令</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster info 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster check 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[2000-5460] (3461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[0-1999],[5461-10922] (7462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head> 
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script> 
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/v4-shims.js"></script> 
+</head> 
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/21/redis%E7%AC%94%E8%AE%B004/" data-id="ckp6jsm2w004uz0n0c4qbbm9f" data-title="redis笔记04" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis笔记03" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/" class="article-date">
+  <time class="dt-published" datetime="2020-11-18T14:32:48.000Z" itemprop="datePublished">2020-11-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p>缓存:数据可以丢 急速!</p>
+<p>数据库:数据绝对不能丢 速度+持久性 </p>
+<p>掉电易失!</p>
+<p>redis+mysql &gt; 数据库 &lt; 不太对</p>
+<h3 id="redis如何持久化"><a href="#redis如何持久化" class="headerlink" title="redis如何持久化"></a>redis如何持久化</h3><p>存储层:</p>
+<p>1.快照/副本</p>
+<p>2.日志</p>
+<h4 id="从linux进程开始聊"><a href="#从linux进程开始聊" class="headerlink" title="从linux进程开始聊"></a>从linux进程开始聊</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[单机持久化] --&gt; id2&#123;RDB&#125; </span><br><span class="line">	id2 --&gt; id4[时点性]</span><br><span class="line">	id2 --&gt; id6[save]</span><br><span class="line">	id6 --&gt; id10[明确:比如,关机维护]</span><br><span class="line">	id2 --&gt; id7[bgsave]</span><br><span class="line">	id7 --&gt; id8[fork创建子进程]</span><br><span class="line">	id2 --&gt; id9[配置文件中给出bgsave的规则:save这个标识]</span><br><span class="line">	id2 --&gt; id11[弊端&lt;br/&gt;&lt;br/&gt;1.不支持拉链,只有一个dump.rdb&lt;br/&gt;&lt;br/&gt;2.丢失数据相对多,&lt;br/&gt;时点与时点之间窗口数据容易丢失&lt;br/&gt;8点得到一个rdb,9点刚要落一个rdb,挂机了]</span><br><span class="line">	id2 --&gt; id12[优点&lt;br/&gt;类似java中序列化,恢复的速度相对快]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id101[如果果开启了AOF,只会用AOF恢复,&lt;br/&gt;4.0之后,AOF中包含RDB全量,增加记录新的写操作]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><ol>
+<li><p>衔接,前一个命令的输出作为后一个命令的输入</p>
+</li>
+<li><p>管道会触发子进程</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$ | more</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8130</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8132</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8134</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8136</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="进程演示"><a href="#进程演示" class="headerlink" title="进程演示"></a>进程演示</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[使用linux的时候:&lt;br/&gt;&lt;br/&gt;父子进程&lt;br/&gt;&lt;br/&gt;常规思想,进程数据隔离的&lt;br/&gt;&lt;br/&gt;进阶思想,父进程其实可以让子进程看到数据 &lt;br/&gt;&lt;br/&gt;linux中&lt;br/&gt;export的环境变量,子进程的修改不会影响到父进程&lt;br/&gt;&lt;br/&gt;父进程不会破坏子进程&lt;br/&gt;] --&gt; id2[创建子进程应该是什么程度&lt;br/&gt;如果父进程是redis,内存数据10G&lt;br/&gt; 1.速度&lt;br/&gt;2.内存空间够不够]</span><br><span class="line">	id2--&gt;id3((&quot;fork&quot;))</span><br><span class="line">	id3 --&gt; id4[&quot;1.速度:快&lt;br/&gt;2.空间:小&quot;]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ exit</span><br><span class="line">exit</span><br><span class="line">[lemcoden@hadoop01 ~]$ export num</span><br><span class="line">[lemcoden@hadoop01 ~]$ /bin/bash</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>test.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo $$</span><br><span class="line">echo $num</span><br><span class="line">num=999</span><br><span class="line">echo num:$num</span><br><span class="line"></span><br><span class="line">sleep 20</span><br><span class="line"></span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure>
+
+<p>执行状况(子进程不会修改父进程)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8558</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8558</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">8454</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
+
+<p>执行状况(父进程不会破坏子进程)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8623</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8623</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ num=888</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">888</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
+
+<h4 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h4><p>redis实现持久化需要解决两个问题:</p>
+<ol>
+<li><p>非阻塞,redis继续对外提供服务</p>
+</li>
+<li><p>将数据落地</p>
+</li>
+</ol>
+<p>通过fork和copy on  write实现</p>
+<p>时点.png</p>
+<p><strong>RDB配置要点</strong></p>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">######################## SNAPSHOTTING  ########################</span><br><span class="line">#   save &quot;&quot;</span><br><span class="line"></span><br><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line">rdbchecksum yes 文件末尾写入校验位</span><br><span class="line"></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line">dir /var/lib/redis/6379</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么一般redis设置1到10个G,而不占满内存?</strong></p>
+<p>因为做数据持久化的时候,磁盘IO的瓶颈,为了保证redis的速度,不能有太大的数据量做持久化.</p>
+<h4 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[主从复制] --&gt; id3&#123;AOF&#125;</span><br><span class="line">	id3 --&gt; id5[redis的写操作记录到文件中]</span><br><span class="line">	id5 --&gt; id22[丢失数据少]</span><br><span class="line">	id5 --&gt; id23[rdb和aof可以同时开启]</span><br><span class="line">	id5 --&gt; id24[弊端:体量无限变大,恢复慢]</span><br><span class="line">	id24 --&gt; id25[日志:优点如果能保住&lt;br/&gt;还是可以用的&lt;br/&gt;&lt;br/&gt;设计方案-&gt;AOF足够小]</span><br><span class="line">	</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	hdfs[hdfs:fsimage+edits.log&lt;br/&gt;&lt;br/&gt;让日志记录增量&lt;br/&gt;&lt;br/&gt;合并过程]</span><br><span class="line">	hdfs --&gt; id0[4.0以前]</span><br><span class="line">	id0 --&gt; id2[重写&lt;br/&gt;删除抵消的命令&lt;br/&gt;合并重复的命令]</span><br><span class="line">	id2 --&gt; id4[最终也是纯指令文件]</span><br><span class="line">	hdfs --&gt; id10[4.0以后]</span><br><span class="line">	id10 --&gt;id11[重写&lt;br/&gt;将老的数据RDB到aof文件中&lt;br/&gt;将增量以指令的方式&lt;br/&gt;append到AOF]</span><br><span class="line">	id11 --&gt; id12[AOF是一个混合体,利用RDB的快,日志的全量]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>redis运行了10年</p>
+<p>开启了AOF</p>
+<p>10年头,redis挂了</p>
+<ol>
+<li><p>AOF多大:10T</p>
+<p><strong>恢复:会不会溢出</strong></p>
+</li>
+<li><p>恢复要多久:恢复5年</p>
+</li>
+</ol>
+<p><strong>redis内存数据库</strong></p>
+<p>原点:redis是内存数据库</p>
+<p>写操作会触发IO</p>
+<p>NO</p>
+<p>aways</p>
+<p>每秒</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id1[java] --&gt; id2[kenel fd8 buffer]</span><br><span class="line">	id2 --&gt; id3[磁盘]</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">############################## APPEND ONLY MODE ###############################</span><br><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly.aof</span><br><span class="line"># appendfsync always</span><br><span class="line">appendfsync everysec</span><br><span class="line"># appendfsync no 等内核buffer快满了.kernel自动flush</span><br><span class="line"></span><br><span class="line">no-appendfsync-on-rewrite no </span><br><span class="line">redis有一个正在进行rdb的子进程时,此值为true,就不会产生AOF写</span><br><span class="line">???</span><br><span class="line"># When rewriting the AOF file, Redis is able to use an RDB preamble in the</span><br><span class="line"># AOF file for faster rewrites and recoveries. When this option is turned</span><br><span class="line"># on the rewritten AOF file is composed of two different stanzas:</span><br><span class="line">#</span><br><span class="line">#   [RDB file][AOF tail]</span><br><span class="line">#</span><br><span class="line"># When loading Redis recognizes that the AOF file starts with the &quot;REDIS&quot;</span><br><span class="line"># string and loads the prefixed RDB file, and continues loading the AOF</span><br><span class="line"># tail.</span><br><span class="line">aof-use-rdb-preamble yes</span><br></pre></td></tr></table></figure>
+
+<p><strong>AOF实操</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">daemonize no</span><br><span class="line">#logfile /var/log/redis_6379</span><br><span class="line">aof-use-rdb-preamble no</span><br><span class="line">[lemcoden@hadoop01 6379]$cd /var/lib/redis/6379</span><br><span class="line">[lemcoden@hadoop01 6379]$rm -f dump.rdb</span><br><span class="line">[lemcoden@hadoop01 6379]$ systemctl stop redis_6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ sudo ./redis-server /etc/redis/6379.conf </span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">set</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$5</span><br><span class="line">hello</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; bgsave</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-check-rdb  dump.rdb </span><br><span class="line">[offset 0] Checking RDB file dump.rdb</span><br><span class="line">[offset 26] AUX FIELD redis-ver = &#x27;5.0.5&#x27;</span><br><span class="line">[offset 40] AUX FIELD redis-bits = &#x27;64&#x27;</span><br><span class="line">[offset 52] AUX FIELD ctime = &#x27;1605840860&#x27;</span><br><span class="line">[offset 67] AUX FIELD used-mem = &#x27;853472&#x27;</span><br><span class="line">[offset 83] AUX FIELD aof-preamble = &#x27;0&#x27;</span><br><span class="line">[offset 85] Selecting DB ID 0</span><br><span class="line">[offset 107] Checksum OK</span><br><span class="line">[offset 107] \o/ RDB looks OK! \o/</span><br><span class="line">[info] 1 keys read</span><br><span class="line">[info] 0 expires</span><br><span class="line">[info] 0 already expired</span><br></pre></td></tr></table></figure>
+
+<p><strong>重写AOF</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">Backgrou*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">SET</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$1</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+
+<p><strong>AOF &amp; RDB混合</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">aof-use-rdb-preamble yes</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">REDIS0009ú      redis-ver^E5.0.5ú</span><br><span class="line">redis-bitsÀ@ú^EctimeÂK3·_ú^Hused-memÂÐ^E^M^@ú^Laof-preambleÀ^Aþ^@û^A^@^@^Bk1^Acÿ&lt;84&gt;^Q·&lt;9e&gt;^T&quot;&lt;96&gt;]</span><br><span class="line">~                     </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Automatic rewrite of the append only file.</span><br><span class="line"># Redis is able to automatically rewrite the log file implicitly calling</span><br><span class="line"># BGREWRITEAOF when the AOF log size grows by the specified percentage.</span><br><span class="line">#</span><br><span class="line"># This is how it works: Redis remembers the size of the AOF file after the</span><br><span class="line"># latest rewrite (if no rewrite has happened since the restart, the size of</span><br><span class="line"># the AOF at startup is used).</span><br><span class="line">#</span><br><span class="line"># This base size is compared to the current size. If the current size is</span><br><span class="line"># bigger than the specified percentage, the rewrite is triggered. Also</span><br><span class="line"># you need to specify a minimal size for the AOF file to be rewritten, this</span><br><span class="line"># is useful to avoid rewriting the AOF file even if the percentage increase</span><br><span class="line"># is reached but it is still pretty small.</span><br><span class="line">#</span><br><span class="line"># Specify a percentage of zero in order to disable the automatic AOF</span><br><span class="line"># rewrite feature.</span><br><span class="line"></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/18/redis%E7%AC%94%E8%AE%B003/" data-id="ckp6jsm21001xz0n0fp92453a" data-title="redis笔记03" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hexo-github部署异常" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/17/hexo-github%E9%83%A8%E7%BD%B2%E5%BC%82%E5%B8%B8/" class="article-date">
+  <time class="dt-published" datetime="2020-11-17T01:49:32.000Z" itemprop="datePublished">2020-11-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/17/hexo-github%E9%83%A8%E7%BD%B2%E5%BC%82%E5%B8%B8/">hexo github部署异常</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="邮箱收到github构建异常"><a href="#邮箱收到github构建异常" class="headerlink" title="邮箱收到github构建异常"></a>邮箱收到github构建异常</h4><p>三个月前,我的gmail收到一封关于hexo在github上构建异常的邮箱</p>
+<p>邮箱的主要内容如下:</p>
+<p>The page build failed for the <code>master</code> branch with the following error:</p>
+<p>The symbolic link <code>/blog_workspace</code> targets a file which does not exist within your site’s repository.</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/17/hexo-github%E9%83%A8%E7%BD%B2%E5%BC%82%E5%B8%B8/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/17/hexo-github%E9%83%A8%E7%BD%B2%E5%BC%82%E5%B8%B8/" data-id="ckp6jsm1e000dz0n04sdscizs" data-title="hexo github部署异常" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-markdown技巧01" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/14/markdown%E6%8A%80%E5%B7%A701/" class="article-date">
+  <time class="dt-published" datetime="2020-11-14T11:55:32.000Z" itemprop="datePublished">2020-11-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/14/markdown%E6%8A%80%E5%B7%A701/">markdown技巧01</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="mermaid-流程图"><a href="#mermaid-流程图" class="headerlink" title="mermaid 流程图"></a>mermaid 流程图</h3><p>格式:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mermaid</span><br><span class="line">	graph 流程图方向</span><br><span class="line">	流程图内容</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/14/markdown%E6%8A%80%E5%B7%A701/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/14/markdown%E6%8A%80%E5%B7%A701/" data-id="ckp6jsm1v001kz0n0338df47n" data-title="markdown技巧01" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis笔记01" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/12/redis%E7%AC%94%E8%AE%B001/" class="article-date">
+  <time class="dt-published" datetime="2020-11-12T14:15:03.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/12/redis%E7%AC%94%E8%AE%B001/">redis笔记01</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h3><p>数据库:表很大,性能下降?<br>    如果表有索引,增删改变慢(需要维护索引)<br>    查询速度会不会变慢:<br>        1.一个或少量查询依然很快<br>        2.并发大的时候会受硬盘带宽影响速度</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/12/redis%E7%AC%94%E8%AE%B001/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/12/redis%E7%AC%94%E8%AE%B001/" data-id="ckp6jsm1x001pz0n0cs682hcg" data-title="redis笔记01" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis笔记02" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/12/redis%E7%AC%94%E8%AE%B002/" class="article-date">
+  <time class="dt-published" datetime="2020-11-12T14:15:03.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="redis-API-及其设计"><a href="#redis-API-及其设计" class="headerlink" title="redis API 及其设计"></a>redis API 及其设计</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[value] --&gt; id1[List 单向链表,双向链表,环形链表]</span><br><span class="line">	id1 --&gt; id2[list栈&lt;br/&gt; 同向命令]</span><br><span class="line">	id1 --&gt; id3[list队列&lt;br/&gt; 反向命令]</span><br><span class="line">	id1 --&gt; id4[数组]</span><br><span class="line">	id1 --&gt; id5[阻塞&lt;br/&gt; 单播队列 &lt;br/&gt; FIFO]</span><br><span class="line">	id1 --&gt; id6[Set]</span><br><span class="line">	id1 --&gt; id9[sorted Set]</span><br><span class="line">	id6 --&gt; id7[无序,去重]</span><br><span class="line">id100[成本思考,两次服务端通讯,keys*模式匹配成本高,mget] --&gt; id101(hash&lt;br/&gt;对field进行数值计算,场景:点赞,收藏,计算)</span><br><span class="line">	id6 --&gt; id8[随机事件]</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/12/redis%E7%AC%94%E8%AE%B002/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/12/redis%E7%AC%94%E8%AE%B002/" data-id="ckp6jsm1y001uz0n07b8pcoqx" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-sql语句笔记01" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/" class="article-date">
+  <time class="dt-published" datetime="2020-11-12T14:15:03.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mysql/">mysql</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/">sql语句笔记01</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="mysql四大排名函数"><a href="#mysql四大排名函数" class="headerlink" title="mysql四大排名函数"></a>mysql四大排名函数</h4><p>row_number: 连续 不重复 </p>
+<p>rank: 不连续 重复</p>
+<p>dense_rank: 连续 重复</p>
+<p>ntile:有参数 入参group_num, 将数据分成group_num个组排序编号</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/" data-id="ckp6jsm230024z0n0965x26yy" data-title="sql语句笔记01" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>hbase笔记总结 | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1.先从关系型数据库与非关系型数据讲起关系型数据库 就是我们传统的像mysql,oracle,sql server这样的具有自己的二维固定的数据结构优点:  易于维护:都是使用表结构,格式一致  使用方便: SQL语言通用,可用于复杂查询  复杂操作:支持SQL,可用于一个表以及多个表之间非常复杂的查询">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hbase笔记总结">
+<meta property="og:url" content="https://lemcoden.github.io/2020/09/15/hbase%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="1.先从关系型数据库与非关系型数据讲起关系型数据库 就是我们传统的像mysql,oracle,sql server这样的具有自己的二维固定的数据结构优点:  易于维护:都是使用表结构,格式一致  使用方便: SQL语言通用,可用于复杂查询  复杂操作:支持SQL,可用于一个表以及多个表之间非常复杂的查询">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-15T07:43:36.000Z">
+<meta property="article:modified_time" content="2020-11-15T08:52:53.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="hadoop生态">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-hbase笔记总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/15/hbase%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2020-09-15T07:43:36.000Z" itemprop="datePublished">2020-09-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      hbase笔记总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="1-先从关系型数据库与非关系型数据讲起"><a href="#1-先从关系型数据库与非关系型数据讲起" class="headerlink" title="1.先从关系型数据库与非关系型数据讲起"></a>1.先从关系型数据库与非关系型数据讲起</h3><p><strong>关系型数据库</strong> 就是我们传统的像mysql,oracle,sql server这样的具有自己的二维固定的数据结构<br/><br>优点:</p>
+<ul>
+<li><p>易于维护:都是使用表结构,格式一致</p>
+</li>
+<li><p>使用方便: SQL语言通用,可用于复杂查询</p>
+</li>
+<li><p>复杂操作:支持SQL,可用于一个表以及多个表之间非常复杂的查询</p>
+<span id="more"></span></li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li>读写性能差,尤其是海量数据的高效率读写</li>
+<li>固定的表结构,灵活度稍欠</li>
+<li>高并发读写需求,传统关系型数据库,硬盘IO是一个很大的瓶颈</li>
+</ul>
+<p><strong>非关系型数据库</strong><br>非关系型数据库严格意义上不是一种数据库,应该是一种数据结构化存储方法的集合,可以是文档或者键值对<br/><br>优点:</p>
+<ul>
+<li>格式灵活:存储数据的格式可以是key,value,文档形式,图片形式等等,使用灵活,应用场景广泛,而关系型数据库则只支持基础类型</li>
+<li>速度快:nosql 可以使用硬盘或随机存储器作为载体,而关系型数据库只能使用硬盘</li>
+<li>高扩展性</li>
+<li>成本低:nosql数据库部署简单,基本都是开源软件</li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li>不提供sql支持,学习和使用成本高</li>
+<li>无事务处理</li>
+<li>数据结构相对复杂,复杂查询方面稍欠<h3 id="2-HBase数据模型"><a href="#2-HBase数据模型" class="headerlink" title="2.HBase数据模型"></a>2.HBase数据模型</h3></li>
+<li><strong>rowkey</strong></li>
+</ul>
+<ol>
+<li>决定一行数据,每行记录的唯一标识</li>
+<li>按照字典序排序</li>
+<li>rowkey只能存储64K的字节数据</li>
+</ol>
+<ul>
+<li><strong>Column Family &amp; Qualifier</strong></li>
+</ul>
+<ol>
+<li>Hbase表中的每个列都归属于某个列族,列族作为表模式(schema)定义的一部分预先给出</li>
+<li>列名以列族作为前缀,每个列族都可以有多个列成员(column);如course:math,course:english,新的列祖成员可以随后按需动态加入;</li>
+<li>权限控制,存储以及调优都是再列族层面进行的</li>
+<li>HBase把同一列族里面的数据存储再同一目录下,由几个文件保存</li>
+</ol>
+<ul>
+<li><strong>TimeStamp时间戳</strong></li>
+</ul>
+<ol>
+<li>在HBase每个cell存储单元对同一份数据有多个版本,根据唯一的时间戳来区分每个版本之间的差异,不同版本的数据按照时间倒序排序,最新的数据版本排在最前面</li>
+<li>时间戳的类型是64位整型</li>
+<li>时间戳可以由HBase(在数据写入时自动)赋值,此时时间戳是精确到毫秒的当前系统时间.</li>
+<li>时间戳也可以由客户显式赋值,如果应用程序要避免数据版本冲突,就必须自己生成具有唯一性的时间戳.</li>
+</ol>
+<ul>
+<li><strong>Cell</strong></li>
+</ul>
+<ol>
+<li>由行和列的坐标交叉决定</li>
+<li>单元格是有版本的</li>
+<li>单元格的内容是未解析的字节数组</li>
+<li>由(rowkey,column(=+),version)唯一确定的单元</li>
+<li>cell中的数据没有类型的,全部是由字节数组形式存贮<h3 id="3-HBase架构"><a href="#3-HBase架构" class="headerlink" title="3.HBase架构"></a>3.HBase架构</h3>角色介绍:</li>
+</ol>
+<ul>
+<li><strong>Client</strong></li>
+</ul>
+<ol>
+<li>包含访问HBase的接口并维护cache来加快对HBase的访问</li>
+</ol>
+<ul>
+<li><strong>Zookeeper</strong></li>
+</ul>
+<ol>
+<li>保证任何时候,集群中只有一个活跃的master</li>
+<li>存储所有region的寻址入口</li>
+<li>实施监控region server的上线和下限信息,并通知master</li>
+<li>存储Hbase的schema和table元数据</li>
+</ol>
+<ul>
+<li><strong>Master</strong></li>
+</ul>
+<ol>
+<li>为region server 分配region</li>
+<li>负责region server的负载均衡</li>
+<li>发现失效的region server并重新分配其上的region</li>
+<li>管理用户对table的增删改操作</li>
+</ol>
+<ul>
+<li><strong>RegionServer</strong></li>
+</ul>
+<ol>
+<li>region server维护region,处理对这些region的IO请求</li>
+<li>region server负责切分运行过程中变得过大的region</li>
+</ol>
+<p><strong>regionserver组件介绍</strong></p>
+<ul>
+<li><strong>region</strong></li>
+</ul>
+<ol>
+<li>Hbase自动把表水平划分成多个区域(region),每个region会保存表里某段连续的数据</li>
+<li>每个表一开始只有一个region,随着数据不断插入,region不断增大,当增大到一个阈值的时候,region会等分成两个新的region</li>
+<li>当table中的行不断增多,就会由越来越多的region.这样一张完整的表被保存到多个regionserver上</li>
+</ol>
+<ul>
+<li>Memstore与storefile</li>
+</ul>
+<ol>
+<li>一个region由多个store组成,一个store对应一个CF(列族)</li>
+<li>store包括位于内存中的memstore和位于磁盘的storefile,</li>
+<li>当storefile文件的数量增长到一定阈值,系统会进行合并(minor,major),在合并过程中会进行版本合并和删除工作(major),形成更大的storefile</li>
+<li>当一个region所有的storefile的大小和数量超过一定阈值后,会把当前的region分割为两个,并由hmaster分配到相应的regionserver服务器,实现负载均衡</li>
+<li>客户端检索数据,先在memstore找,找不到取blockcache,找不到再找storefile</li>
+</ol>
+<p><strong>注意问题</strong></p>
+<ol>
+<li>HRegion是HBase中分布式存储和负载均衡的最小单元,最小单元就表示不同的HRegion可以分布在不同的HRegion server的上</li>
+<li>HRegion由一个或者多个Store组成,每个store保存一个columns family</li>
+<li>每个store又由一个memStore和0至多个StoreFile组成.如图:StoreFile以HFile保存在HDFS上</li>
+</ol>
+<p><strong>HBase读写流程</strong></p>
+<ul>
+<li><strong>读流程</strong></li>
+</ul>
+<ol>
+<li>客户端从zookeeper中获取meta表的regionserver节点信息</li>
+<li>客户端访问meta表所在的regionserver节点,获取到region所在的regionserver的节点信息</li>
+<li>客户端访问具体的region所在的regionserver,找到对应的region及store</li>
+<li>首先从memstore中读取数据,如果读取到了那么直接将数据返回,如果没有,则去blockcache读取数据</li>
+<li>如果blockcache中读取到数据,则直接返回数据给客户端,如果读取不到,则遍历storefile文件,查找数据</li>
+<li>如果storefile中读取不到数据,则客户端为空,如果读取到数据,那么需要将数据先缓存到blockcache中(方便下一次读取),然后再将数据返回给客户端</li>
+<li>blockcache是内存空间,如果缓存的数据比较多,满了之后会采用LRU策略,将比较老的数据进行删除</li>
+</ol>
+<ul>
+<li><strong>写流程</strong></li>
+</ul>
+<ol>
+<li>客户端从zookeeper中获取meta表所在的regionserver节点信息</li>
+<li>客户端访问meta表所在的regionserver节点,获取到region所在的regionserver信息</li>
+<li>客户端访问具体的region所在的regionserver,找到对应的reion以及store</li>
+<li>开始写数据,数据的时候会先向hlog中写一份数据(方便memstore中数据丢失后能沟根据hlog恢复数据,向hlog中写数据的时候也是优先写入内存,后台会有一个线程定期异步刷写数据到hdfs,如果hlog的数据也写入失败,那么数据就会发生丢失)</li>
+<li>hlog写数据完成之后,会将数据写入到memstore,memstore默认大小是64M,当memstore满了之后会进行统一的溢写操作,将memstore中的数据持久化到hdfs中.</li>
+<li>频繁的溢写会导致产生很多的小文件,因此会进行文件的合并,文件合并的时候会有两种方式,minor和major,minor表示小范围文件的合并,major表示将所有的storefile文件都合并成一个,具体详细过程,后续会讲解</li>
+</ol>
+<h3 id="HBASE-分布式搭建"><a href="#HBASE-分布式搭建" class="headerlink" title="HBASE 分布式搭建"></a>HBASE 分布式搭建</h3><h4 id="1-搭建方式说明"><a href="#1-搭建方式说明" class="headerlink" title="1.搭建方式说明"></a>1.搭建方式说明</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">By default,HBase run in standalone mode,Both standalone mode and pseudo-ditributed mode are provided for the purpose of small-scale testing.For a production environment, distributed mode is advised,multiple instances of Hbase daemons run on multiple servers in the cluster</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-搭建步骤"><a href="#2-搭建步骤" class="headerlink" title="2.搭建步骤"></a>2.搭建步骤</h4><ol>
+<li><p>将集群所有的节点的hosts的文件配置完成</p>
+</li>
+<li><p>将集群中所有节点的防火墙关闭</p>
+</li>
+<li><p>将集中的所有检点的事件设置一致</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install ntpdate</span><br><span class="line">ntpdate ntp1.aliyun.com4.</span><br></pre></td></tr></table></figure></li>
+<li><p>将所有的节点设置免密登陆</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub node01(节点名称)</span><br></pre></td></tr></table></figure></li>
+<li><p>解压hbase安装包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar xzvf hbase-2.0.5-bin.tar.gz -C /opt/bigdata</span><br><span class="line">cd hbase-2.0.5/</span><br></pre></td></tr></table></figure></li>
+<li><p>在/etc/profile文件中配置HBase的环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_HOME=/opt/bigdata/hbase-2.0.5</span><br><span class="line">将$HBASE_HOME设置到PATH路径中</span><br></pre></td></tr></table></figure></li>
+<li><p>进入到/opt/bigdata/hbase-2.0.5/conf 目录中,在hbase-env.sh文件中添加JAVA_HOME</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">设置JAVA的环境变量</span><br><span class="line">JAVA_HOME=/usr/java/jdk1.8.0_181-amd64</span><br><span class="line">设置是否使用自己的zookeeper实例</span><br><span class="line">HBASE_MANAGES_ZK=false</span><br></pre></td></tr></table></figure></li>
+<li><p>进入到/opt/bigdata/hbase-2.0.5/conf目录中,在hbase-site.xml文件中添加hbase相关属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">    &lt;name&gt;hbase.rootdir&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;hdfs://mycluster/hbase&lt;/value&gt;</span><br><span class="line">  &lt;/property&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">    &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">  &lt;/property&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">    &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;node02,node03,node04&lt;/value&gt;</span><br><span class="line">  &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改regionserver文件,设置regionservert分布在哪台节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node02</span><br><span class="line">node03</span><br><span class="line">node04</span><br></pre></td></tr></table></figure>
+
+<p>10.如果需要配置Master的高可用,需要在conf目录下创建backup-masters 文件.并添加如下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node04</span><br></pre></td></tr></table></figure>
+
+<p>11.拷贝hdfs-site.xml文件到conf目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /opt/bigdate/hbase-2.6.5/etc/hadoop/hdfs-site.xml /opt/bigdata/hbase-2.0.5/conf</span><br></pre></td></tr></table></figure>
+
+<p>12.在任意目录下运行hbase shell的命令,进入hbase的命令进行相关的操作</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/09/15/hbase%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/" data-id="ckp6jsm1b0007z0n09nsbdcs5" data-title="hbase笔记总结" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/09/15/hbase%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%9302/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hbase笔记总结02
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%BA%95%E5%B1%82%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%9301/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">计算机底层知识总结01</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

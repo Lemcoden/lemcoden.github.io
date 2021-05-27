@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇叁 | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前情提要jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇贰其中对象的引用链路描述有误，现已经更改（应该是查找根节点引用的对象，而不是查找引用根节点的对象） 前言1234hey！guys，I&amp;#x27;m back,关于之前两篇的blog，博主尽可能进行debug，毕竟一篇好的blog是需要经过不断修改打磨的，就像我们敲过的代码，如果不去不断的重构，之后必将&quot;积重难返&quot;，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇叁">
+<meta property="og:url" content="https://lemcoden.github.io/2020/06/18/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E5%8F%81/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="前情提要jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇贰其中对象的引用链路描述有误，现已经更改（应该是查找根节点引用的对象，而不是查找引用根节点的对象） 前言1234hey！guys，I&amp;#x27;m back,关于之前两篇的blog，博主尽可能进行debug，毕竟一篇好的blog是需要经过不断修改打磨的，就像我们敲过的代码，如果不去不断的重构，之后必将&quot;积重难返&quot;，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign2.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign3.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign4.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign5.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign6.png">
+<meta property="article:published_time" content="2020-06-18T12:22:33.000Z">
+<meta property="article:modified_time" content="2020-06-25T11:05:52.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="jvm虚拟机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇叁" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/18/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E5%8F%81/" class="article-date">
+  <time class="dt-published" datetime="2020-06-18T12:22:33.000Z" itemprop="datePublished">2020-06-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇叁
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h4><p><a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/05/27/jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇贰/">jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇贰</a><br/><br>其中对象的引用链路描述有误，现已经更改（应该是查找根节点引用的对象，而不是查找引用根节点的对象）</p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hey！guys，I&#x27;m back,关于之前两篇的blog，博主尽可能进行debug，毕竟一篇好的blog是需要经过不断修改打磨的，</span><br><span class="line">就像我们敲过的代码，如果不去不断的重构，之后必将&quot;积重难返&quot;，然后还有一个，关于图片显示的问题，这个博主也</span><br><span class="line">正在全力解决当中，准备把图床转到国内(此行为需要备案)，域名正在备案中.......请大家耐心等待。好了我们继续上一</span><br><span class="line">篇的问题，上一篇我们留下一个关键的问题，如何进行垃圾内存的并发标记，这次，我们就从这个问题开始。</span><br></pre></td></tr></table></figure>
+
+<h3 id="再聊并发可达性分析"><a href="#再聊并发可达性分析" class="headerlink" title=" 再聊并发可达性分析"></a><font color=#3.5169E1> 再聊并发可达性分析</font></h3><p>上一篇关于并发可达性问题，我们只是简单的一笔带过，这次我们利用对象图，帮我们把问题描述的更加清晰一些，以便于更加清晰的理解和解决。首先我们先对对象在对象图中的颜色进行区分定义：</p>
+<ul>
+<li>白色：表示对象还没有被垃圾回收器访问过，也没有被标记过。</li>
+<li>黑色：表示对象已经被访问且标记为安全存活对象（即不是垃圾对象），不会再进行扫描。</li>
+<li>灰色：表示对象已经被访问，但是此对象所引用的其他对象至少有一个还没有被扫描过。只有灰色对象所引用的白色对象扫描完毕，其才能被标记为黑色对象，所以说在标记过程中， <font color=#00ff00>黑色对象不能直接指向白色对象</font>。<br/></li>
+</ul>
+<p>好的，我们看一下标记过程的抽象图：<br>初始过程，黑色的方框对象为根节点，开始向下查找。<br><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign1.png" alt="memory_sign1"><br>中间标记过程，就像是波纹<del>（dio：纳尼？）</del>一样，以灰色对象为波峰持续推进</br><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign2.png" alt="memory_sign2"><br>最后直到所有的灰色对象都查找不到引用，将最后这批灰色对象标记为黑色。</br><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign3.png" alt="memory_sign3"><br>好了，<font color=#00ff00 >正常的标记过程</font>就是如此，但如果有用户线程来捣乱，那就不一样了<br/><br>那用户线程如何捣乱呢？把正在查找的灰色对象对白色对象切断？我们先试一下，以下虚线为切断的引用<br/><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign4.png" alt="memory_sign4"><br>好像结果并没有什么阻碍，最终查找的结果是正确的，因为用户已经切断了引用，而我们的标记结果也实时作出了改变。<br/><br>那么添加黑色对象对已经查找的白色对象的引用呢？<br/><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign5.png" alt="memory_sign5"><br>也同样的不会出现什么问题，最后的结果和原来一致，那么，如果两个同时叠加呢？<br/><br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign6.png" alt="memory_sign6"><br>唉？问题就出来了，如果我们切断灰色对象对白色对象的引用，然后用一个黑色对象引用此白色对象，会让这个白色对象到扫描的最后都不会标记为黑色，但他有黑色对象的引用，照这样的标记回收会使我们的回收掉本应该存活的对象。<br/><br>现在，我们知道，要是并发收集出现错误，必须满足以下两个条件：</p>
+<ul>
+<li>切断从灰色对象到黑色对象的引用</li>
+<li>添加已经扫描过的黑色对象对白色对象的引用</li>
+</ul>
+<p>只要我们破坏其中一个条件，并发标记便可以实现。<br/><br>破坏第一个条件，当探测到切断灰色对象对白色对象的引用，把这个引用记录下来，然后再以记录过的灰色对象为根节点，再扫描一遍，这种方法叫做<font color=#00ff00 >原始快照</font><br/><br>破坏第二个条件，当添加黑色对象到白色对象的引用时，我们将这个黑色对象重置为灰色对象，再进行查找。这种方法叫做<font color=#00ff00>增量更新</font><br>CMS收集器是基于增量更新来做并发标记的，G1、shennandoah则是用原始快照来实现的，这些收集器，会在之后进行专门的一一讲解。</p>
+<h3 id="再聊谁实现"><a href="#再聊谁实现" class="headerlink" title=" 再聊谁实现"></a><font color=#3.5169E1> 再聊谁实现</font></h3><p>好了讲了这么多的理论，我们该讲讲实现了，其实还有一些理论还没有涉及，笔者会在下面以及后几篇补上，现在感觉理论比较枯燥，我们还是聊聊实际的吧。<br/><br>接下来我们会聊到一些垃圾收集器，以及垃圾收集器所用到的之前的理论部分。<br/><br>首先，我们先为垃圾收集器进行分类，Serial、ParNew，Parallel  Scavenge，Serial Old，Parallel Old,CMS收集器，笔者称他们为经典的收集器，因为这些收集器都是专门管理新生代，或者老年代的。<br/><br>而之后出现的G1,shennandoah，ZGC收集器，都是新生代，老年代并用的。<br/><br>而 jdk11出现的Epsilon收集器比较特殊，它不做任何回收动作<del>(我要你有何用？)</del>，至于其作用笔者会在之后描述。<br/><br>目前我们只聊了聊经典收集器的理论，所以我们从经典的收集器开始聊起，<br/></p>
+<ul>
+<li><font color=#00ff00>  Serial </font>收集器（直译是电视连续剧？重在连续这个词）最早出现的垃圾回收器，它适用于单核的CPU，因此特别适合运行客户端方面的应用，虽然在之后的回收器层出不穷，但是在客户端应用方面，Serial收集器一直最低内存消耗发挥着作用。</li>
+<li><font color=#00ff00>  ParNew   </font>收集器，专管新生代的多线程收集器<font color=#00FFFF>JDK1.3</font></li>
+<li><font color=#00ff00> Parallel Scavenge  </font>ParNew 收集器的进阶版一般Par开头的，都是多线程收集器，这款收集器主打可控的吞吐量，吞吐量？好像是一个新概念，没错，之前我们讲过，停顿时间是衡量垃圾回收性能的重要指标之一，另一个指标便是吞吐量，他是指用户运行时间在整个程序总运行时间（用户运行时间和垃圾回收时间）的占比。他有自己的参数<font color=#00FFFF>JDK1.4</font></li>
+<li><font color=#00ff00> Serial Old</font> 收集器 Serial收集器的老年代版本</li>
+<li><font color=#00ff00> Parallel Old </font>收集器专门管理老年代的收集器，在此收集器出现之前ParNew 收集器一直初一比较尴尬的境地，因为作为多线程的新生代收集器，他却只能与单线程的Serial 配合使用<font color=#00FFFF>JDK6</font></li>
+<li><font color=#00ff00> CMS 划时代意义的收集器</font>，我们之前所说的并发回收就是从这个收集器开始的，<font color=#00ff00>之前的所有收集器，都只能通过停顿其他用户线程进行标记和回收</font>，但是他是老年代的收集器，其次，作为老年代的收集器，它却无法配合Parallel Scavenge使用。</li>
+</ul>
+<p>以上就是对我们所讲的理论支撑的垃圾回收器的简单介绍，那我们怎么使用他们呢？<br>很简单，只要启动java的时候加入配置参数就好</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java  -XX:+回收器参数   运行的Main类</span><br></pre></td></tr></table></figure>
+<p>那么下面给出的回收器参数</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UseSerialGC</td>
+<td>使用Serial + Serial Old 收集器</td>
+</tr>
+<tr>
+<td>UseParNewGC</td>
+<td>使用ParNew + Serial Old 收集器</td>
+</tr>
+<tr>
+<td>UseConcMarkSweepGC</td>
+<td>使用ParNew + CMS+Serial Old 的收集器组合进行回收 ,如果CMS收集器并发收集失败，会切换到Serial Old 收集器</td>
+</tr>
+<tr>
+<td>UseParallelGC</td>
+<td>使用Parallel Scavenge + Serial Old 收集器</td>
+</tr>
+<tr>
+<td>UseParallelOldGC</td>
+<td>使用 Parallel Scavenge + Parallel Old 收集器</td>
+</tr>
+</tbody></table>
+<p>这是我们目前可以通过参数切换到的收集器参数，我们会在下一篇blog，将参数写的更详尽一些，包括一些收集器的配置参数，和JDK9之后的从参数改变。</p>
+<h3 id="再聊一下停顿"><a href="#再聊一下停顿" class="headerlink" title="  再聊一下停顿"></a><font color=#3.5169E1>  再聊一下停顿</font></h3><p>我们前面聊了聊并发标记是如何实现的，现在我们聊一下如何让用户线程停顿，为什么要讲这个？因为可能会出现停顿时间异常的现象，如果我们不懂其中的原理将没有办法定位问题所在。<br/></p>
+<p>首先我们先退一步，上一篇博客，我们讲到GC ROOT 其中有很多类型的引用都会被作为GC ROOT，那么随着应用的体量的增大，引用数量必定猛增不减，这种时候我们如果在垃圾回收的时候，再去查询GC ROOT的引用，<br/></p>
+<p>那必然是不行的，因此，我们需要先整一个数据结构，在类型加载的时候，就把相关的引用写入数据结构中，这样我们不必在海量的引用中查找，只取数据结构里面的数据便可，<font color=#00ff00>JVM最经典的HotSpot虚拟机就是利用OopMap数据结构这样进行工作的</font>。<br/></p>
+<p>好了，GC Root的收集问题得到解决了，但是运行过程当中，引用关系肯定会改变，而JVM指令当中，大部分的指令都会造成引用关系的改变，我们不可能在每条指令后面都加一个OopMap结构，那对回收来说，空间成本将会变得额外的高昂。<br/></p>
+<p>因此，存储了OopMap数据结构外，在运行时，JVM会选择某些“特殊的位置”来记录引用信息，这些特殊的位置就叫做<font color=#00ff00>安全点</font>,那么安全点应该如何设置呢？<br/></p>
+<p>安全点设置既不能太少而使回收程序等待时间过长，又不能太多增大程序运行负荷，因此安全点一般选在可长时间执行的地方，一般在<font color=#00ff00>方法调用、循环跳转、异常跳转</font>等这些可以指令序列复用的地方。<br/></p>
+<h3 id="简单总结一下问题"><a href="#简单总结一下问题" class="headerlink" title="简单总结一下问题"></a><font color=#3.5169E1>简单总结一下问题</font></h3><ul>
+<li>如何做到并发可达性分析，方法分为哪几种？</li>
+<li>前期新生代，老年代分开管理的回收器都有那些？</li>
+<li>安全点是什么？一般在哪里设置</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/06/18/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E5%8F%81/" data-id="ckp6jsm1n000uz0n0b3bqcq5a" data-title="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇叁" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/25/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%82%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+           jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇肆
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/09/%E6%B3%B0%E6%8B%89%E7%91%9E%E4%BA%9A-%E5%8D%8E%E5%A4%8F%E4%B8%96%E7%95%8C%E5%90%84%E7%BA%A7%E8%81%8C%E7%A7%B0%E6%9D%83%E9%99%90%E7%AE%80%E4%BB%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">泰拉瑞亚-华夏世界各级职称权限简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

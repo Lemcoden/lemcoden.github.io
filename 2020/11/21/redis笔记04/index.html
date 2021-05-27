@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>redis笔记04 | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AKF概述12345graph TB	subgraph single	id1[redis 单机 单进程 缓存 数据库]	id1 --&gt; id((RDB AOF))	end  单机,单节点,单实例 1.单点故障 2.容量有限 3.压力 AKF &#x3D;&gt; xyz 12345678910111213141516171819202122232425262728graph LR		subgraph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis笔记04">
+<meta property="og:url" content="https://lemcoden.github.io/2020/11/21/redis%E7%AC%94%E8%AE%B004/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="AKF概述12345graph TB	subgraph single	id1[redis 单机 单进程 缓存 数据库]	id1 --&gt; id((RDB AOF))	end  单机,单节点,单实例 1.单点故障 2.容量有限 3.压力 AKF &#x3D;&gt; xyz 12345678910111213141516171819202122232425262728graph LR		subgraph">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-21T14:32:48.000Z">
+<meta property="article:modified_time" content="2021-01-24T08:45:55.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="内存数据库">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-redis笔记04" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/" class="article-date">
+  <time class="dt-published" datetime="2020-11-21T14:32:48.000Z" itemprop="datePublished">2020-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      redis笔记04
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="AKF概述"><a href="#AKF概述" class="headerlink" title="AKF概述"></a>AKF概述</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	subgraph single</span><br><span class="line">	id1[redis 单机 单进程 缓存 数据库]</span><br><span class="line">	id1 --&gt; id((RDB AOF))</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
+
+<p>单机,单节点,单实例</p>
+<p>1.单点故障</p>
+<p>2.容量有限</p>
+<p>3.压力</p>
+<p><strong>AKF =&gt; xyz</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph LR	</span><br><span class="line">	subgraph redis:x</span><br><span class="line">	id&#123;client&#125; --&gt; id1((redis:rw))</span><br><span class="line">	id1 -- x --&gt; id2((redis:r))</span><br><span class="line">	id2 --&gt; id3((redis:r))</span><br><span class="line">	id --&gt; id2</span><br><span class="line">	id --&gt; id3</span><br><span class="line">	style id1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis2</span><br><span class="line">	bu3[redis:rw] --y--- id1</span><br><span class="line">	bu3 --- id11[redis]</span><br><span class="line">	id11 --- id12[redis]</span><br><span class="line">	style bu3 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis1</span><br><span class="line">	bu2[redis:rw] --- bu3</span><br><span class="line">	bu2 --- id21[redis]</span><br><span class="line">	id21 --- id22[redis]</span><br><span class="line">	style bu2 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis</span><br><span class="line">	bu1[redis:rw] --- bu2</span><br><span class="line">	bu1 --- id31[redis]</span><br><span class="line">	id31 --- id32[redis]</span><br><span class="line">	style bu1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	id1 --z--&gt; id11</span><br></pre></td></tr></table></figure>
+
+<p><strong>AKF一变多</strong></p>
+<p>数据一致性问题</p>
+<p>所有节点阻塞直到数据全部一致</p>
+<ul>
+<li>同步方式</li>
+</ul>
+<p>强一致性</p>
+<p>极其容易破坏可用性!反问自己:为什么一边多? 解决可用性</p>
+<ul>
+<li>通过异步方式</li>
+</ul>
+<p>容忍数据丢失一部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --阻塞--&gt; id3((redis))</span><br><span class="line">	sum[强一致性,破坏可用性]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id3((redis))</span><br><span class="line">	sum[弱一致性&lt;br/&gt;丢失数据]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	client --set k1 a--&gt; id1((redis))</span><br><span class="line"> 	id1 --同步阻塞--&gt; id4[kafka &lt;br/&gt; 可靠,集群&lt;br/&gt;响应速度够快]</span><br><span class="line">    id4 --&gt; id2((redis))</span><br><span class="line">	id4 --&gt; id3((redis))</span><br><span class="line">	sum[最终数据会一致&lt;br/&gt; 有可能数据不一致]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>主从:</strong></p>
+<p>主从复制,主机有的数据从机也有</p>
+<p>客户端主从都可以访问</p>
+<p><strong>主备:</strong></p>
+<p>客户端只访问master</p>
+<p>备用机不参业务</p>
+<p><strong>主机</strong></p>
+<p>负责读写</p>
+<p>自己又是一个:单点</p>
+<p><strong><center>一般对主做高可用,自动的故障转移:代替人</center></strong></p>
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>人是怎么做监控的</center>
+
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>由一个技术,程序实现<br/>只要是一个程序就会有单点故障的问题,一变多的集群</center>
+
+<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
+
+<center>有一些不一样的地方</center>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id((redis)) --&gt; id1[监控]</span><br><span class="line">	id --&gt; id2[监控]</span><br><span class="line">	id --&gt; id3[监控]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">	id1[监控] --&gt; id((redis)) </span><br><span class="line">	id2[监控] --&gt; id</span><br><span class="line">	id3[监控] --&gt; id</span><br></pre></td></tr></table></figure>
+
+<p>都给出 OK</p>
+<p>强一致性</p>
+<p>一部分给出OK</p>
+<p>另一部分不算数</p>
+<p>几个?</p>
+<p>1,2</p>
+<p>推导:</p>
+<p><strong>1</strong>台统计不准确,不够势力范围</p>
+<p>问题:网络分区</p>
+<p>脑裂</p>
+<p><strong>2</strong> 在3个节点成功解决脑裂问题</p>
+<p><strong>3</strong> 在4个节点成功解决脑裂问题</p>
+<p><strong>4</strong> 在5个节点成功解决脑裂问题</p>
+<p>n/2+1 过半!</p>
+<p>使用奇数台!</p>
+<h4 id="x实际操作-主从复制"><a href="#x实际操作-主从复制" class="headerlink" title="x实际操作:主从复制"></a>x实际操作:主从复制</h4><p>启动安装redis-server脚本,6379,6380,6381</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 utils]$ sudo ./install_server.sh </span><br><span class="line">Welcome to the redis service installer</span><br><span class="line">This script will help you easily set up a running redis server</span><br><span class="line"></span><br><span class="line">Please select the redis port for this instance: [6379] 6380</span><br><span class="line">Please select the redis config file name [/etc/redis/6380.conf] </span><br><span class="line">Selected default - /etc/redis/6380.conf</span><br><span class="line">Please select the redis log file name [/var/log/redis_6380.log] </span><br><span class="line">Selected default - /var/log/redis_6380.log</span><br><span class="line">Please select the data directory for this instance [/var/lib/redis/6380] </span><br><span class="line">Selected default - /var/lib/redis/6380</span><br><span class="line">Please select the redis executable path [] /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Selected config:</span><br><span class="line">Port           : 6380</span><br><span class="line">Config file    : /etc/redis/6380.conf</span><br><span class="line">Log file       : /var/log/redis_6380.log</span><br><span class="line">Data dir       : /var/lib/redis/6380</span><br><span class="line">Executable     : /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Cli Executable : /opt/bigdata/module/redis5/bin/redis-cli</span><br><span class="line">Is this ok? Then press ENTER to go on or Ctrl-C to abort.</span><br><span class="line">Copied /tmp/6380.conf =&gt; /etc/init.d/redis_6380</span><br><span class="line">Installing service...</span><br><span class="line">Successfully added to chkconfig!</span><br><span class="line">Successfully added to runlevels 345!</span><br><span class="line">Starting Redis server...</span><br><span class="line">Installation successful!</span><br></pre></td></tr></table></figure>
+
+<p>拷贝配置文件到测试目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ cp /etc/redis/* ./</span><br><span class="line">[lemcoden@hadoop01 test]$ ls</span><br><span class="line">6379.conf  6380.conf  6381.conf</span><br><span class="line">[lemcoden@hadoop01 test]$ vim 6379.conf </span><br><span class="line">daemonize no</span><br><span class="line">#logfile /var/lib/redis/6379.log</span><br><span class="line">appendonly no</span><br></pre></td></tr></table></figure>
+
+<p>启动redis-server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">终端01</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端02</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端03</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br></pre></td></tr></table></figure>
+
+<p>启动redis-cli(略过)</p>
+<p>REPLICAOF命令 降级主机slave</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6380&gt; get k1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6380&gt; set k1 222</span><br><span class="line">(error) READONLY You can&#x27;t write against a read only replica.</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; set key2 ccc</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; get key2</span><br><span class="line">&quot;ccc&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; get key2 </span><br><span class="line">(nil)</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br></pre></td></tr></table></figure>
+
+<p>kill 6381主机后,6379设置多个key,然后启动6381(增量同步)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k3 aaa</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k4 444</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k2 4123313</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k5 141jddpfipj</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k6 sada</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k5&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line">5) &quot;k6&quot;</span><br><span class="line">6) &quot;k2&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果6381开启AOF ,则会产生RDB sync</p>
+<p>!!!!<strong>且RDB文件中不存在replicaID号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379 --appendonly yes</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.820 * Full resync from master: d93b72c43fc1777195b07d7546baf1b34a92fb4f:12772</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: receiving 240 bytes from master</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: Flushing old data</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Loading DB in memory</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Finished with success</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.919 * Background AOF rewrite terminated with success</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 6381]$ vim dump.rdb </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>假如Master宕掉,SLAVE升级为Master</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6381&gt; REPLICAOF no one </span><br><span class="line">OK</span><br><span class="line">16192:M 21 Nov 2020 05:18:36.965 * MASTER MODE enabled</span><br><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6381</span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>关于主从架构,conf文件的一些配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># replicaof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"># masterauth &lt;master-password&gt;</span><br><span class="line">如果redis刚启动,从Master复制数据期间,是否还支持本机old数据查询</span><br><span class="line">replica-serve-stale-data yes</span><br><span class="line">备机是否只支持查询</span><br><span class="line">replica-read-only yes</span><br><span class="line">是否直接使用网络复制</span><br><span class="line">repl-diskless-sync no</span><br><span class="line">增量复制文件大小,salve短时间下线情况发生时</span><br><span class="line"># repl-backlog-size 1mb</span><br><span class="line">最少几个replica写成功</span><br><span class="line"># min-replicas-to-write 3</span><br><span class="line"># min-replicas-max-lag 10</span><br></pre></td></tr></table></figure>
+
+<p>主从复制配置,需要人工维护主的故障问题</p>
+<h4 id="x实际操作-HA哨兵"><a href="#x实际操作-HA哨兵" class="headerlink" title="x实际操作:HA哨兵"></a>x实际操作:HA哨兵</h4><p>新建哨兵conf文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br></pre></td></tr></table></figure>
+
+<p>启动服务器,启动哨兵26379,26380,26381</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/26379.conf --sentinel</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.434 # +monitor master mymaster 127.0.0.1 6379 quorum 2</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.435 * +slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.442 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:34.614 * +sentinel sentinel aea8334513cd9abf6b18c40262915bd337033350 127.0.0.1 26380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:54.877 * +sentinel sentinel f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3 127.0.0.1 26381 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p> 退出6379,master,sentinal推演出新的leader,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">16806:X 21 Nov 2020 06:04:32.642 * +failover-state-send-slaveof-noone slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p><strong>sentinel通过发布订阅知道其他sentinel</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; PSUBSCRIBE *</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26380,aea8334513cd9abf6b18c40262915bd337033350,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26381,f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br></pre></td></tr></table></figure>
+
+<p>sentinel 配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$REDIS_SRC/sentinel.conf</span><br><span class="line">port 26379</span><br><span class="line">daemonize no</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+
+<h4 id="y概述"><a href="#y概述" class="headerlink" title="y概述"></a>y概述</h4><p>单节点副本解决了单点故障和压力的问题,但是容量问题没有解决</p>
+<p>容量client端解决方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-1:client&lt;br/&gt;融入逻辑,业务拆分&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br></pre></td></tr></table></figure>
+
+<p><em>sharding分片方式</em></p>
+<p>hash+取模</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client&lt;br/&gt;算法:hash+取模&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br><span class="line">	id1((弊端:取模的值必须固定,&lt;br/&gt;%3,&lt;br/&gt;%4&lt;br/&gt;影响分布式下的扩展性))</span><br></pre></td></tr></table></figure>
+
+<p>random lpush 适用于消息队列场景</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;random&lt;br/&gt;lpush]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br></pre></td></tr></table></figure>
+
+<p>一致性hash算法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;kemata&lt;br/&gt;一致性hash&lt;br/&gt;没有取模&lt;br/&gt;data,node]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br><span class="line">	id2 --&gt; id4((规划一个环形哈希:虚拟节点))</span><br><span class="line">	subgraph 映射算法</span><br><span class="line">	id1[hash&lt;br/&gt;crc&lt;br/&gt;fmv&lt;br/&gt;md5&lt;br/&gt;]</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
+
+<p>一致性Hash优点:</p>
+<p>你加节点,的确可以分担其他节点的压力,不会造成全局洗牌</p>
+<p>缺点:</p>
+<p>新增节点造成一小部分数据不能命中</p>
+<p>1.问题,缓存击穿,压到mysql</p>
+<p>2.方案,每次取离我最近的2个物理节点</p>
+<p>更倾向于作为缓存,而不是数据库</p>
+<p>弊端:</p>
+<p>3个模式不能做数据库用</p>
+<p>预分区</p>
+<h4 id="twemproxy安装"><a href="#twemproxy安装" class="headerlink" title="twemproxy安装"></a>twemproxy安装</h4><p>大部分直接按照官网的README操作</p>
+<p>编译完成之后,进入scrips目录</p>
+<p>将nutcracker.init copy到/etc/ini.d目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 scripts]$ sudo cp nutcracker.init /etc/init.d/twemproxy</span><br><span class="line">[lemcoden@hadoop01 init.d]$ sudo chmod +x twemproxy </span><br></pre></td></tr></table></figure>
+
+<p>新建/etc/nutcracker/</p>
+<p>将源码的config目录下的所有文件copy过来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 conf]$ sudo mkdir /etc/nutcracker/</span><br><span class="line">[lemcoden@hadoop01 conf]$ ls</span><br><span class="line">nutcracker.leaf.yml  nutcracker.root.yml  nutcracker.yml</span><br><span class="line">[lemcoden@hadoop01 conf]$ cp ./* /etc/nutcracker/</span><br></pre></td></tr></table></figure>
+
+<p>将src文件夹下的nutcracker可执行文件copy到/usr/bin/目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 src]$ sudo cp nutcracker /usr/bin/</span><br></pre></td></tr></table></figure>
+
+<p>新建redis数据文件夹,</p>
+<p>并手动启动redis-server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 nutcracker]$ cd ~</span><br><span class="line">[lemcoden@hadoop01 ~]$ mkdir data</span><br><span class="line">[lemcoden@hadoop01 ~]$ cd data/</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6380</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6380</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6380</span><br><span class="line">启动twemproxy代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ systemctl start twemproxy</span><br><span class="line">客户端链接代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 22121</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; keys *</span><br><span class="line">Error: Server closed the connection</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6380</span><br><span class="line">127.0.0.1:6380&gt; keys * </span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">2) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6379</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:22121&gt; MULTI</span><br><span class="line">Error: Server closed the connection</span><br></pre></td></tr></table></figure>
+
+<h4 id="predixy-安装"><a href="#predixy-安装" class="headerlink" title="predixy 安装"></a>predixy 安装</h4><p>上github,找到release包,下载下来,解压</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/joyieldInc/predixy/releases/download/1.0.5/predixy-1.0.5-bin-amd64-linux.tar.gz</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim predixy.conf</span><br><span class="line">#cluster.conf</span><br><span class="line">Include sentinel.conf</span><br><span class="line">#try.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim sentinel.conf</span><br><span class="line">    Sentinels &#123;</span><br><span class="line">        + 127.0.0.1:26379</span><br><span class="line">        + 127.0.0.1:26380</span><br><span class="line">        + 127.0.0.1:26381</span><br><span class="line">    &#125;</span><br><span class="line">    Group ooxx &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    Group xxoo &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>集群文件配置(sentinel)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26380</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26381</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>集群启动</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ redis-server 26379.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26380.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26381.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36380</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46380</span><br><span class="line">[lemcoden@hadoop01 predixy-1.0.5]$ ./bin/predixy conf/predixy.conf </span><br></pre></td></tr></table></figure>
+
+<p><strong>redis-cli实验</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 7617</span><br><span class="line">127.0.0.1:7617&gt; set k1 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k2</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k1 sdfsdfsdfs</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k2 sdasdasfasfqad</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">(error) ERR forbid transaction in current server pool</span><br><span class="line">127.0.0.1:7617&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p  46379</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;&#123;oo&#125;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;&#123;oo&#125;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli  -p 36379</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; </span><br></pre></td></tr></table></figure>
+
+<p><strong>不支持事务,所以试验单主从</strong></p>
+<p>修改config</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; set k1 sdasfa</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 asdada</span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1 </span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 2222</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; exec</span><br><span class="line">1) &quot;sdasfa&quot;</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
+
+<p>kill掉36379进程,哨兵会自动选择,在代理层是感觉不到的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kill掉36379进程之后</span><br><span class="line">127.0.0.1:7617&gt; get k1</span><br><span class="line">&quot;sdasfa&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="redis官方集群样例"><a href="#redis官方集群样例" class="headerlink" title="redis官方集群样例"></a>redis官方集群样例</h4><p>去redis源码的utils/create-cluster目录下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ vim create-cluster </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">Starting 30001</span><br><span class="line">Starting 30002</span><br><span class="line">Starting 30003</span><br><span class="line">Starting 30004</span><br><span class="line">Starting 30005</span><br><span class="line">Starting 30006</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster create</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:30005 to 127.0.0.1:30001</span><br><span class="line">Adding replica 127.0.0.1:30006 to 127.0.0.1:30002</span><br><span class="line">Adding replica 127.0.0.1:30004 to 127.0.0.1:30003</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">Can I set the above configuration? (type &#x27;yes&#x27; to accept): </span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">..</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">客户端</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -c  -p 30001 (cluster集群模式)</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; get k1</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; set k2 sdfsdsf</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; get k2</span><br><span class="line">&quot;sdfsdsf&quot;</span><br><span class="line">127.0.0.1:30001&gt; get k1</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; WATCH k2</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set k1 232323456</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; set sdfsdf sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; exec</span><br><span class="line">(error) ERR EXEC without MULTI </span><br><span class="line">(事务中重定向不同的进程的命令会失败)</span><br><span class="line"></span><br><span class="line">127.0.0.1:30003&gt; set &#123;oo&#125;k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [1629] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k3 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 234234</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; get  &#123;oo&#125;k3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; exec</span><br><span class="line">1) OK</span><br><span class="line">2) &quot;sdfsdf&quot;</span><br><span class="line">(可以在事务中给key添加相同的前缀)</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端分赃"><a href="#客户端分赃" class="headerlink" title="客户端分赃"></a>客户端分赃</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster create 127.0.0.1:30001 127.0.0.1:30002 127.0.0.1:30003 127.0.0.1:30004 127.0.0.1:30005 127.0.0.1:30006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+
+<p>客户端重新分片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster reshard 127.0.0.1:30001</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">How many slots do you want to move (from 1 to 16384)? 2000</span><br><span class="line">What is the receiving node ID? 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">Please enter all the source node IDs.</span><br><span class="line">  Type &#x27;all&#x27; to use all the nodes as source nodes for the hash slots.</span><br><span class="line">  Type &#x27;done&#x27; once you entered all the source nodes IDs.</span><br><span class="line">Source node #1: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">Source node #2: done</span><br><span class="line"></span><br><span class="line">检查使用info或者check命令</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster info 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster check 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[2000-5460] (3461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[0-1999],[5461-10922] (7462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head> 
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script> 
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/v4-shims.js"></script> 
+</head> 
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/11/21/redis%E7%AC%94%E8%AE%B004/" data-id="ckp6jsm2w004uz0n0c4qbbm9f" data-title="redis笔记04" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          redis笔记05
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">redis笔记03</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

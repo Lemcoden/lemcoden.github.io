@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>hexo优化:github+coding双搭建，域名CNAME别称指向 | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前情提要:hexo + github 搭建教程记录一次github + hexo 文件的迁徙 前言    填一下之前搭建博客的坑，之前发布了一篇搭建hexo的博客，有读者(无中生读者)反应，博客搭建完之后，网站访问很慢，的确，在这样的快节奏时代，超过5秒的网页大家都不想打开，所以笔者写了这篇关于博客的优化(感觉不能算作优化，只是填坑)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo优化:github+coding双搭建，域名CNAME别称指向">
+<meta property="og:url" content="https://lemcoden.github.io/2020/05/20/hexo%E4%BC%98%E5%8C%96-github-coding%E5%8F%8C%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%9F%9F%E5%90%8DCNAME%E5%88%AB%E7%A7%B0%E6%8C%87%E5%90%91/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="前情提要:hexo + github 搭建教程记录一次github + hexo 文件的迁徙 前言    填一下之前搭建博客的坑，之前发布了一篇搭建hexo的博客，有读者(无中生读者)反应，博客搭建完之后，网站访问很慢，的确，在这样的快节奏时代，超过5秒的网页大家都不想打开，所以笔者写了这篇关于博客的优化(感觉不能算作优化，只是填坑)。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_regist.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_registe_step1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_person.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_pub_id.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_cipher.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/ssh_coding.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_new_project.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_pages_url.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/emoticon1.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/godaddy_dns.jpgraw=true">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/godaddy_dns_server.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/godaddy2dnspod.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/dnspod_record.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_bind_domain.jpg">
+<meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/github_bind_domain.jpg">
+<meta property="article:published_time" content="2020-05-20T05:17:20.000Z">
+<meta property="article:modified_time" content="2020-11-09T13:19:08.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="博客搭建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://picture.lemcoden.xyz/blog_optimize/coding_regist.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-hexo优化-github-coding双搭建，域名CNAME别称指向" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/05/20/hexo%E4%BC%98%E5%8C%96-github-coding%E5%8F%8C%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%9F%9F%E5%90%8DCNAME%E5%88%AB%E7%A7%B0%E6%8C%87%E5%90%91/" class="article-date">
+  <time class="dt-published" datetime="2020-05-20T05:17:20.000Z" itemprop="datePublished">2020-05-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      hexo优化:github+coding双搭建，域名CNAME别称指向
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>前情提要:<br><a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/01/05/hexo-github-%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">hexo + github 搭建教程</a><br><a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/01/06/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1github-hexo-%E6%96%87%E4%BB%B6%E7%9A%84%E8%BF%81%E5%BE%99/">记录一次github + hexo 文件的迁徙</a></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><pre><code>    填一下之前搭建博客的坑，之前发布了一篇搭建hexo的博客，有读者(无中生读者)反应，博客搭建完之后，网站访问很慢，的确，在这样的快节奏时代，超过5秒的网页大家都不想打开，所以笔者写了这篇关于博客的优化(感觉不能算作优化，只是填坑)。
+</code></pre>
+<span id="more"></span>
+
+<h3 id="追究起因"><a href="#追究起因" class="headerlink" title="追究起因"></a>追究起因</h3><p>博客访问慢，追究其原因，主要是github的服务器在境外，域名解析的时候难免要绕几个圈子，那怎么办呢？<del>让读者修改hosts文件</del>，~ε=ε=ε=(~￣▽￣)~，当然不会了，这种事当然是我们服务端解决。<br/><br>好的回正题，我们可以利用域名解析CNAME，通过CNAME,我们把代码托管的服务器分为境内和境外，境内用coding托管平台的pages（静态网站服务），境外使用github平台的pages，这样我们在境内访问的时候，切到coding的服务器，访问会变得非常便捷。</p>
+<h3 id="coding项目托管"><a href="#coding项目托管" class="headerlink" title="coding项目托管"></a>coding项目托管</h3><p>其实境内的代码托管平台很多，有码云，阿里云，华为云,想挑战一下的可以试试这些代码平台，这里给出coding的解决方法，因为对于新手来说，coding提供的pages服务（帮助文档一看就懂）相对比较简单，适合个人建站。<br/></p>
+<h4 id="注册登录（觉得too-easy，可跳）"><a href="#注册登录（觉得too-easy，可跳）" class="headerlink" title="注册登录（觉得too easy，可跳）"></a>注册登录（觉得too easy，可跳）</h4><p>打开浏览器，输入coding.net,回车访问<br/><br>点击右上角注册<br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_regist.png" alt="coding主页"><br/></p>
+<p><img src="http://picture.lemcoden.xyz/blog_optimize/coding_registe_step1.png" alt="注册"><br/><br>还记得之前建站的博客名字吗？这次我们同样的，博客名字要和团队名称，登陆地址一模一样，便于部署。<br>接下来填名字邮箱什么的就不说了，按自己个人情况填就可以，最后邮箱验证一下ok，完成注册。</p>
+<h4 id="设置免密登陆（可跳）"><a href="#设置免密登陆（可跳）" class="headerlink" title="设置免密登陆（可跳）"></a>设置免密登陆（可跳）</h4><p>如果你想方便一点，不想每次进入coding都输入密码，每次上传代码都输入密码的话，我们可以设置ssh免密登陆。<br/><br>具体操作：<br/><br>打开dos或者终端命令行<br/><br>windows系统进入C：/用户（也可能是user）/你的用户名/<br/><br>linux系统进入：/home/你的用户名/<br/><br>输入</p>
+<pre><code>ssh-keygen -m PEM -t rsa -b 4096 -C 注册的邮箱地址
+</code></pre>
+<p>命令生成密钥<br>然后一路回车<br/><br>之后你会发现该路径下有一个.ssh文件，进入，用文本编辑器打开id_rsa.pub,复制里面的所有内容<br/><br>然后进入coding主页面，点击右上角个人设置→ SSH公钥 → 新增公钥<br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_person.png" alt="coding主页"><br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_pub_id.png" alt="coding个人设置"><br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_cipher.png" alt="coding个人设置"><br>公钥名称随便写，便于记忆就可以，公钥内容帮我们之前复制的id_rsa.pub的内容粘贴进去就可以。<br/><br>自己定义一下有效期，点击添加，这样我们以后用注册过密钥的电脑登陆就不再需要密码了。<br/></p>
+<h4 id="免密部署（可跳）"><a href="#免密部署（可跳）" class="headerlink" title="免密部署（可跳）"></a>免密部署（可跳）</h4><p><font color=HotPink>这里建议看完后面的项目建立之后再回来设置</font><br/><br>免密部署和免密登陆很相似，首先我们在刚刚的.ssh文件夹中再次输入命令</p>
+<pre><code>ssh-keygen -m PEM -t rsa -b 4096 -C 注册的邮箱地址
+</code></pre>
+<p>然后这一次不要一路回车，等出现下面的log<br><img src="http://picture.lemcoden.xyz/blog_optimize/ssh_coding.png" alt="coding个人设置"> <br/><br>我们输入id_deploy,之后再一路回车，<br/><br>我们会在.ssh文件夹新增了两个文件id_deploy还有id_deploy.pub,<br/><br>老规矩，编辑器复制内容，进入coding控制台 → 全部项目 → 选中你建立的项目 → 代码仓库 → 设置 → 部署公钥 <br/><br>按免密登陆的方式复制添加就可以。<br/></p>
+<h4 id="新建-amp-部署项目"><a href="#新建-amp-部署项目" class="headerlink" title="新建&amp;部署项目"></a>新建&amp;部署项目</h4><p>工作台 → 全部项目 → 新建项目<br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_new_project.png" alt="coding个人设置"><br>这里需要注意，要选择DevOps项目，前两个没有pages服务的，新建了也没用，<del>笔者曾栽入此坑</del><br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png" alt="coding个人设置"><br>这里老规矩了，项目名称，仓库名称和github，博客名字一致，选git仓库，最后点击完成创建<br>项目创建好之后<br>我们进入项目管理界面，<br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png" alt="coding个人设置"><br>进入代码仓库 → 设置<br>点击复制仓库链接（登录输入帐号密码的用https,如果是ssh免密的复制ssh），然后回到我们之前的hexo博客文件中<br>打开config.yml文件<br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_np_step1.png" alt="coding个人设置"><br>将我们原来的部署设置添加一个coding项目，coding后面添加我们刚刚复制的仓库链接<br>然后再source文件新建两个文件，第一个CNAME文件，内容填你的域名比如lemcoden.xyz<br>第二个Staticfile文件，什么都不用填</p>
+<p>之后就hexo部署玩起来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<p>然后刷新一下coding的代码仓库，验证是否有更新。</p>
+<h4 id="设置pages"><a href="#设置pages" class="headerlink" title="设置pages"></a>设置pages</h4><p>还是项目管理界面，找到持续部署 → 静态网站，点击开通，对就这么简单。<br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_pages_url.jpg" alt="coding个人设置"><br>不过记得复制一下这个网站地址，等一下要用</p>
+<h3 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h3><h4 id="Godaddy的坑"><a href="#Godaddy的坑" class="headerlink" title="Godaddy的坑"></a>Godaddy的坑</h4><p>关于上次hexo的搭建还有一个坑，那就是笔者推荐了Godaddy的域名，但是显然，官网推广做的很好，根本不需要推荐，毕业当时作为小萌新也是有那种“既然大家都在用，那一定很不错”的想法，然而，只能说<br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/emoticon1.jpg" alt="coding个人设置"><br>官网访问特别慢，DNS解析做的也不是很好，CNAME和A记录死活配置不上去，这也就是为什么笔者当时使用是域名转址而不是CNAME别称的原因。<br/><br>但是域名转址有很大的缺陷，即使是对用户来说，要是显式跳转吧，直接跳转到github的pages，地址栏上的github.io的后缀就很扎眼，如果是隐式跳转吧，进入某个具体的博文，地址栏也不会显示路径，想分享复制URL就很困难。<br/><br>所以如果读者想尝试其他域名提供商，笔者推荐namecheap或者namesoil，来自某踩过Godaddy坑的前辈的经验<br/><br>如果你已经在Godaddy注册了域名也没关系，Godaddy的DNS解析服务是可以转出的，<br/></p>
+<h4 id="DNSPod解析"><a href="#DNSPod解析" class="headerlink" title="DNSPod解析"></a>DNSPod解析</h4><p>在这里笔者也选择同为腾讯的DNSPod作为解析服务商。<br/><br>首先我们还需要最后在Godaddy走一趟,<del>真的最后一次doge</del><br/><br>进入官网 → 右上角登录 → 右上角菜单我的产品 → 点击你的域名旁边的DNS <br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/godaddy_dns.jpgraw=true" alt="godaddy我的产品"><br><img src="http://picture.lemcoden.xyz/blog_optimize/godaddy_dns_server.jpg" alt="godaddy Dns设置"><br><img src="http://picture.lemcoden.xyz/blog_optimize/godaddy2dnspod.jpg" alt="godaddy DnsPod服务器"><br>到，域名服务器那里，点击更改<br/><br>选择我将使用自己的域名服务器， <br/><br>下面两个地址栏填入DNSPod的解析服务器地址，即<br/></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f1g1ns1.dnspod.net</span><br><span class="line">f1g1ns2.dnspod.net</span><br></pre></td></tr></table></figure>
+<p>点击保存，好了现在我们的DNS解析服务就已经转到DNSPod上了<br/><br>接下来去<a target="_blank" rel="noopener" href="https://www.dnspod.cn/">DNSPod官网</a><br>注册登陆就不用笔者说了吧~~,<del>感觉这次写太长了，所以偷懒省略了(๑•̀ㅂ•́)و✧</del><br/><br>注册登陆后，点击右上的管理控制台 → 选择DNS解析 → 我的域名 → 添加域名，将我们在Godaddy的域名输入<br/><br>点击添加，添加之后如果状态是失败的话，也不要着急，godaddy那边轮询DNS可能需要十几分钟，我们先做下面的。<br/><br>这里笔者重点挑出一个坑，就是点击域名之后在域名设置里面下面的功能设置<font color=#00FF00>一定，一定，一定要开启CNAME优化</font>（搜索引擎优化也可以加），否则添加解析记录的时候，你会找不到CNAME域名的类型<br/><br>解析的最后一步，添加DNS解析记录。笔者先给出DNS记录，然后慢慢解释。<br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/dnspod_record.jpg" alt="DnsPod域名记录"><br><font color=HotPink>下面的解析记录，关于github的所有记录请先不要添加，等绑定coding域名时，申请完证书之后，再添加</font> <br/><br>首先基本的4个CNAME记录类型的记录，<br/><br>其中两个主机记录为@,两个主机记录为www。<br/><br>&emsp;首先说@记录，一个指向我们github的pages地址，一个指向我们刚刚复制的coding的pages地址，<br/><br>&emsp;然后www记录，一个指向我们的github记录的pages地址，一个指向我们刚刚复制的coding地址。<br/><br>&emsp;&emsp;其中github的指向记录线路设为境外，coding的指向记录设为境内<br/><br>&emsp;&emsp;如果出现提示线路必须有默认，建议把coding设置为默认（和图片有点出入，作者懒得改了）。<br/><br>最后一个记录是github的证书服务器IP。<br>进入coding的静态网站项，点击右上角设置，<br><img src="http://picture.lemcoden.xyz/blog_optimize/coding_bind_domain.jpg" alt="coding绑定域名"><br>绑定一下域名,绑定成功之后，coding会自动申请证书。等证书设置完成之后，再将github相关的解析记录添加。<br>最后两步，去gitthub 项目里的Settings页面找 github Pages选项，如果选项显示还没有绑定域名的话<br/><br><img src="http://picture.lemcoden.xyz/blog_optimize/github_bind_domain.jpg" alt="github设置"><br>在解析记录里添加一条github的证书服务器的记录，记录类型为A，记录内容为一下IP的任意一个（一项不行，换另一项）<br/></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">185.199.108.153</span><br><span class="line">185.199.109.153</span><br><span class="line">185.199.110.153</span><br><span class="line">185.199.111.153</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/05/20/hexo%E4%BC%98%E5%8C%96-github-coding%E5%8F%8C%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%9F%9F%E5%90%8DCNAME%E5%88%AB%E7%A7%B0%E6%8C%87%E5%90%91/" data-id="ckp6jsm1k000nz0n0022hfdhq" data-title="hexo优化:github+coding双搭建，域名CNAME别称指向" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/21/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3--%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E5%A3%B9/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇壹
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/26/taking-the-work-out-of-networking-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%87%8A%E6%94%BE%E5%86%85%E5%90%91%E8%80%85%E6%BD%9C%E5%9C%A8%E7%9A%84%E8%83%BD%E9%87%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">taking the work out of networking:第一章 释放内向者潜在的能量</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

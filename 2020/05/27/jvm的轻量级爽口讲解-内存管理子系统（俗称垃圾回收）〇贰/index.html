@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰 | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前情提要jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹 上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。 jvm内存为什么使用可达性分析算法而不是使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰">
+<meta property="og:url" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="前情提要jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹 上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。 jvm内存为什么使用可达性分析算法而不是使用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process1.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process2.png">
+<meta property="article:published_time" content="2020-05-27T13:38:52.000Z">
+<meta property="article:modified_time" content="2020-06-25T04:03:44.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="jvm虚拟机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇贰" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-05-27T13:38:52.000Z" itemprop="datePublished">2020-05-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h4><p><a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/05/21/jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇壹/">jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹</a></p>
+<p><code>上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。</code></p>
+<h3 id="jvm内存为什么使用可达性分析算法而不是使用引用计数器算法实现内存块的标记"><a href="#jvm内存为什么使用可达性分析算法而不是使用引用计数器算法实现内存块的标记" class="headerlink" title="jvm内存为什么使用可达性分析算法而不是使用引用计数器算法实现内存块的标记"></a><font color=#3.5169E1>jvm内存为什么使用可达性分析算法而不是使用引用计数器算法实现内存块的标记</font></h3><h3 id="标记之后再回收？"><a href="#标记之后再回收？" class="headerlink" title=" 标记之后再回收？"></a><font color=#3.5169E1> 标记之后再回收？</font></h3><p>关于整理的书籍，笔者有一本书推荐给大家，那就是 近藤麻理惠的《怦然心动的人生整理魔法》，近藤麻理惠是日本比较出名的整理大师，笔者最喜欢书中大师最核心的思想，也和我们这一章节要讲的东西很有关系，那就是要学会丢弃，一旦我们判定手中的东西，以后不再使用就可以丢弃他们。<br/><br>作为面向对象的特性，我们甚至可以直接用现实中的整理，类比内存整理，就像那本书的核心思想一样，我们首先要确定内存是否是需要丢弃的垃圾内存，在垃圾回收器这里这个方法我们把它叫做标记算法，嗯对，先标记内存是否可用，再去回收，没毛病。<br/><br>那么我们目前哪些内存标记算法呢？一共两种一种是引用计数器算法，一种是可达性分析算法。</p>
+<h3 id="引用计数器算法-amp-可达性分析算法"><a href="#引用计数器算法-amp-可达性分析算法" class="headerlink" title=" 引用计数器算法&amp;可达性分析算法"></a><font color=#3.5169E1> 引用计数器算法&amp;可达性分析算法</font></h3><h4 id="引用计数器算法"><a href="#引用计数器算法" class="headerlink" title=" 引用计数器算法"></a><font color=#3.5169E1> 引用计数器算法</font></h4><p>他的实现很简单，就是给内存中存在的对象添加一个计数器，但它被引用时，它的计数器数值就加一，当它的引用数值变成0，就会被标记为垃圾对象，对其进行回收。<br/><br>引用计数器算法，在垃圾回收领域应用很广泛，包括 Action Script3的FlashPlayer,Python语言以及游戏脚本领域得到许多应用的Squirrel都是使用引用计数器算法，但是在Java领域中却不是这样，我们主流的Java虚拟机（Hotspot,J9等）都没有选用引用计数器算法来标记内存，<br>主要原因是，这个看似实现简单的原理，却有很多意外情况需要处理，比如说比较突出的循环引用问题，<br/><br>举个例子，我们新建两个实例A和B，<br/><br>A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br>然后我们把A,B实例置空，<br/><br>如果我们的语言使用的引用计数器算法，那么我们的A,B变量将不会被回收，因为实例本身为空了，但是变量的引用还为1。<br/></p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title=" 可达性分析算法"></a><font color=#3.5169E1> 可达性分析算法</font></h4><p><font color="#FFC0CB">通过一系列称为“GC Roots”的根对象作为起始节点，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路程称为“引用链”。</font><br/><br>感觉整个描述比较抽象，不过没关系，一般抽象的概念，在使用过程当中会变得具体，之后笔者会讲分代收集从某些方面是如何应用可达性分析算法，以及如何进行并发状态下的可达性收集，当讲到这一部分的时候，读者可以再会头看看这里。<br/><font size=2>（为了便于回头查找，笔者先把这行文字标识为粉色）</font><br>因为读者表述能力不足，下面这个关于GC Roots一般都包括哪些只能硬背了。</p>
+<ul>
+<li>在虚拟机栈中（栈帧中的本地变量表）中引用的对象，譬如各个线程被调用方法堆栈中的参数、局部变量、临时变量等。</li>
+<li>在方法区中类静态属性引用的对象，譬如Java类的引用类型静态变量。</li>
+<li>在方法区中常量引用的对象，譬如字符串常量池里的引用</li>
+<li>在本地方法栈帧中JNI（即通常所说的Native方法）引用的对象</li>
+<li>Java虚拟机内部的引用，如基本数据类型对应的Class对象，一些常驻的异常对象（比如NullPonitExeception、OutofMemoryError）等，还有系统类加载器。</li>
+<li>所有被同步锁（synchronized 关键字）持有的对象</li>
+<li>反映Java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等<br>为了更形象的表示GC Root的标记过程笔者给出图片</li>
+</ul>
+<p><img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png" alt="gc_root"></p>
+<p>图片如上。我们通过GC Root节点往下查找他引用的节点，然后再继续查找引用的节点引用的节点<del>禁止套娃</del>，就这样将所有关于GC Root的引用链路查找完毕，最后将那些没有在引用链路中的节点标识为垃圾节点，进行回收<br/></p>
+<h4 id="Stop-the-world？并行-and-并发？"><a href="#Stop-the-world？并行-and-并发？" class="headerlink" title="Stop the world？并行 and 并发？"></a><font color=#3.5169E1>Stop the world？并行 and 并发？</font></h4><p>既然可达性分析算法已经讲了，那我们顺便聊聊，标记算法的重点特性，我们知道在jvm虚拟机运行过程中的线程分为两大类，分别是<font color=#00FF00> 用户线程和垃圾回收线程</font> <br><br>两个线程都会对我们上面的引用链路进行操作，那么问题就出来了，<br/><br>如果垃圾回收线程在引用链路查找过程中，用户突然对查找过的引用进行变更操作，那么势必会使回收的变量产生问题，<br/><br>所以，当垃圾回收线程在进行标记的过程中，会让用户线程进入短时间的停顿。这个现象被形象的称之为<font color=#00FF00>Stop the world</font>。所以说Java程序运行过程中，如果使用内存量大的话，用户会感到有明显的<font color=#00FF00>停<br>顿</font>。<br/><br>对，就是<font color=#00FF00>停顿</font>，这是我们对GC回收优化的一个重要指标，如果你是Web端的服务程序，那么停顿时间这个指标是你的优化首选，毕竟没有哪个用户希望，在他使用服务的过程中经常出现明显的卡顿。<br/><br>好的，讲到停顿，那么我们可不可以不进行停顿呢？答案是当然的,我们可以让用户线程和垃圾回收线程进行<font color=#00FF00>并发执行</font>。<br/><br>什么？并发?对就是读者所理解的让回收线程和用户线程抢占CPU的时间片，但是这样子还会出现上面那种情况，用户修改标记过后的引用链路，导致回收了错误的对象或者叫变量。这个…………由于篇幅有限，这个问题的答案以及原理我们放到下一篇当中。（还有一个优化指标吞吐量和这个有关系）</p>
+<h3 id="回收算法-amp-内存分代"><a href="#回收算法-amp-内存分代" class="headerlink" title="回收算法&amp;内存分代"></a><font color=#3.5169E1>回收算法&amp;内存分代</font></h3><p>既然我们聊完标记了，那么标记之后的回收我们也来聊一聊，应该怎么回收这些垃圾，对垃圾进行分类，哪种垃圾的用哪种算法回收效率最高。<br/><br>关于标题的三个回收算法想必大家都已经很熟悉了，这里就简单用图提点一下概念。重点讲为什么？<br/></p>
+<h4 id="回收-清除算法"><a href="#回收-清除算法" class="headerlink" title="回收-清除算法"></a><font color=#3.5169E1>回收-清除算法</font></h4><p>回收算法中简单，最基础的算法，其实就是把标记过后的内存直接清除掉，这样的处理的有点是处理方式简单，回收效率高，但是正因为简单，没有考虑之后的内存插入，可能会导致后面，大对象的插入，会让计算机查找很长时间寻找连续的内存，具体怎么回收直接看下面的简图。<br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process.png" alt="思维导图"></p>
+<h4 id="标记-复制算法"><a href="#标记-复制算法" class="headerlink" title="标记-复制算法"></a><font color=#3.5169E1>标记-复制算法</font></h4><p>为了标记清除算法的缺陷，基于标记-清除算法，又出现了标记-复制算法，简单来说，就是预留一半的内存区域，回收之后，将存活的内存对象紧密排列到预留的区域当中，这样当然可以回收过后得到规整的可用内存区域。但是缺点也很明显，我们需要两倍的内存空间来做，能不能减少预留的空间呢？当然可以，要解决这个问题，我们需要先回到GC的分代问题，为什么jvm内存要分年轻代，老年代？相信大家都知道，jvm堆内存主要分为年轻代，老年代，而年轻代，基本都是使用的标记-复制算法，所谓年轻代，就是内存区域中的大部分对象都是“朝生夕死”的。内存赋值之后，很快就会被标记为可回收，那么我们在年轻代进行回收的时候，就会回收到大量的垃圾对象，而余下存活的对象很少，这样我们就可以把标记-复制算法的预留区域设置的少一点，降低一点标记-复制算法所消耗的内存，在最常用的jvm Hotspot虚拟机当中，<font color=#00FF00>年轻代默认的主内存（eden区）和预留内存（suvivor1区和suvivor2区）</font>的内存比例就达到了8：1：1的比例，也就是两个预留区总共占用百分之20的内存<br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process1.png" alt="思维导图"></p>
+<h4 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a><font color=#3.5169E1>标记-整理算法</font></h4><p>除了设置预留区域之外，我们还可以在内存回收之后进行内存的整理，这样我们也可以使用比较规整的内存区域，其抽象的过程就如下图，但是，如果我们内存回收之后，各个存活对象之间的空白区域很多，那么整理对于我们的回收线程是特别消耗时间和性能的事情，所以我们要找那种回收过程中要回收垃圾对象比较少的区域，这样回收之后，空白区域预留的比较少，可以消耗比较较少的计算资源进行整理，看到这里，你应该能反应到了吧，对就是老年代，这种回收方式对于老年代的内存是再合适不过了，因为老年代中的对象存活率比较高，产生的垃圾对象相对较少。<br><img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process2.png" alt="思维导图"></p>
+<p>好的，此篇博客基本就讲到这里，我把这此所讲述的问题列出来，当然有些问题仅仅是解决了一半而已，比如说，停顿具体是怎样实现的，并发标记是如何做的，还有一个没有列出来的，记忆集是怎么来的等等，这些问题笔者会在下一篇中写出答案，以下是我的问题列表：</p>
+<ul>
+<li>垃圾 标记算法有哪些，为什么使用可达性分析算法，而不是引用计数器算法？</li>
+<li>jvm回收线程在标记过程中是否会造成停顿，为什么？</li>
+<li>垃圾回收算法有哪些，分别什么作用，他和内存分代有什么关系？</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/" data-id="ckp6jsm1r0017z0n058291upj" data-title="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/09/%E6%B3%B0%E6%8B%89%E7%91%9E%E4%BA%9A-%E5%8D%8E%E5%A4%8F%E4%B8%96%E7%95%8C%E5%90%84%E7%BA%A7%E8%81%8C%E7%A7%B0%E6%9D%83%E9%99%90%E7%AE%80%E4%BB%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          泰拉瑞亚-华夏世界各级职称权限简介
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/21/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3--%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E5%A3%B9/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇壹</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

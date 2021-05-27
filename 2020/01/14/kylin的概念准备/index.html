@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>使用kylin前，你需要知道？ | Lemcoden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="为什么要使用Kylin在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用kylin前，你需要知道？">
+<meta property="og:url" content="https://lemcoden.github.io/2020/01/14/kylin%E7%9A%84%E6%A6%82%E5%BF%B5%E5%87%86%E5%A4%87/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="为什么要使用Kylin在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png">
+<meta property="og:image" content="http://picture.lemcoden.xyz/kylin/kylin_architecture.png">
+<meta property="article:published_time" content="2020-01-14T12:23:58.000Z">
+<meta property="article:modified_time" content="2020-06-25T04:02:34.000Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="数据仓库框架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Lemcoden" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Lemcoden</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">来自于大数据攻城狮的分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lemcoden.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-kylin的概念准备" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/01/14/kylin%E7%9A%84%E6%A6%82%E5%BF%B5%E5%87%86%E5%A4%87/" class="article-date">
+  <time class="dt-published" datetime="2020-01-14T12:23:58.000Z" itemprop="datePublished">2020-01-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      使用kylin前，你需要知道？
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="为什么要使用Kylin"><a href="#为什么要使用Kylin" class="headerlink" title="为什么要使用Kylin"></a>为什么要使用Kylin</h3><p>在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。<br>那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。<br>在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，它通过自己所独有的预计算功能，将原来查询所需的几个小时缩短为秒内返回。</p>
+<h3 id="使用kylin前的几个概念"><a href="#使用kylin前的几个概念" class="headerlink" title="使用kylin前的几个概念"></a>使用kylin前的几个概念</h3><p><font color="#FFA500">维度</font>：看待事物的角度，比如时间，地点，销售量，销售物品类别<br><font color="#FFA500">度量</font>：被聚合的统计值，也就是聚合运算的结果，它一般事连续的值。<br><font color="#FFA500">Cube</font>：数据魔方，我们传统的数据库的表字段在数据仓库的分析前，会先把字段转化为相应的维度和度量，维度和度量组成了整体的Cube<br><font color="#FFA500">Cubeboid</font>：我们通过维度和度量预先计算出所有查询的可能结果，每种可能结果的实体我们称之为Cuboid<br><font color="#FFA500">星型模型</font>：星型模型，雪花模型，事实星座模型主要是数据建模相关工作需要深度了解的知识，这里我简单举个例子，有兴趣的小伙伴可以自行查询。</p>
+<h3 id="kylin的工作过程"><a href="#kylin的工作过程" class="headerlink" title="kylin的工作过程"></a>kylin的工作过程</h3><h4 id="1-指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）"><a href="#1-指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）" class="headerlink" title="1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）"></a>1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）</h4><h4 id="2-预计算Cube，计算所有Cuboid并保存为物化视图。"><a href="#2-预计算Cube，计算所有Cuboid并保存为物化视图。" class="headerlink" title="2.预计算Cube，计算所有Cuboid并保存为物化视图。"></a>2.预计算Cube，计算所有Cuboid并保存为物化视图。</h4><p>这个我们举个例子，比如我们有一个电商的销售数据集，其中维度包括时间（Time）,商品（Item）,地点（Location）和供应商（Supplier），度量为销售额（GMV）那么所有的维度组合就有2^4=16种组合，其维度所构成的所有组合表如下<br><img src="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png" alt="kylin_all_cuboid"><br>上图每个原点代表一个cubiod，中括号的标识，表示这个cubiod所包含的查询维度<br>那么具体的内容是什么样的？<br>我们以Cuboid[Time，Location]为例，它所对应的SQL语句如下：<br>select Time，Location，Sum（GMV） as GMV from Sales group by Time, Location<br>根据以上SQL语句，我们不难想象出其查询的具体内容</p>
+<h4 id="3-执行查询时，读取Cuboid，运算，产生查询结果。"><a href="#3-执行查询时，读取Cuboid，运算，产生查询结果。" class="headerlink" title="3.执行查询时，读取Cuboid，运算，产生查询结果。"></a>3.执行查询时，读取Cuboid，运算，产生查询结果。</h4><h3 id="kylin的技术架构"><a href="#kylin的技术架构" class="headerlink" title="kylin的技术架构"></a>kylin的技术架构</h3><p>和其他经典的大数据框架一样，我们先给出技术架构图<br><img src="http://picture.lemcoden.xyz/kylin/kylin_architecture.png" alt="kylin技术架构"><br>我们先看最左边，kylin以hive作为数据源，数据格式为星型模式的关系表形式（只支持星型模式，雪花模式可以自行转换），通过mapreduce作为计算框架来构建cube，构建完成后，保存cube的索引值到右侧的HBase当中，当用户有查询需求的时候，可以通过Kylin开放的RestApi,JDBC/ODBC接口。<br>PS：路由功能已弃用，数据源，构建引擎以及存储引擎可以替换，比如把hive替换为Kafka，Mapreduce替换为Spark，Hbase可以替换为Kudu等等。</p>
+<h3 id="Kylin的主要特点"><a href="#Kylin的主要特点" class="headerlink" title="Kylin的主要特点"></a>Kylin的主要特点</h3><p><font color="#FFA500">SQL接口</font>：对用户提供最简单的SQL接口，降低使用要求<br><font color="#FFA500">支持超大数据集</font>：理论上Kylin可以支撑的数据集大小没有上限，仅受限于存储系统的分布式计算系统的承载能力<br><font color="#FFA500">压秒级查询</font>：得益于Kylin的预计算，比如连接、聚合，在理想的预计算过程种就已经完成，这大大降低了查询实课所需要的计算量，提高了响应速度。<br><font color="#FFA500">BI及可视化工具集成</font>：ODBC接口,JDBC接口，Rest API，分析师可以沿用最熟悉的BI工具于Kylin一同工作。<br><font color="#FFA500">查询速度</font>：0（1）常数计划别的查询速度。也就是说查询速度并不是随数据量大小线性增长，而是不论数据量怎么增长，查询速度都不变。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lemcoden.github.io/2020/01/14/kylin%E7%9A%84%E6%A6%82%E5%BF%B5%E5%87%86%E5%A4%87/" data-id="ckp6jsm1q0014z0n0bvh1g8ku" data-title="使用kylin前，你需要知道？" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/18/kylin%E7%9A%84cube%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用kylin构建cube
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/06/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1github-hexo-%E6%96%87%E4%BB%B6%E7%9A%84%E8%BF%81%E5%BE%99/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">记录一次github + hexo 文件的迁徙</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop%E7%94%9F%E6%80%81/">hadoop生态</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E7%8E%AF%E5%A2%83/">linux环境</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/terraria%E5%8D%8F%E8%AE%AE/">terraria协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/">书籍翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">底层原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1/">数仓建模</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">--博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop%E7%94%9F%E6%80%81/" rel="tag">hadoop生态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag">jvm虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" rel="tag">linux客户端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E7%8E%AF%E5%A2%83/" rel="tag">linux环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/" rel="tag">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E7%BB%83%E4%B9%A0/" rel="tag">sql练习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E8%AF%AD%E5%8F%A5/" rel="tag">sql语句</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/" rel="tag">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terraria/" rel="tag">terraria</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" rel="tag">书籍翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">内存数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" rel="tag">博客分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag">大数据计算框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" rel="tag">底层原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1DB/" rel="tag">建模DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" rel="tag">建模工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" rel="tag">数据仓库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" rel="tag">数据仓库框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" rel="tag">计算模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" rel="tag">资源调度</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 11.67px;">--博客搭建</a> <a href="/tags/hadoop%E7%94%9F%E6%80%81/" style="font-size: 18.33px;">hadoop生态</a> <a href="/tags/jvm%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 15px;">jvm虚拟机</a> <a href="/tags/linux%E5%AE%A2%E6%88%B7%E7%AB%AF/" style="font-size: 11.67px;">linux客户端</a> <a href="/tags/linux%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">linux环境</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/sql%E7%BB%83%E4%B9%A0/" style="font-size: 10px;">sql练习</a> <a href="/tags/sql%E8%AF%AD%E5%8F%A5/" style="font-size: 10px;">sql语句</a> <a href="/tags/sqoop/" style="font-size: 10px;">sqoop</a> <a href="/tags/terraria/" style="font-size: 10px;">terraria</a> <a href="/tags/%E4%B9%A6%E7%B1%8D%E7%BF%BB%E8%AF%91/" style="font-size: 10px;">书籍翻译</a> <a href="/tags/%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 16.67px;">内存数据库</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 20px;">分布式</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E5%88%86%E4%BA%AB/" style="font-size: 10px;">博客分享</a> <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">博客搭建</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">大数据计算框架</a> <a href="/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" style="font-size: 10px;">底层原理</a> <a href="/tags/%E5%BB%BA%E6%A8%A1DB/" style="font-size: 10px;">建模DB</a> <a href="/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">建模工具</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" style="font-size: 13.33px;">数据仓库</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E6%A1%86%E6%9E%B6/" style="font-size: 13.33px;">数据仓库框架</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">计算模型</a> <a href="/tags/%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6/" style="font-size: 10px;">资源调度</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">spark源码分析RPC篇-1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">ubuntu20.04LTS:amule低ID问题</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/">redis笔记05</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/">redis笔记04</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/">redis笔记03</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 Lemcoden<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
