@@ -3,7 +3,7 @@ title: hexo优化:github+coding双搭建，域名CNAME别称指向
 date: 2020-05-20 13:17:20
 categories: 建站
 tags:
-					- 博客搭建
+	- 博客搭建
 cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 ---
 前情提要:
