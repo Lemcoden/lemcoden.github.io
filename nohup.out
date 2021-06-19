@@ -1,0 +1,34 @@
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+[0607/092320:INFO:exception_record.cc(518)] [QB]Process ID: 8 Type: 1
+[0607/092320:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 8
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0607/092345.024:ERROR:gl_surface_egl.cc(770)] ANGLE Platform initialization failed.
+[268:291:0607/092346:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 122
+[268:291:0607/092346:ERROR:xwalk_net_log.cc(65)] Could not open file f:\xw_log\xw_net_log.txt for net logging
+[268:291:0607/092346:ERROR:xwalk_platform_notification_service.cc(143)] NOT IMPLEMENTED
+[268:291:0607/092346:ERROR:xwalk_browser_context.cc(88)] Failed to read preference, error num: 0
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0607/092922:INFO:exception_record.cc(518)] [QB]Process ID: 390 Type: 2
+[0607/092923:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+[0607/092924:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0607/093205:INFO:exception_record.cc(518)] [QB]Process ID: 132 Type: 2
+[0607/093205:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+[0607/093206:INFO:http_cache_transaction.cc(72)] IgnoreZeroCacheError: 0
+[0607/093207:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0607/093405:INFO:exception_record.cc(518)] [QB]Process ID: 157 Type: 2
+[0607/093405:WARNING:url_request_job_manager.cc(89)] Failed to map: weixin://resourceid/blank
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).

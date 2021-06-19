@@ -15,7 +15,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/spark.png
 
 RPC调用其实并不是很高深,它特指某类通信技术,它的应用其实特别广泛,我们经常所说的http协议也是一种特殊RPC调用,http协议就定义了请求的方式方法post,get,delete,update
 
-而通过看源码我们会发现,spark中Master和Worker之间也定义了相似的消息投递规则即<font color= #FFA500>send,ask,answer,recive,reciveAndReply</font>
+而通过看源码我们会发现,spark中Master和Worker之间也定义了相似的消息投递规则即<font color= #FFA500>send,ask,recive,reciveAndReply</font>
 
 RPC的原理很简单,但是落地到实际生产环境中需要做的细活很多,比如拆包粘包问题,动态代理库的使用,线程池,链接池,传输层的封装等等
 

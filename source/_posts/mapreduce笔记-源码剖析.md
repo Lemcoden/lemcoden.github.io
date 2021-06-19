@@ -319,7 +319,7 @@ public void initialize(InputSplit genericSplit,
 最后一个判断是,默认跳过第一条数据的读取,因为切块的原因很有可能第一条信息不完整.然后我们知道,NewTrackingRecordReader在Context对象里而我们的LineRecordReader在NewTrackingRecordReader当中,所以其实最后context对象调用的nextKeyValue其实调用的是LineRecordReader的方法
 ```
 public boolean nextKeyValue() throws IOException {
-    ```
+```
     key.set(pos);
     ```
   }
@@ -389,7 +389,7 @@ public void init(MapOutputCollector.Context context
       ...
       sorter = ReflectionUtils.newInstance(job.getClass("map.sort.class",
             QuickSort.class, IndexedSorter.class), job);
-
+    
       ...
       // k/v serialization
       comparator = job.getOutputKeyComparator();
@@ -400,7 +400,7 @@ public void init(MapOutputCollector.Context context
       keySerializer.open(bb);
       valSerializer = serializationFactory.getSerializer(valClass);
       valSerializer.open(bb);
-
+    
       ...
       // compression
       if (job.getCompressMapOutput()) {
@@ -490,7 +490,7 @@ Iterable<VALUEIN> getValues() throws IOException, InterruptedException {
 }
 ```
 他返回一个Iterable对象,而Iterable只有一个方法,返回iterator对象
-```   
+```
 private ValueIterator iterator = new ValueIterator();
  @Override
     public Iterator<VALUEIN> iterator() {
