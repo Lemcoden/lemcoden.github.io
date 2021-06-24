@@ -32,3 +32,29 @@ X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+[0619/212510:INFO:exception_record.cc(518)] [QB]Process ID: 8 Type: 1
+[0619/212510:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 8
+wine: could not open working directory L"unix\\home\\lemcoden\\hexo_blog\\", starting in the Windows directory.
+[0619/212523:INFO:exception_record.cc(518)] [QB]Process ID: 199 Type: 2
+[0619/212525:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+[0619/212525:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+wine: could not open working directory L"unix\\home\\lemcoden\\hexo_blog\\", starting in the Windows directory.
+[0619/212531.785:ERROR:gl_surface_egl.cc(770)] ANGLE Platform initialization failed.
+[243:267:0619/212533:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 122
+[243:267:0619/212533:ERROR:xwalk_net_log.cc(65)] Could not open file f:\xw_log\xw_net_log.txt for net logging
+[243:267:0619/212533:ERROR:xwalk_platform_notification_service.cc(143)] NOT IMPLEMENTED
+[243:267:0619/212533:ERROR:xwalk_browser_context.cc(88)] Failed to read preference, error num: 0
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
