@@ -1,0 +1,91 @@
+---
+title: es踩坑日记(持续更新)
+date: 2021-07-19 11:52:37
+categories: javaWeb组件
+tags:
+    - es
+    - elasticsearch
+cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
+---
+
+# es踩坑日记(持续更新........)
+
+最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化.
+
+提前说明:
+
+1. 目前的两次踩坑基于Java的<font color= #FFA500>RestHighLevelClient</font>
+2. 本人是根据mysql的<font color= #FFA500>sql基础</font>进行从已知推未知,精通es开发的小伙伴可以略过
+
+### 多条件查询前提
+
+本次业务需要进行多条件的查询,如果mysql的话好说,直接在where 后面加字段名=查询值,就可以了
+
+,但是在es中不一样,需要在<font color= #FFA500>布尔查询</font>下添加相应的子句,布尔查询有四种查询子句:
+
+- must
+- filter
+- must not
+- should
+
+<font color= #FFA500>must</font>与我们sql当中的and关键字一致,就是must后跟随的查询子句,必须满足这个子句的查询条件,否则本条document结果不予以返回
+
+然后说<font color= #FFA500>filter</font>,filter在开发语义上与must是一模一样的,不过实现上相较于must少做了一步,所以查询条件更快
+
+***那么少做了哪一步呢?***
+
+我们知道elasticsearch是一个文档型的应用于全文检索场景的数据库,所以查询时,它会对每一条文档的字段内容通过以TF/IDF为核心封装的算法进行计算,打出分值,如果不给出排序条件,es就会根据分值进行排序,所以filter减少了对分值进行计算的过程,如果符合返回条件,直接返回.
+
+然后说<font color= #FFA500>must not</font> 这个不用解释,就是must的非版本
+
+<font color= #FFA500>should</font> 这个也简单,相当于sql当中的or,用should拼接的两个条件,只要满足其中的一个条件就可以返回
+
+所以,我们多条件查询使用的filter,因为我们有自己业务上的排序字段,并不需要通过分值进行排序,并且filter少了分值的计算,返回也更快
+
+### 精确查询的坑
+
+多条件查询可以通过布尔查询来实现,那么具体的子句呢?比如我想精确查询字段id = 12345,怎么查询?
+
+当然是通过<font color= #FFA500>term查询</font>进行精确查询了,查询也简单,只要输入字段值和字段名就可以了,
+
+但是有个问题就是
+
+***会出现查询某个text类型的字段时,明明应该有的数据,但是查询不出来的状况.***
+
+这就要首先说一下,在es当中有个叫做mapping的东西,类似于mysql的schema,hive的元数据.标识着所有字段的类型,搜索方式,分词器等属性值,而如果我们没进行mapping的定义,直接插入数据,es会进行<font color= #FFA500>dynamic mapping</font> 就是根据插入的数据进行动态映射类型
+
+而如果插入的是字符串,<font color= #FFA500>es会创建两种类型,一种是text,一种是keyword,</font>而这两种类型对应两种不同的查询方式,即(full text)和(exact value)
+
+<font color= #FFA500>text</font>类型对应<font color= #FFA500>full text</font>查询方式:首先,会将text进行分词,大写转小写等操作,为转换后的数据内容建立索引,所以我们通过term查询text会走索引,找那些已经被拆分和转为小写的词汇,当然查询不到了.
+
+<font color= #FFA500>keyword</font> 类型对应<font color= #FFA500>exact alue</font>查询方式:它不会对数据内容进行任何的操作,直接保留原数据进行查询,
+
+那怎么查询keyword的数据呢? 
+
+查询的时候,通过字段名.keyword进行查询即可
+
+### 模糊查询的坑
+
+模糊查询,sql当中通过like关键子实现,查询内容通过加类似正则通配符的符号,实现各种模糊查询,但是在全文搜索下的模糊查询和sql下的模糊查询并不是一回事
+
+当我以sql的方式构建es下的fuzzy查询条件,结果都查不出来,回头查询资料才发现,es的模糊查询是这样的:
+
+比如我们本来像在百度搜索框中输入suprise,但是一不小心打错了写成了suprize,在这种查询下,模糊查询依然能查询到suprise相应的条目,也就是说es当中的查询是模糊拼写查询,并非sql当中的查询语义
+
+所以,在es当中,我们想实现"模糊查询",应该使用以下三种:
+
+- prefix
+- wildcard
+- regexp
+
+从名字应该就知道,他们分别对应前缀查询,通配符查询以及正则查询.
+
+<font color= #FFA500>前缀查询</font>不用说,可以全文搜索文档中包含哪些前缀
+
+<font color= #FFA500>通配符</font>查询,允许使用shell的标准通配符
+
+而<font color= #FFA500>正则查询</font>就是输入标准的正则表达式
+
+<font color= #FFA500>不过需要注意的是,正则这类查询大部分情况都是查询text类型字段,</font>
+
+所以也是对分词后的情况进行查询,是使用字段名.keyword还是字段名本身就需要开发者自行判断了.
