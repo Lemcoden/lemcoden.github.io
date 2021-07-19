@@ -83,14 +83,13 @@ creative_commons:
 # External url should start with http:// or https://
 menu:
   home: / || fa fa-home
-  archives: /archives
-  about: /about
-#  tags: /tags/
-#  categories: /categories/
+  archives: /archives/ || fa fa-archive
+  tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
+  about: /about/ || fa fa-user
   #schedule: /schedule/ || fa fa-calendar
   #sitemap: /sitemap.xml || fa fa-sitemap
   #commonweal: /404/ || fa fa-heartbeat
-
 # Enable / Disable menu icons / item badges.
 menu_settings:
   icons: true
@@ -379,20 +378,20 @@ codeblock:
 back2top:
   enable: true
   # Back to top in sidebar.
-  sidebar: false
+  sidebar: true
   # Scroll percent label in b2t button.
-  scrollpercent: false
+  scrollpercent: true
 
 # Reading progress bar
 reading_progress:
-  enable: false
+  enable: true
   # Available values: left | right
   startAt: left
   # Available values: top | bottom
   position: top
   reversed: false
-  color: "#37c6c0"
-  height: 3px
+  color: "#FFA500"
+  height: 2px
 
 # Bookmark Support
 bookmark:
@@ -511,12 +510,12 @@ math:
   every_page: false
 
   mathjax:
-    enable: false
+    enable: true
     # Available values: none | ams | all
     tags: none
 
   katex:
-    enable: false
+    enable: t
     # See: https://github.com/KaTeX/KaTeX/tree/master/contrib/copy-tex
     copy_tex: false
 
@@ -644,7 +643,7 @@ utterances:
   repo: # Github repository name
   # Available values: pathname | url | title | og:title
   issue_term: pathname
-  # Available values: github-light | github-dark | preferred-color-scheme | github-dark-orange | icy-dark | dark-blue | photon-dark | boxy-light
+  # Available values: github-light | github-dark | preferred-color- | github-dark-orange | icy-dark | dark-blue | photon-dark | boxy-light
   theme: github-light
 
 # Isso
@@ -684,7 +683,7 @@ google_analytics:
 
 # Baidu Analytics
 # See: https://tongji.baidu.com
-baidu_analytics: # <app_id>
+baidu_analytics: 5559683623f16c6f10fe5b4f1cb2f062
 
 # Growingio Analytics
 # See: https://www.growingio.com
@@ -812,7 +811,7 @@ pdf:
 
 # Mermaid tag
 mermaid:
-  enable: false
+  enable: true
   # Available themes: default | dark | forest | neutral
   theme: forest
 
@@ -838,16 +837,16 @@ motion:
 # Progress bar in the top during page loading.
 # For more information: https://github.com/rstacruz/nprogress
 nprogress:
-  enable: false
+  enable: true
   spinner: true
 
 # Canvas ribbon
 # For more information: https://github.com/hustcc/ribbon.js
 canvas_ribbon:
-  enable: false
+  enable: true
   size: 300 # The width of the ribbon
   alpha: 0.6 # The transparency of the ribbon
-  zIndex: -1 # The display level of the ribbon
+  zIndex: 0 # The display level of the ribbon
 
 
 #! ==============================================================
@@ -882,9 +881,8 @@ vendors:
   # Prism
   prism:
   prism_autoloader:
-  prism_line_numbers:
 
-  # MathJax
+  # Jax
   mathjax:
 
   # KaTeX
@@ -943,7 +941,7 @@ vendors:
   nprogress_css:
 
   # Canvas ribbon
-  canvas_ribbon:
+  canvas_ribbon: //cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js
 
 # Assets
 # Accelerate delivery of static files using a CDN
