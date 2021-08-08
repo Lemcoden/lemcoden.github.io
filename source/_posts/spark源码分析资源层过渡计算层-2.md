@@ -29,6 +29,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/spark.png
 
 我们看到message原本是字节缓存,通过<font color= #FFA500>internalReceive</font>方法组装成<font color= #FFA500>RequestMessage</font>对象
 
+<!--more-->
+
 那再进internalRecceive方法
 
 ```scala

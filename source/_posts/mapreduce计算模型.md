@@ -11,7 +11,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
 为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型
 #### 计算模型
 ![计算模型](http://picture.lemcoden.xyz/mapreduce/mr_mod.png)
-* map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出
+* map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出<!--more-->
 * reduce 端负责将数据整合归纳,缩小,分解,一般是一组数据进N出
 * 不管是map还是reduce处理的数据结构基本都是<key,value>的形式划分的
 * 最基本的数据格式确定后,会有数据迁移更加细致的流程

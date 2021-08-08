@@ -14,7 +14,11 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
 ### 1.HDFS存储模型
   * 1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一的计算单位,这个统一的计算单位block不是固定的,需要根据具体的I/O特性进行调整.
   * 2.除了围绕块之外存储模型还有一个核心是存储副本(replication),副本可以冗余数据保证系统的可靠性.并多个副本存储在不同主机当中可以增加计算程序与数据在同一集群的概率,提升计算的性能.
+
+<!--more-->
+
 ### 2.HDFS的角色
+
   #### HDFS主要角色
   主要角色有两个namenode和datanode,主要功能包括如下:
 
@@ -64,13 +68,13 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
   * 如果再读取程序的同一个机架上有一个副本，那么就读该副本
   * 如果一个HDFS集群跨越多个数据中心，那么客户端也将首先读本地数据中心的副本
   * 语义：
-  　　 download a file
-  　　 Client和NN交互文件元数据获取fileBlockLocation
-  　　 NN按距离策略排序返回
-  　　 Client尝试下载Block并且校验数据完整性（校验盒校验）
+    　　 download a file
+    　　 Client和NN交互文件元数据获取fileBlockLocation
+    　　 NN按距离策略排序返回
+    　　 Client尝试下载Block并且校验数据完整性（校验盒校验）
   * 语义：下载一个文件其实是获取文件的所有的Block元数据，那么子集获取block应该成立
-  　　Hdfs支持Client输出文件的offset自定义连接哪些Block的DN，自定义获取数据
-  　　这个是支持计算层的分治，并行计算的核心（牢记）
+    　　Hdfs支持Client输出文件的offset自定义连接哪些Block的DN，自定义获取数据
+    　　这个是支持计算层的分治，并行计算的核心（牢记）
 
 ### 5.HDFS设置高可用
 #### 为什么

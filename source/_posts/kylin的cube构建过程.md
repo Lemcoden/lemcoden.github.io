@@ -6,3 +6,5 @@ tags:
 	- 数据仓库框架
 cover_picture: http://picture.lemcoden.xyz/cover_picture/logo.jpg
 ---
+
+<!--more-->

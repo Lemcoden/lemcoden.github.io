@@ -21,6 +21,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 
 但是,对于我一个node.js一点都不懂的java工程师而言,这样的学习成本很高,并且程序员都比较繁忙,很难抽出空来再去学习本专业无关的事.(仅指nodejs语言,非集成部署方式)
 
+<!--more-->
+
 这让我陷入了矛盾当中.
 
 ### 无脑重新部署

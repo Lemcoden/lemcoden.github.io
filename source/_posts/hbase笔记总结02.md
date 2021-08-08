@@ -16,6 +16,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hbase.jpg
 
 ​		默认情况下，在创建HBase表的时候会自动创建一个region分区，当导入数据的时候，所有的HBase客户端都向这一个region写数据，直到这个region足够大了才进行切分。一种可以加快批量写入速度的方法是通过预先创建一些空的regions，这样当数据写入HBase时，会按照region分区情况，在集群内做数据的负载均衡。	
 
+<!--more-->
+
 ```java
 //第一种实现方式是使用admin对象的切分策略
 byte[] startKey = ...;      // your lowest key

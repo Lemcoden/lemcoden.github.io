@@ -21,6 +21,8 @@ RPC的原理很简单,但是落地到实际生产环境中需要做的细活很�
 
 这里简单给出RPC框架的简单架构
 
+<!--more-->
+
 ![http://picture.lemcoden.xyz/spark/spark_rpc.png](http://picture.lemcoden.xyz/spark/spark_rpc.png)
 
 client将实体类封装为inbox通过分发器分发到队列当中,然后传输层连接池,线程池拉取队列数据,通过网络发送二进制数据

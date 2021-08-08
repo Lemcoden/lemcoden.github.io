@@ -17,6 +17,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 
 ## 先聊linux
 
+<!--more-->
+
 我们知道java是一款虚拟机,它是根据不同的操作系统虚拟化出来的一层代码(所以我们的jdk会划分windows版,linux版,mac版等等),我们只讨论linux版,因为windows,mac是闭源的,看不到源代码,也就无从聊起机制细节是什么样的
 
 ### 一些概念前提

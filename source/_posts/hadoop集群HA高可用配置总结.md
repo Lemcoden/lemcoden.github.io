@@ -25,7 +25,7 @@ IPADDR=192.168.0.101  //一般本地IP最后依次增加
 NETMASK=255.255.255.0
 GATWAY=192.168.0.1 //同一集群必须同一网关
 ```
-* 设置hosts
+* 设置hosts<!--more-->
 ```
 vim /etc/hosts
 192.168.0.101 hadoop01

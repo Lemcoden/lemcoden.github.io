@@ -19,6 +19,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 
 ### 关于图床
 
+<!--more-->
+
 #### 怎么加入图片?
 
 关于怎么在hexo框架中加入图片,百度肯定有很多方法,笔者也尝试过,比如

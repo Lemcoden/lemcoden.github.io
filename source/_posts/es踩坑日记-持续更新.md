@@ -19,6 +19,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
 
 ### 多条件查询前提
 
+<!--more-->
+
 本次业务需要进行多条件的查询,如果mysql的话好说,直接在where 后面加字段名=查询值,就可以了
 
 ,但是在es中不一样,需要在<font color= #FFA500>布尔查询</font>下添加相应的子句,布尔查询有四种查询子句:
