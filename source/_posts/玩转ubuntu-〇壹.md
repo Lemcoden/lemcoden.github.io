@@ -1,5 +1,5 @@
 ---
-title: 玩转unbuntu 〇壹
+title: 玩转ubuntu 〇壹
 date: 2020-08-13 20:00:37
 categories: linux
 tags: linux客户端

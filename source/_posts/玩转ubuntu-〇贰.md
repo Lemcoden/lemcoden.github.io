@@ -1,9 +1,9 @@
 ---
- title: 玩转ubuntu-〇贰
+title: 玩转ubuntu-〇贰
 date: 2021-08-08 13:24:43
 categories: linux
 tags: linux客户端
-cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg将
+cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg
 ---
 
 #### 关于Ubuntu办公软件
@@ -15,6 +15,8 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg将
 不需要再不断繁琐的调试wine这样的反人类的虚拟层
 
 #### 关于markdown编辑器
+
+<!--more-->
 
 这里推荐使用Typora,官方有ubuntu的安装方式,照着官网方式一步一步做就可以
 
