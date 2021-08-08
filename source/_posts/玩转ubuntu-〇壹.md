@@ -8,7 +8,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg
 
 #### 终端 => 文件管理器
 
-在终端输入
+在终端输入,nautilus(中文直译为鹦鹉螺,是ubuntu默认文件管理器的名字,戏剧性的是笔者玩的一款游戏terraria,里面的某个boss就是nautilus,所以就顺带记住了)
 
 ```
 nautilus ./
@@ -102,7 +102,7 @@ winetricks riched20
 
 还有可能出现
 
-#### 壁纸软件
+#### 动态壁纸软件
 
 推荐软件komorebi
 
@@ -111,3 +111,6 @@ winetricks riched20
 通过阅读下面说明就可以轻松下载安装
 
 支持视频格式动态壁纸,自定义时钟(视频壁纸平常可能会占些cpu)
+
+[动态壁纸效果]: https://picture.lemcoden.xyz/linux/komorebi.gif
+
