@@ -28,7 +28,7 @@ lemcoden@ubuntu:~$ snap install typora
 
 #### 关于截图和录屏
 
-原本想用linux'版本的QQ,但是linux版本的QQ截图没有编辑功能
+原本想用linux版本的QQ,但是linux版本的QQ截图没有编辑功能
 
 所以截图软件推荐使用flameshot
 
@@ -44,11 +44,11 @@ lemcoden@ubuntu:~$ sudo apt-get install flameshot
 
 然后是关于录屏的,直接使用obs,简单好用没的说,没事还能做直播 
 
-[obs推流软件]: https://obsproject.com/
+[obs推流软件](https://obsproject.com/)
 
 #### 关于划词取词翻译
 
-这个笔者找了好旧,因为ubuntu原生的翻译软件都非常古老,基本无法使用,
+这个笔者找了好久,因为ubuntu原生的翻译软件都非常古老,基本无法使用,
 
 直到后来发现uTools(一个简易的搜索栏生产力工具箱)的插件列表中,
 

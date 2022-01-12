@@ -58,3 +58,29 @@ X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
 X connection to :0 broken (explicit kill or server shutdown).
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+[0809/093316:INFO:exception_record.cc(518)] [QB]Process ID: 8 Type: 1
+[0809/093317:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 8
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0809/093425.948:ERROR:gl_surface_egl.cc(770)] ANGLE Platform initialization failed.
+[311:334:0809/093427:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 122
+[311:334:0809/093427:ERROR:xwalk_net_log.cc(65)] Could not open file f:\xw_log\xw_net_log.txt for net logging
+[311:334:0809/093427:ERROR:xwalk_platform_notification_service.cc(143)] NOT IMPLEMENTED
+[311:334:0809/093427:ERROR:xwalk_browser_context.cc(88)] Failed to read preference, error num: 0
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\", starting in the Windows directory.
+[0809/094221:INFO:exception_record.cc(518)] [QB]Process ID: 394 Type: 2
+[0809/094222:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+[0809/094222:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
