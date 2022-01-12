@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
+<meta name="description" content="从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty前言前些天一直在看netty,感觉网络博客少有从内核函数的角度直接剖析io到nio的发展,并和java的netty框架结合起来的,导致很多人对netty的概念仅仅停留在抽象的角度,就损失很多细节方面的东西以及对io模型的整体把控,所以写了这一篇博客,希望读者读后能发现新的东西,以及有一个系统的知识,当然因为时间问题,本篇博客会写的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty">
+<meta property="og:url" content="https://lemcoden.github.io/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/index.html">
+<meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty前言前些天一直在看netty,感觉网络博客少有从内核函数的角度直接剖析io到nio的发展,并和java的netty框架结合起来的,导致很多人对netty的概念仅仅停留在抽象的角度,就损失很多细节方面的东西以及对io模型的整体把控,所以写了这一篇博客,希望读者读后能发现新的东西,以及有一个系统的知识,当然因为时间问题,本篇博客会写的">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-06-24T03:52:45.000Z">
+<meta property="article:modified_time" content="2021-06-24T03:55:33.574Z">
+<meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="IO模型">
+<meta property="article:tag" content="高并发">
+<meta property="article:tag" content="netty">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lemcoden.github.io/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty&#x2F;&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;从linux内核函数角度-JAVA角度聊IO发展史-并叙述netty&#x2F;&quot;,&quot;title&quot;:&quot;从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty | Lemcoden</title><script src="/js/config.js"></script>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Lemcoden</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty"><span class="nav-number">1.</span> <span class="nav-text">从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E8%81%8Alinux"><span class="nav-number">1.2.</span> <span class="nav-text">先聊linux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5%E5%89%8D%E6%8F%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">一些概念前提</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E8%A7%92%E5%BA%A6%E7%9A%84IO%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">内核角度的IO模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO-%E5%90%8C%E6%AD%A5%E9%98%BB%E5%A1%9E%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">BIO(同步阻塞模型)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO-%E5%90%8C%E6%AD%A5%E9%9D%9E%E9%98%BB%E5%A1%9EIO"><span class="nav-number">1.3.2.</span> <span class="nav-text">NIO(同步非阻塞IO)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%99%A8-%E2%80%94-gt-select-poll%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.3.</span> <span class="nav-text">NIO多路复用器 —&gt; select&#x2F;poll函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%99%A8%E2%80%94-gt-epoll%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">NIO 多路复用器—&gt; epoll函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8EJAVA%E5%B1%82%E9%9D%A2%E7%9C%8BIO%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">从JAVA层面看IO模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.1.</span> <span class="nav-text">BIO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NIO%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.2.</span> <span class="nav-text">NIO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%99%A8NIO"><span class="nav-number">1.4.3.</span> <span class="nav-text">多路复用器NIO</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactor%E6%A8%A1%E5%9E%8BNetty"><span class="nav-number">1.5.</span> <span class="nav-text">Reactor模型Netty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Http%E5%8D%8F%E8%AE%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">1.6.</span> <span class="nav-text">Http协议对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E6%9C%9F%E4%BC%9A%E8%A1%A5%E4%B8%8A%E7%9A%84%E7%9F%A5%E8%AF%86"><span class="nav-number">1.7.</span> <span class="nav-text">后期会补上的知识</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Lemcoden"
+      src="http://picture.lemcoden.xyz/avater.jpeg">
+  <p class="site-author-name" itemprop="name">Lemcoden</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lemcoden">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-06-24 11:52:45 / Modified: 11:55:33" itemprop="dateCreated datePublished" datetime="2021-06-24T11:52:45+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="从linux内核函数角度-JAVA角度聊IO发展史-并叙述netty"><a href="#从linux内核函数角度-JAVA角度聊IO发展史-并叙述netty" class="headerlink" title="从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty"></a>从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前些天一直在看netty,感觉网络博客少有从内核函数的角度直接剖析io到nio的发展,并和java的netty框架结合起来的,导致很多人对netty的概念仅仅停留在抽象的角度,就损失很多细节方面的东西以及对io模型的整体把控,所以写了这一篇博客,希望读者读后能发现新的东西,以及有一个系统的知识,当然因为时间问题,本篇博客会写的简单一些,后期可能会写出更加细节系统化的系列.</p>
+<h2 id="先聊linux"><a href="#先聊linux" class="headerlink" title="先聊linux"></a>先聊linux</h2><p>我们知道java是一款虚拟机,它是根据不同的操作系统虚拟化出来的一层代码(所以我们的jdk会划分windows版,linux版,mac版等等),我们只讨论linux版,因为windows,mac是闭源的,看不到源代码,也就无从聊起机制细节是什么样的</p>
+<h3 id="一些概念前提"><a href="#一些概念前提" class="headerlink" title="一些概念前提"></a>一些概念前提</h3><p><strong>文件描述符</strong>:   我们知道linux当中有一切皆文件的说法,访问磁盘的文件是文件,进程是文件,socket网络也是一个文件,我们可以通过lsof 列出进程,用户打开的文件,就像下面这样(列出某进程打开的文件)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~/develop/my-bigdata$ lsof -p 43587 | less</span><br><span class="line">COMMAND   PID     USER   FD      TYPE             DEVICE  SIZE/OFF     NODE NAME</span><br><span class="line">chrome  43587 lemcoden    0r      CHR                1,3       0t0        6 /dev/null</span><br><span class="line">chrome  43587 lemcoden    1w     FIFO               0,13       0t0   418082 pipe</span><br><span class="line">chrome  43587 lemcoden    2w     FIFO               0,13       0t0   418084 pipe</span><br><span class="line">chrome  43587 lemcoden    3u  a_inode               0,14         0    11473 [eventpoll]</span><br><span class="line">chrome  43587 lemcoden    4u     unix 0x0000000000000000       0t0   418088 <span class="built_in">type</span>=SEQPACKET</span><br><span class="line">chrome  43587 lemcoden    5r      REG              259,3  10413488 11272442 /opt/google/chrome/icudtl.dat</span><br><span class="line">chrome  43587 lemcoden    6r      REG              259,3    165675 11272541 /opt/google/chrome/v8_context_snapshot.bin</span><br></pre></td></tr></table></figure>
+
+<p>这其中第一行标题一个FD(FileDescrption)的列,意思就是文件描述符,既然在linux当中一切皆文件,那必然有它被访问的入口,这个就是linux的文件描述符,什么?你不熟?相信大家这条命令总见过吧</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lemcoden<span class="meta">@unbuntu</span>:nohup xxxxx.proccess <span class="number">2</span>&gt;&amp;<span class="number">1</span> &gt; /dev/<span class="literal">null</span> &amp;</span><br></pre></td></tr></table></figure>
+
+<p>而2&gt;&amp;1我们经常说它是错误输出重定向到标准输出,而这个2和1就是我们FD的名字,对应我们上面某进程的1和2,后面的r,w,u分别代表着只读,只写,即可读又可写,这就和我们标准输入,标准输出对应上了</p>
+<p><strong>虚拟内存:</strong>   这个笔者也无奈直接讲个故事吧,很久很久之前的第一代操作系统像Dos这样的,因为硬件资源少的一个操作系统上只能运行一个程序,所以对于这个正在运行的程序来说,它可以占掉所有的内存计算资源.</p>
+<p>但之后呢,硬件资源上来的,我的算力明显提升,一个操作系统上只运行一个程序有点得不偿失,于是大家就想着开发多任务的操作系统,但是多任务的操作系统有两个问题,</p>
+<ol>
+<li>就是内存的划分问题,如果多个程序可以资源使用内存,程序A和程序B相互无通信却选择了同一块内存区域读写怎么办?即内存区域管理混乱问题</li>
+<li>多任务的操作系统,程序和操作系统有了明显的分工,操作系统负责维护硬件,像网卡,磁盘,CPU等,而此时对于操作系统来说,程序直接访问硬件相当于夺取操作系统控制权,这是个安全问题</li>
+</ol>
+<p>第一个问题是就是通过虚拟内存的方式解决的,我先把系统运行的内存和程序运行的内存隔离开来,当程序运行时,向系统申请内存,系统会给程序划定一块内存,这块内存就叫做虚拟内存,为什么是虚拟的呢?</p>
+<p>是这样的,首先真的物理内存,内存第0号开始先是系统引导(这里不确定，这么说仅仅是为了便于理解,后期会更加详细研究),再是系统运行的内存,之后才是第一个要运行的用户程序的内存,然后是第二个用户程序以此类推,那么对用户程序来说它的内存地址绝对不是从0开始的,但是系统会有一系列的复杂转址过程,将物理地址转成对用户程序来说是从0开始的虚拟地址,所以这块内存就叫做虚拟内存</p>
+<p>然后我们运行在虚拟内存当中的用户程序我们称它处于用户态,虚拟内存叫做用户空间</p>
+<p>运行在物理内存当中的操作系统我们称它处于内核态,物理内存叫做内核空间</p>
+<p><strong>中断</strong>:   上述概念了解明白之后,我们还有一个问题,假如我用户程序想访问网卡,磁盘或者其他只有系统内核才能访问的硬件该怎么办? 首先有个大前提,就是我已经把系统内核和用户程序隔离开了,用户程序无权读写系统内核的内存,那怎么通知操作系统呢?</p>
+<p>答案是使用中断,老版的中断是通过自陷异常通知的系统内核,我们java的程序员可以理解为抛出一个异常,对,抛出一个异常,系统捕获到了,知道哦~~~~用户程序要用硬件资源搞事情,搞什么事情呢?用户程序会写在CPU的寄存器上,然后系统内核会保存用户程序现在的执行状态,然后挂起,专心在内核态把用户程序要搞的事搞完,然后回来把用户程序通过保存的执行状态唤醒并运行用户程序,所以大家就经常说</p>
+<p><strong>用户态和内核态的切换非常耗费资源</strong></p>
+<p><strong>linux系统调用函数</strong>:   这个百度一下就会搜到相关的系统调用函数列表,这里我仅仅是解释一下系统调用函数是什么,其实它就是上面中断的外包装,也就是说系统调用函数基本都使用中断来实现,但是每个函数各有各的功能,有linux系统的同学可以安装一个man命令,这是一个可以查看命令文档的程序,我们先用man命令看一下man命令的文档</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~/$ man man</span><br><span class="line">MAN(1)                                                                  手册分页显示工具                                                                 MAN(1)</span><br><span class="line"></span><br><span class="line">名称</span><br><span class="line">       man - an interface to the system reference manuals</span><br><span class="line"></span><br><span class="line">概述</span><br><span class="line">       man [man options] [[section] page ...] ...</span><br><span class="line">       man -k [apropos options] regexp ...</span><br><span class="line">       man -K [man options] [section] term ...</span><br><span class="line">       man -f [whatis 选项] 页 ...</span><br><span class="line">       man -l [man options] file ...</span><br><span class="line">       man -w|-W [man options] page ...</span><br><span class="line"> 描述</span><br><span class="line">       man  is  the system<span class="string">&#x27;s manual pager.  Each page argument given to man is normally the name of a program, utility or function.  The manual page associated</span></span><br><span class="line"><span class="string">       with each of these arguments is then found and displayed.  A section, if provided, will direct man to look only in that  section  of  the  manual.   The</span></span><br><span class="line"><span class="string">       default  action  is to search in all of the available sections following a pre-defined order (see DEFAULTS), and to show only the first page found, even</span></span><br><span class="line"><span class="string">       if page exists in several sections.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       下表显示了手册的 章节 号及其包含的手册页类型。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       1   可执行程序或 shell 命令</span></span><br><span class="line"><span class="string">       2   系统调用(内核提供的函数)</span></span><br><span class="line"><span class="string">       3   库调用(程序库中的函数)</span></span><br><span class="line"><span class="string">       4   特殊文件(通常位于 /dev)</span></span><br><span class="line"><span class="string">       5   File formats and conventions, e.g. /etc/passwd</span></span><br><span class="line"><span class="string">       6   游戏</span></span><br><span class="line"><span class="string">       7   杂项(包括宏包和规范，如 man(7)，groff(7))</span></span><br><span class="line"><span class="string">       8   系统管理命令(通常只针对 root 用户)</span></span><br><span class="line"><span class="string">       9   内核例程 [非标准</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       一个手册 页面 包含若干个小节。</span></span><br></pre></td></tr></table></figure>
+
+<p>重点看描述当中,2 表示的是系统调用的函数,也就是说,我们可以通过man 2 系统调用函数名,查看系统调用的文档,比如 socket</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~/develop/my-bigdata$ man 2 socket</span><br><span class="line">SOCKET(2)                                                          Linux Programmer<span class="string">&#x27;s Manual                                                          SOCKET(2)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">NAME</span></span><br><span class="line"><span class="string">       socket - create an endpoint for communication</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">SYNOPSIS</span></span><br><span class="line"><span class="string">       #include &lt;sys/types.h&gt;          /* See NOTES */</span></span><br><span class="line"><span class="string">       #include &lt;sys/socket.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       int socket(int domain, int type, int protocol);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">DESCRIPTION</span></span><br><span class="line"><span class="string">       socket() creates an endpoint for communication and returns a file descriptor that refers to that endpoint.  The file descriptor returned by a successful</span></span><br><span class="line"><span class="string">       call will be the lowest-numbered file descriptor not currently open for the process.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       The domain argument specifies a communication domain; this selects the protocol family which will be used for communication.  These families are defined</span></span><br><span class="line"><span class="string">       in &lt;sys/socket.h&gt;.  The formats currently understood by the Linux kernel include:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       Name         Purpose                                    Man page</span></span><br><span class="line"><span class="string">       AF_UNIX      Local communication                        unix(7)</span></span><br><span class="line"><span class="string">       AF_LOCAL     Synonym for AF_UNIX</span></span><br><span class="line"><span class="string">       AF_INET      IPv4 Internet protocols                    ip(7)</span></span><br><span class="line"><span class="string">       AF_AX25      Amateur radio AX.25 protocol               ax25(4)</span></span><br><span class="line"><span class="string">..........</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="内核角度的IO模型"><a href="#内核角度的IO模型" class="headerlink" title="内核角度的IO模型"></a>内核角度的IO模型</h2><p>我们都知道IO分为BIO,NIO,AIO</p>
+<p>分别表示同步阻塞模型,同步非阻塞模型,异步非阻塞模型(异步模型只有windows系统有)</p>
+<p>我们从后端应用的开发历史来看这几个模型是怎么一步步发展过来的</p>
+<h3 id="BIO-同步阻塞模型"><a href="#BIO-同步阻塞模型" class="headerlink" title="BIO(同步阻塞模型)"></a>BIO(同步阻塞模型)</h3><p>我们知道java都是调用linux的系统调用函数来实现IO模型的,那我们从内核函数来讲</p>
+<p>首先第一个函数socket</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~$ man 2 socket</span><br><span class="line">DESCRIPTION</span><br><span class="line">       socket()  creates  an endpoint <span class="keyword">for</span> communication and returns a file de‐</span><br><span class="line">       scriptor that refers to that endpoint.  The file descriptor returned by</span><br><span class="line">       a  successful call will be the lowest-numbered file descriptor not cur‐</span><br><span class="line">       rently open <span class="keyword">for</span> the process.</span><br></pre></td></tr></table></figure>
+
+<p>这个函数意思是在网卡上开辟一块区域用于做连接的绑定和数据的传输,它会返回一个文件描述符指向这块空区域,为了方便后面区分,我们叫它fd3</p>
+<p>然后是 函数bind</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~$ man 2 <span class="built_in">bind</span></span><br><span class="line">DESCRIPTION 描述</span><br><span class="line">       <span class="built_in">bind</span>  为套接字  sockfd  指定本地地址 my_addr.  my_addr 的长度为 addrlen</span><br><span class="line">       (字节).传统的叫法是给一个套接字分配一个名字.  当使用 socket(2),  函数创</span><br><span class="line">       建一个套接字时,它存在于一个地址空间(地址族), 但还没有给它分配一个名字</span><br><span class="line"></span><br><span class="line">       一般来说在使用 SOCK_STREAM 套接字建立连接之前总要使用 <span class="built_in">bind</span> 为其分配一个</span><br><span class="line">       本地地址.参见 accept(2)).</span><br></pre></td></tr></table></figure>
+
+<p>我们拿到网卡的文件描述符之后,将fd3传给bind,并输入本地的ip地址以及端口号,表示我的文件描述符fd3绑定了本地地址某某端口号</p>
+<p>之后是 函数listen</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~$ man 2 listen</span><br><span class="line">DESCRIPTION 描述</span><br><span class="line">       在接收连接之前,首先要使用 socket(2) 创建一个套接字,然后调用 listen 使其</span><br><span class="line">       能够自动接收到来的连接并且为连接队列指定一个长度限制.    之后就可以使用</span><br><span class="line">       accept(2)    接收连接.     listen    调用仅适用于    SOCK_STREAM   或者</span><br><span class="line">       SOCK_SEQPACKET 类型的套接字.</span><br><span class="line"></span><br><span class="line">       参数 backlog  指定未完成连接队列的最大长度.如果一个连接请求到达时未完成</span><br><span class="line">       连接 队列已满,那么客户端将接收到错误 ECONNREFUSED.  或者,如果下层协议支</span><br><span class="line">       持重发,那么这个连接请求将被忽略,这样客户端 在重试的时候就有成功的机会.</span><br></pre></td></tr></table></figure>
+
+<p>然后再将持有的文件描述符交给listen函数,让文件描述符fd3可以接收它绑定端口相关的连接</p>
+<p>之后是 函数accept</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION 描述</span><br><span class="line">       accept   函数用于基于连接的套接字   (SOCK_STREAM,   SOCK_SEQPACKET   和</span><br><span class="line">       SOCK_RDM).  它从未完成连接队列中取出第一个连接请求,创建一个和参数 s  属</span><br><span class="line">       性相同的连接套接字,并为这个套接字分配一个文件描述符, 然后以这个描述符返</span><br><span class="line">       回.新创建的描述符不再处于倾听状态.原 套接字 s 不受此调用的影响.注意任意</span><br><span class="line">       一个文件描述符标志  (任何可以被 fcntl以参数 F_SETFL 设置的值,比如非阻塞</span><br><span class="line">       式或者异步状态)不会被 accept.  所继承.</span><br></pre></td></tr></table></figure>
+
+<p>这个accpet函数需要额外重点说明,首先它是一个阻塞函数,它也接收我们的fd3,它的意思是如果来了一个新的连接,它会给新的连接一个文件描述符,并且返回,如果没有,阻塞当前函数,这个是与每个客户端建立的连接的文件描述符,因为不止有一个客户端连接到本地,所以在java的IO包中,会在外层加一个循环,不断轮询调用此函数返回与客户端建立的连接,我们把新的连接的文件描述命名为fd4,fd5,fd6…………..</p>
+<p>之后是 函数 recv</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~$ man 2 recv</span><br><span class="line">DESCRIPTION</span><br><span class="line">       The  recv(),  recvfrom(),  and recvmsg() calls are used to receive mes‐</span><br><span class="line">       sages from a socket.  They may be used to receive data on both  connec‐</span><br><span class="line">       tionless  and  connection-oriented  sockets.  This page first describes</span><br><span class="line">       common features of all three system calls, and <span class="keyword">then</span> describes the  dif‐</span><br><span class="line">       ferences between the calls.</span><br></pre></td></tr></table></figure>
+
+<p>我们拿到新的客户端连接之后,再交给recv函数,recv函数会专门返回当前连接客户端所传输的数据,这个方法也是阻塞的.</p>
+<p>我们再回顾一下accept函数和recv函数,accpet函数负责返回连接,recv负责获取当前连接的数据,</p>
+<p>而再java IO底层,每获取一个连接,就会新开一个线程来负责这个连接数据传输即调用recv方法,为什么?</p>
+<p>因为recv方法是阻塞的,如果在一个线程里面轮询所有连接调用recv,一旦其中一个客户端没数据,那么recv方法就会阻塞在那里,那么其他所有的连接就得一直等待排在后面.</p>
+<p>那么问题来了,如果我有一万个连接要进来,那么我还start 一万个线程?</p>
+<p>我们首先分析一下,一般一个空线程需要占用内存大约1M的资源,那么一万个线程相当于10G的内存资源,也就是说,我还没传输数据呢,光空线程就占用了10G资源</p>
+<p>那再说一下,线程切换的开销,假如我的服务器CPU 10核,那么开启超过10个线程就需要线程来回切换,那一万个线程就需要平均1000个线程在一个核上来回切换,这个成本很巨大,不可忽略</p>
+<h3 id="NIO-同步非阻塞IO"><a href="#NIO-同步非阻塞IO" class="headerlink" title="NIO(同步非阻塞IO)"></a>NIO(同步非阻塞IO)</h3><p>基于上面的问题,所以才有了我们的非阻塞的IO</p>
+<p>非阻塞IO非常简单,在调用我们刚刚的socket函数的时候.只要传入一个SOCK_NONBLOCK标志位就可以,然后accept以及recv函数就会变成非阻塞的函数,如果调用没有连接和数据,他们就会返回-1</p>
+<p>那么我们的线程布局就不一样了,</p>
+<p>以前我们是主线程调用accept函数返回连接,然后每个连接开一个线程</p>
+<p>现在我们是开一个线程专门做连接的维护,然后开一个线程池专门拉取数据,线程池中每一个线程持有多个连接,可以轮询获取多个连接的数据</p>
+<p>这样就不用但心我们的线程过多所导致的内存开销大,响应极慢的问题</p>
+<h3 id="NIO多路复用器-—-gt-select-poll函数"><a href="#NIO多路复用器-—-gt-select-poll函数" class="headerlink" title="NIO多路复用器 —&gt; select/poll函数"></a>NIO多路复用器 —&gt; select/poll函数</h3><p>不过旧的问题解决了,又产生了新的问题,上面的NIO模型对java调用来说没问题,但是对linux来说还会有点慢,我们细扣一下细节,我们一个线程负责多个连接的数据传输,每连接每次拉取或者写入数据都需要遍历做recv的系统调用,而我们之前说过,只要调用系统函数,就会发生用户态和内核态的切换这个很耗费资源,假如有N个连接,遍历调用的时间复杂度是0(n),这0(n)当中又有很多空数据连接是浪费掉的.</p>
+<p>那么我们怎么才能减少recv函数的调用次数呢?</p>
+<p>这时候又有两个新的内核函数横空出世,那就是select/poll 系统调用,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">lemcoden@unbuntu:~$ man 2 select</span><br><span class="line">NAME</span><br><span class="line">       select, pselect, FD_CLR, FD_ISSET, FD_SET, FD_ZERO - synchronous I/O multiplexing</span><br><span class="line">DESCRIPTION</span><br><span class="line">       select()  and pselect() allow a program to monitor multiple file descriptors, waiting until one or</span><br><span class="line">       more of the file descriptors become <span class="string">&quot;ready&quot;</span> <span class="keyword">for</span> some class of I/O operation  (e.g.,  input  possi‐</span><br><span class="line">       ble).   A file descriptor is considered ready <span class="keyword">if</span> it is possible to perform a corresponding I/O op‐</span><br><span class="line">       eration (e.g., <span class="built_in">read</span>(2), or a sufficiently small write(2)) without blocking.</span><br><span class="line"></span><br><span class="line">lemcoden@unbuntu:~$ man 2 poll</span><br><span class="line">DESCRIPTION</span><br><span class="line">       poll()  performs a similar task to select(2): it waits <span class="keyword">for</span> one of a <span class="built_in">set</span> of file descriptors to be‐</span><br><span class="line">       come ready to perform I/O.</span><br><span class="line"></span><br><span class="line">       The <span class="built_in">set</span> of file descriptors to be monitored is specified <span class="keyword">in</span> the fds argument, <span class="built_in">which</span> is an array of</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>select与poll的函数调用非常相似,都是将一组文件描述符作为参数,但是唯一的不同点在于select的文件描述符组有1024这个长度的限制,但是poll没有</p>
+<p>说一下他们俩的主要功能,就是输入一组连接的文件描述符,然后会返回有数据的文件描述符数量,并在文件描述符组中标记这些有数据的FD</p>
+<p>所以调用accept之后,会把返回的文件描述符用一个集合结构存起来,并调用select</p>
+<p>java在调用select之后,会遍历被select标记过的文件描述符组,再通过FD_ISSET这个函数来判断文件描述符是否被标记,被标记了,再执行recv方法,这样就避免了大量空数据连接使用系统调用的问题</p>
+<p>恩,好像还有一个epoll没聊,从上面一路看下来的同学都知道,如果出现新的技术肯定是老的技术有某些问题,那么select/poll 多路复用器有什么问题呢?</p>
+<p>首先select/poll 内核函数在我们传入fd组之后,它会遍历fd组,找出哪些fd有数据存储着,当然在内核中遍历的确比多次调用系统函数的遍历要快很多,</p>
+<ol>
+<li>但还是要触发一个全量复杂度的遍历,</li>
+<li>并且select外避免不了多次重复传入fd组,每次传入内核都要重新开辟空间用于存放</li>
+</ol>
+<h3 id="NIO-多路复用器—-gt-epoll函数"><a href="#NIO-多路复用器—-gt-epoll函数" class="headerlink" title="NIO 多路复用器—&gt; epoll函数"></a>NIO 多路复用器—&gt; epoll函数</h3><p>epoll表示的是一组函数,分别是epoll_create,epoll_ctl和epoll_wait</p>
+<p>这里笔者就不再给出man命令介绍了,直接说怎么用以及它内在的机制是什么样的</p>
+<p>首先调用epoll_create,epoll_create会在内核空间当中开辟一块儿内存,使用红黑树结构,并且返回标识这块内存的FD,我们都叫它EPFD,即epoll函数的空间的文件描述符</p>
+<p>然后我们将这个EPFD传入到epoll_ctl(control缩写)当中,epoll_ctl还有两个参数,一个是连接的FD,一个是我们具体的操作类型,操作类型有三种EPOLL_CTL_ADD,EPOLL_CTL_MOD,EPOLL_CTL_DEL(添加,修改,删除)我们主要是使用的添加操作,即将我们连接的FD添加到刚刚创建的那块红黑数的内存区域当中</p>
+<p>然后epoll这个系统调用对中断程序进行了扩展,当我们的数据通过网卡copy到FD的缓存时,中断程序会自动把处于红黑树的FD移动到另一个epoll_wait函数所使用的链表当中</p>
+<p>最后,调用epoll_wait函数,将它下面的FD链表全部返回</p>
+<p>然后我们就可以遍历链表,挨个挨个recv数据了</p>
+<p>这样子就规避了,要不断重复开辟内核空间的问题,并且全程无遍历</p>
+<h2 id="从JAVA层面看IO模型"><a href="#从JAVA层面看IO模型" class="headerlink" title="从JAVA层面看IO模型"></a>从JAVA层面看IO模型</h2><p>如果前面的linux看能坚持看完的话,到了JAVA这里就会感觉有好多东西能够对应上,比如文件描述符和channel,多路复用的select/poll/epoll函数 与JAVA的selector多路复用器,以及同名的accept方法函数等等</p>
+<h3 id="BIO模型"><a href="#BIO模型" class="headerlink" title="BIO模型"></a>BIO模型</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketBIO</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ServerSocket server = <span class="keyword">new</span> ServerSocket(<span class="number">9090</span>,<span class="number">20</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;step1: new ServerSocket(9090) &quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            Socket client = server.accept();  <span class="comment">//阻塞1</span></span><br><span class="line">            System.out.println(<span class="string">&quot;step2:client\t&quot;</span> + client.getPort());</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    InputStream in = <span class="keyword">null</span>;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        in = client.getInputStream();</span><br><span class="line">                        BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</span><br><span class="line">                        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">                            String dataline = reader.readLine(); <span class="comment">//阻塞2</span></span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span>(<span class="keyword">null</span> != dataline)&#123;</span><br><span class="line">                                System.out.println(dataline);</span><br><span class="line">                            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                                client.close();</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        System.out.println(<span class="string">&quot;客户端断开&quot;</span>);</span><br><span class="line"></span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>了解清楚了linux系统调用后，BIO的java阻塞代码就很容易理解了，ServerSocket封装的socket,bind,listen系统调用</p>
+<p>accept方法封装的accept系统调用</p>
+<p>client里面有新产生的连接，即新的文件描述符，每产生一个新的连接，就start一个线程来运行单个连接的数据的收发</p>
+<h3 id="NIO模型"><a href="#NIO模型" class="headerlink" title="NIO模型"></a>NIO模型</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketNIO</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//  what   why  how</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        LinkedList&lt;SocketChannel&gt; clients = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        ServerSocketChannel ss = ServerSocketChannel.open();  <span class="comment">//服务端开启监听：接受客户端</span></span><br><span class="line">        ss.bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">9090</span>));</span><br><span class="line">        ss.configureBlocking(<span class="keyword">false</span>); <span class="comment">//重点  OS  NONBLOCKING!!!  //只让接受客户端  不阻塞</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="comment">//接受客户端的连接</span></span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            SocketChannel client = ss.accept(); <span class="comment">//不会阻塞？  -1 NULL</span></span><br><span class="line">            <span class="comment">//accept  调用内核了：1，没有客户端连接进来，返回值？在BIO 的时候一直卡着，但是在NIO ，不卡着，返回-1，NULL</span></span><br><span class="line">            <span class="comment">//如果来客户端的连接，accept 返回的是这个客户端的fd  5，client  object</span></span><br><span class="line">            <span class="comment">//NONBLOCKING 就是代码能往下走了，只不过有不同的情况</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (client == <span class="keyword">null</span>) &#123;</span><br><span class="line">             <span class="comment">//   System.out.println(&quot;null.....&quot;);</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                client.configureBlocking(<span class="keyword">false</span>); <span class="comment">//重点  socket（服务端的listen socket&lt;连接请求三次握手后，往我这里扔，我去通过accept 得到  连接的socket&gt;，连接socket&lt;连接后的数据读写使用的&gt; ）</span></span><br><span class="line">                <span class="keyword">int</span> port = client.socket().getPort();</span><br><span class="line">                System.out.println(<span class="string">&quot;client..port: &quot;</span> + port);</span><br><span class="line">                clients.add(client);</span><br><span class="line">            &#125;</span><br><span class="line">            ByteBuffer buffer = ByteBuffer.allocateDirect(<span class="number">4096</span>);  <span class="comment">//可以在堆里   堆外</span></span><br><span class="line">            <span class="comment">//遍历已经链接进来的客户端能不能读写数据</span></span><br><span class="line">            <span class="keyword">for</span> (SocketChannel c : clients) &#123;  </span><br><span class="line">                <span class="keyword">int</span> num = c.read(buffer); <span class="comment">//不会阻塞</span></span><br><span class="line">                <span class="keyword">if</span> (num &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    buffer.flip();</span><br><span class="line">                    <span class="keyword">byte</span>[] aaa = <span class="keyword">new</span> <span class="keyword">byte</span>[buffer.limit()];</span><br><span class="line">                    buffer.get(aaa);</span><br><span class="line">                    String b = <span class="keyword">new</span> String(aaa);</span><br><span class="line">                    System.out.println(c.socket().getPort() + <span class="string">&quot; : &quot;</span> + b);</span><br><span class="line">                    buffer.clear();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到了NIO时代也一样,仅仅是将ServerSocket对象变成ServerSocketChannle对象,读写方式由传统的IO流变成了既可读又可写的Channel(实际上底层还是文件描述符),</p>
+<p>有个配置项configureBlocking(false),这其实就是底层的SOCK_NONBLOCK,</p>
+<p>新的ByteBuffer缓冲区,可以在堆外内存分配数据,这里说一下所谓的堆外内存或者直接内存其实就是用户空间的内存,还有一种内存可以通过内核函数mmap分配,这个是内核空间和用户空间的共享内存,用户程序访问mmap的这块内存,不会产生用户态到内核态的切换.所以请求速度内存的请求速度排列大致如下</p>
+<p>mmap &gt; 堆外内存/直接内存 &gt; 堆内内存</p>
+<h3 id="多路复用器NIO"><a href="#多路复用器NIO" class="headerlink" title="多路复用器NIO"></a>多路复用器NIO</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketMultiplexingSingleThreadv1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ServerSocketChannel server = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> Selector selector = <span class="keyword">null</span>;   <span class="comment">//linux 多路复用器（select poll    epoll kqueue） nginx  event&#123;&#125;</span></span><br><span class="line">    <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            server = ServerSocketChannel.open();</span><br><span class="line">            server.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">            server.bind(<span class="keyword">new</span> InetSocketAddress(port));</span><br><span class="line">            <span class="comment">//如果在epoll模型下，open--》  epoll_create -&gt; fd3</span></span><br><span class="line">            selector = Selector.open();  <span class="comment">//  select  poll  *epoll  优先选择：epoll  但是可以 -D修正</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">//server 约等于 listen状态的 fd4</span></span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            register</span></span><br><span class="line"><span class="comment">            如果：</span></span><br><span class="line"><span class="comment">            select，poll：jvm里开辟一个数组 fd4 放进去</span></span><br><span class="line"><span class="comment">            epoll：  epoll_ctl(fd3,ADD,fd4,EPOLLIN</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            server.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        initServer();</span><br><span class="line">        System.out.println(<span class="string">&quot;服务器启动了。。。。。&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  <span class="comment">//死循环</span></span><br><span class="line"></span><br><span class="line">                Set&lt;SelectionKey&gt; keys = selector.keys();</span><br><span class="line">                System.out.println(keys.size()+<span class="string">&quot;   size&quot;</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//1,调用多路复用器(select,poll  or  epoll  (epoll_wait))</span></span><br><span class="line">                <span class="comment">/*</span></span><br><span class="line"><span class="comment">                select()是啥意思：</span></span><br><span class="line"><span class="comment">                1，select，poll  其实  内核的select（fd4）  poll(fd4)</span></span><br><span class="line"><span class="comment">                2，epoll：  其实 内核的 epoll_wait()</span></span><br><span class="line"><span class="comment">                *, 参数可以带时间：没有时间，0  ：  阻塞，有时间设置一个超时</span></span><br><span class="line"><span class="comment">                selector.wakeup()  结果返回0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                懒加载：</span></span><br><span class="line"><span class="comment">                其实再触碰到selector.select()调用的时候触发了epoll_ctl的调用</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="keyword">while</span> (selector.select() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    Set&lt;SelectionKey&gt; selectionKeys = selector.selectedKeys();  <span class="comment">//返回的有状态的fd集合</span></span><br><span class="line">                    Iterator&lt;SelectionKey&gt; iter = selectionKeys.iterator();</span><br><span class="line">                    <span class="comment">//so，管你啥多路复用器，你呀只能给我状态，我还得一个一个的去处理他们的R/W。同步好辛苦！！！！！！！！</span></span><br><span class="line">                    <span class="comment">//  NIO  自己对着每一个fd调用系统调用，浪费资源，那么你看，这里是不是调用了一次select方法，知道具体的那些可以R/W了？</span></span><br><span class="line">                    <span class="comment">//幕兰，是不是很省力？</span></span><br><span class="line">                    <span class="comment">//我前边可以强调过，socket：  listen   通信 R/W</span></span><br><span class="line">                    <span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">                        SelectionKey key = iter.next();</span><br><span class="line">                        iter.remove(); <span class="comment">//set  不移除会重复循环处理</span></span><br><span class="line">                        <span class="keyword">if</span> (key.isAcceptable()) &#123;</span><br><span class="line">                            <span class="comment">//看代码的时候，这里是重点，如果要去接受一个新的连接</span></span><br><span class="line">                            <span class="comment">//语义上，accept接受连接且返回新连接的FD对吧？</span></span><br><span class="line">                            <span class="comment">//那新的FD怎么办？</span></span><br><span class="line">                            <span class="comment">//select，poll，因为他们内核没有空间，那么在jvm中保存和前边的fd4那个listen的一起</span></span><br><span class="line">                            <span class="comment">//epoll： 我们希望通过epoll_ctl把新的客户端fd注册到内核空间</span></span><br><span class="line">                            acceptHandler(key);</span><br><span class="line">                        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.isReadable()) &#123;</span><br><span class="line">                            readHandler(key);  <span class="comment">//连read 还有 write都处理了</span></span><br><span class="line">                            <span class="comment">//在当前线程，这个方法可能会阻塞  ，如果阻塞了十年，其他的IO早就没电了。。。</span></span><br><span class="line">                            <span class="comment">//所以，为什么提出了 IO THREADS</span></span><br><span class="line">                            <span class="comment">//redis  是不是用了epoll，redis是不是有个io threads的概念 ，redis是不是单线程的</span></span><br><span class="line">                            <span class="comment">//tomcat 8,9  异步的处理方式  IO  和   处理上  解耦</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">acceptHandler</span><span class="params">(SelectionKey key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ServerSocketChannel ssc = (ServerSocketChannel) key.channel();</span><br><span class="line">            SocketChannel client = ssc.accept(); <span class="comment">//来啦，目的是调用accept接受客户端  fd7</span></span><br><span class="line">            client.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">            ByteBuffer buffer = ByteBuffer.allocate(<span class="number">8192</span>);  <span class="comment">//前边讲过了</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 0.0  我类个去</span></span><br><span class="line">            <span class="comment">//你看，调用了register</span></span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            select，poll：jvm里开辟一个数组 fd7 放进去</span></span><br><span class="line"><span class="comment">            epoll：  epoll_ctl(fd3,ADD,fd7,EPOLLIN</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            client.register(selector, SelectionKey.OP_READ, buffer);</span><br><span class="line">            System.out.println(<span class="string">&quot;-------------------------------------------&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;新客户端：&quot;</span> + client.getRemoteAddress());</span><br><span class="line">            System.out.println(<span class="string">&quot;-------------------------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readHandler</span><span class="params">(SelectionKey key)</span> </span>&#123;</span><br><span class="line">        SocketChannel client = (SocketChannel) key.channel();</span><br><span class="line">        ByteBuffer buffer = (ByteBuffer) key.attachment();</span><br><span class="line">        buffer.clear();</span><br><span class="line">        <span class="keyword">int</span> read = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                read = client.read(buffer);</span><br><span class="line">                <span class="keyword">if</span> (read &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    buffer.flip();</span><br><span class="line">                    <span class="keyword">while</span> (buffer.hasRemaining()) &#123;</span><br><span class="line">                        client.write(buffer);</span><br><span class="line">                    &#125;</span><br><span class="line">                    buffer.clear();</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (read == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    client.close();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SocketMultiplexingSingleThreadv1 service = <span class="keyword">new</span> SocketMultiplexingSingleThreadv1();</span><br><span class="line">        service.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到了多路复用器,事情突然就变得很复杂,主要JAVA一个Selector对象将accept,recv函数以及文件描述符Channel同时封装起来了,导致后面需要分逻辑处理</p>
+<p>可能是因为java是个抽象虚拟层,需要同时兼容windows,linux和Mac,而且windows的多路复用函数只有select,所以我们调用的API它必须高度抽象.才导致封装的东西调用起来比较难受,所以之后netty才火起来,因为Reactor模型很容易理解,封装出来的API调用简单.</p>
+<h2 id="Reactor模型Netty"><a href="#Reactor模型Netty" class="headerlink" title="Reactor模型Netty"></a>Reactor模型Netty</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 服务器入口类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerMain</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日志对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        EventLoopGroup bossEventGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        ServerBootstrap b = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">        b.group(bossEventGroup,workerGroup);</span><br><span class="line">        b.channel(NioServerSocketChannel.class);</span><br><span class="line">        b.childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel channel)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                channel.pipeline().addLast(</span><br><span class="line">                        <span class="keyword">new</span> HttpServerCodec(),</span><br><span class="line">                        <span class="keyword">new</span> HttpObjectAggregator(<span class="number">65535</span>),</span><br><span class="line">                        <span class="keyword">new</span> WebSocketServerProtocolHandler(<span class="string">&quot;/websocket&quot;</span>),</span><br><span class="line">                        <span class="keyword">new</span> GameMsgHandler()</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ChannelFuture f = b.bind(<span class="number">12138</span>).sync();</span><br><span class="line">            <span class="keyword">if</span> (f.isSuccess())&#123;</span><br><span class="line">                LOGGER.info(<span class="string">&quot;服务器启动成功&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//等待服务器信道关闭</span></span><br><span class="line">            *<span class="comment">//也就是不要立即退出应用程序,让应用程序可以一直提供服务*</span></span><br><span class="line">            f.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">&quot;服务器启动失败&quot;</span>,e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与java原生的NIO比起来，netty的代码看起来就简洁很多了</p>
+<p>(一项技术能流行起来的两个因素,它的调用特别简单,它的实现技术很复杂且都有利于它的目的)</p>
+<p>首先有两个同类型对象EventLoopGroup，LoopGroup这个名字首先让人联想到的就是无限轮询的线程                      池，的确LoopGroup对象本质上就是一个线程池，他的构造体可以定义线程数量，线程池的线程中封装了java原生NIO的逻辑</p>
+<p>往回倒一倒，两个同类对象都被ServerBootstrap注册，一个负责建立并返回新连接，一个根据新连接数量建立适量的线程，线程在管理的连接中读写数据</p>
+<p>而NioServerSocketChannel就是可读写的文件描述符的封装</p>
+<p>然后childHandler方法，是为了帮助我们在处理数据的线程中预埋自己的逻辑，通过addLast方法,添加Handler类对象实现,并且预埋逻辑在pipeline中的handlers有两个方向,一个接收的pipeline,一个是响应的pipeline.分别继承自ChannelInboundHandler,ChannelOutboundHandler</p>
+<h2 id="Http协议对比"><a href="#Http协议对比" class="headerlink" title="Http协议对比"></a>Http协议对比</h2><p>讲完IO,NIO到多路复用器到上层的Reactor模型之后，我们再和http协议对比一下，说一下两者的试用场景。</p>
+<p>http有两个特点，一个是无状态的连接，一个是严格的字符请求报文格式。</p>
+<p>什么是无状态？就是没有记忆，客户端请求一次，服务端建立连接，响应一次，这次的连接就直接弃用了，它没有会话连接，长连接这么一个概念。</p>
+<p>字符请求报文格式，</p>
+<p>请求必须包含请求行，请求头，请求体</p>
+<p>响应必须包含响应行，响应头，响应体</p>
+<p>而且请求响应必须都是字符型的</p>
+<p>这样协议适合一般的网页前端，移动应用端的场景，因为这样的场景下用户请求频率比较稀疏</p>
+<p>但是遇到网游或者推送场景就不行了，首先游戏后端用户操作请求特别的密集，如果使用字符型的报文格式，短时间数据量会很巨大，网卡很容易就撑爆卡在那里，只能自己用字节码定义请求格式,而且网游的动作都是定死的,再用protoBuf,thrift等进行编码,可以把每次传输的数据格式压缩到十几个字节的水平,不像http一次请求光请求头就占用上百字节.</p>
+<p>并且游戏客户端需要后端推送其他用户的信息，才能达到交互的目的，而推送功能的前提就是建立长连接。</p>
+<h2 id="后期会补上的知识"><a href="#后期会补上的知识" class="headerlink" title="后期会补上的知识"></a>后期会补上的知识</h2><p>我说,NioEventLoopGroup本质上是一个线程池,我本以为它其中的执行线程Executor对象继承自Runnable,但是粗略的看过源码之后才发现它其实是JUC当中的类,也就是jdk原生提供的高并发的调用,所以笔者会在后期,出几篇netty源码分析并且,再深入研究一下JUC的包</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IO%E6%A8%A1%E5%9E%8B/" rel="tag"># IO模型</a>
+              <a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/" rel="tag"># 高并发</a>
+              <a href="/tags/netty/" rel="tag"># netty</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/06/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E8%BF%87%E6%B8%A1%E8%AE%A1%E7%AE%97%E5%B1%82-2/" rel="prev" title="spark源码分析资源层过渡计算层-2">
+                  <i class="fa fa-chevron-left"></i> spark源码分析资源层过渡计算层-2
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/19/es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" rel="next" title="es踩坑日记(持续更新)">
+                  es踩坑日记(持续更新) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+<script src="/js/comments.js"></script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lemcoden</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

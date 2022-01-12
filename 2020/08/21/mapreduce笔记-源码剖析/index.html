@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -8,8 +8,8 @@
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -18,6 +18,8 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
 <meta name="description" content="为什么要看源码1.为了更好的使用框架的Api解决问题,比如说我们遇到一个问题,需要修改mapreduce分片的大小,如果没看过源码,可能会写很多代码,甚至重新调整文件block的大小上传,但是看过源码的都懂,只要简单的修改minSplite和maxSplite这两个配置属性就可以.2.为了学习框架本身的设计方法,应用到日常开发中.(此次源码分析的hadoop版本为2.7.2) 怎么看源码要有目的性">
@@ -26,9 +28,9 @@
 <meta property="og:url" content="https://lemcoden.github.io/2020/08/21/mapreduce%E7%AC%94%E8%AE%B0-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="Lemcoden">
 <meta property="og:description" content="为什么要看源码1.为了更好的使用框架的Api解决问题,比如说我们遇到一个问题,需要修改mapreduce分片的大小,如果没看过源码,可能会写很多代码,甚至重新调整文件block的大小上传,但是看过源码的都懂,只要简单的修改minSplite和maxSplite这两个配置属性就可以.2.为了学习框架本身的设计方法,应用到日常开发中.(此次源码分析的hadoop版本为2.7.2) 怎么看源码要有目的性">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale">
 <meta property="article:published_time" content="2020-08-21T09:56:07.000Z">
-<meta property="article:modified_time" content="2020-08-24T15:13:20.000Z">
+<meta property="article:modified_time" content="2021-06-11T05:27:32.516Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="hadoop生态">
 <meta property="article:tag" content="分布式">
@@ -39,12 +41,14 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;en&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;08&#x2F;21&#x2F;mapreduce%E7%AC%94%E8%AE%B0-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;08&#x2F;21&#x2F;mapreduce笔记-源码剖析&#x2F;&quot;,&quot;title&quot;:&quot;mapreduce笔记-源码剖析&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;08&#x2F;21&#x2F;mapreduce%E7%AC%94%E8%AE%B0-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;08&#x2F;21&#x2F;mapreduce笔记-源码剖析&#x2F;&quot;,&quot;title&quot;:&quot;mapreduce笔记-源码剖析&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
 <title>mapreduce笔记-源码剖析 | Lemcoden</title><script src="/js/config.js"></script>
   
 
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
 
 
 
@@ -87,9 +91,11 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives" rel="section">Archives</a></li>
-        <li class="menu-item menu-item-about"><a href="/about" rel="section">About</a></li>
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
   </ul>
 </nav>
 
@@ -134,19 +140,21 @@
 <div class="site-state-wrap site-overview-item animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives">
+          <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">24</span>
-        <span class="site-state-item-name">tags</span>
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -155,6 +163,10 @@
 
         </div>
       </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -163,10 +175,7 @@
     </header>
 
     
-  <div class="back-to-top" role="button" aria-label="Back to top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -183,7 +192,7 @@
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/08/21/mapreduce%E7%AC%94%E8%AE%B0-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -215,7 +224,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-08-24 23:13:20" itemprop="dateModified" datetime="2020-08-24T23:13:20+08:00">2020-08-24</time>
+        <time title="Modified: 2021-06-11 13:27:32" itemprop="dateModified" datetime="2021-06-11T13:27:32+08:00">2021-06-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -287,7 +296,7 @@
 <p>代码的中文注释已经比较详细了,我们继续走,看看排序收集器里面都是什么东西<br/><br>打开createSortingCollector</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private &lt;KEY, VALUE&gt; MapOutputCollector&lt;KEY, VALUE&gt;</span><br><span class="line">         createSortingCollector(JobConf job, TaskReporter reporter) &#123;</span><br><span class="line">     Class&lt;?&gt;[] collectorClasses = job.getClasses(</span><br><span class="line">      JobContext.MAP_OUTPUT_COLLECTOR_CLASS_ATTR, MapOutputBuffer.class);</span><br><span class="line">    int remainingCollectors = collectorClasses.length;</span><br><span class="line">    Exception lastException = null;</span><br><span class="line">    for (Class clazz : collectorClasses) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        if (!MapOutputCollector.class.isAssignableFrom(clazz)) &#123;</span><br><span class="line">          throw new IOException(&quot;Invalid output collector class: &quot; + clazz.getName() +</span><br><span class="line">            &quot; (does not implement MapOutputCollector)&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Class&lt;? extends MapOutputCollector&gt; subclazz =</span><br><span class="line">          clazz.asSubclass(MapOutputCollector.class);</span><br><span class="line">        LOG.debug(&quot;Trying map output collector class: &quot; + subclazz.getName());</span><br><span class="line">        MapOutputCollector&lt;KEY, VALUE&gt; collector =</span><br><span class="line">          ReflectionUtils.newInstance(subclazz, job);</span><br><span class="line">        collector.init(context);</span><br><span class="line">        LOG.info(&quot;Map output collector class = &quot; + collector.getClass().getName());</span><br><span class="line">        return collector;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <p>最后知道了,输出数据的排序收集器就是唤醒缓冲区MapOutputBuffer的子类,打开他的init方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">public void init(MapOutputCollector.Context context</span><br><span class="line">                    ) throws IOException, ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">      //sanity checks</span><br><span class="line">      final float spillper =</span><br><span class="line">        job.getFloat(JobContext.MAP_SORT_SPILL_PERCENT, (float)0.8);</span><br><span class="line">      final int sortmb = job.getInt(JobContext.IO_SORT_MB, 100);     </span><br><span class="line">      ...</span><br><span class="line">      sorter = ReflectionUtils.newInstance(job.getClass(&quot;map.sort.class&quot;,</span><br><span class="line">            QuickSort.class, IndexedSorter.class), job);</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">      // k/v serialization</span><br><span class="line">      comparator = job.getOutputKeyComparator();</span><br><span class="line">      keyClass = (Class&lt;K&gt;)job.getMapOutputKeyClass();</span><br><span class="line">      valClass = (Class&lt;V&gt;)job.getMapOutputValueClass();</span><br><span class="line">      serializationFactory = new SerializationFactory(job);</span><br><span class="line">      keySerializer = serializationFactory.getSerializer(keyClass);</span><br><span class="line">      keySerializer.open(bb);</span><br><span class="line">      valSerializer = serializationFactory.getSerializer(valClass);</span><br><span class="line">      valSerializer.open(bb);</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">      // compression</span><br><span class="line">      if (job.getCompressMapOutput()) &#123;</span><br><span class="line">        Class&lt;? extends CompressionCodec&gt; codecClass =</span><br><span class="line">          job.getMapOutputCompressorClass(DefaultCodec.class);</span><br><span class="line">        codec = ReflectionUtils.newInstance(codecClass, job);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        codec = null;</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">      if (combinerRunner != null) &#123;</span><br><span class="line">        final Counters.Counter combineOutputCounter =</span><br><span class="line">          reporter.getCounter(TaskCounter.COMBINE_OUTPUT_RECORDS);</span><br><span class="line">        combineCollector= new CombineOutputCollector&lt;K,V&gt;(combineOutputCounter, reporter, job);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        combineCollector = null;</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">      spillThread.setDaemon(true);</span><br><span class="line">      spillThread.setName(&quot;SpillThread&quot;);</span><br><span class="line">      spillLock.lock();</span><br><span class="line">      try &#123;</span><br><span class="line">        spillThread.start();</span><br><span class="line">        while (!spillThreadRunning) &#123;</span><br><span class="line">          spillDone.await();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        throw new IOException(&quot;Spill thread failed to initialize&quot;, e);</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        spillLock.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">      if (sortSpillException != null) &#123;</span><br><span class="line">        throw new IOException(&quot;Spill thread failed to initialize&quot;,</span><br><span class="line">            sortSpillException);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">public void init(MapOutputCollector.Context context</span><br><span class="line">                    ) throws IOException, ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">      //sanity checks</span><br><span class="line">      final float spillper =</span><br><span class="line">        job.getFloat(JobContext.MAP_SORT_SPILL_PERCENT, (float)0.8);</span><br><span class="line">      final int sortmb = job.getInt(JobContext.IO_SORT_MB, 100);     </span><br><span class="line">      ...</span><br><span class="line">      sorter = ReflectionUtils.newInstance(job.getClass(&quot;map.sort.class&quot;,</span><br><span class="line">            QuickSort.class, IndexedSorter.class), job);</span><br><span class="line">    </span><br><span class="line">      ...</span><br><span class="line">      // k/v serialization</span><br><span class="line">      comparator = job.getOutputKeyComparator();</span><br><span class="line">      keyClass = (Class&lt;K&gt;)job.getMapOutputKeyClass();</span><br><span class="line">      valClass = (Class&lt;V&gt;)job.getMapOutputValueClass();</span><br><span class="line">      serializationFactory = new SerializationFactory(job);</span><br><span class="line">      keySerializer = serializationFactory.getSerializer(keyClass);</span><br><span class="line">      keySerializer.open(bb);</span><br><span class="line">      valSerializer = serializationFactory.getSerializer(valClass);</span><br><span class="line">      valSerializer.open(bb);</span><br><span class="line">    </span><br><span class="line">      ...</span><br><span class="line">      // compression</span><br><span class="line">      if (job.getCompressMapOutput()) &#123;</span><br><span class="line">        Class&lt;? extends CompressionCodec&gt; codecClass =</span><br><span class="line">          job.getMapOutputCompressorClass(DefaultCodec.class);</span><br><span class="line">        codec = ReflectionUtils.newInstance(codecClass, job);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        codec = null;</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">      if (combinerRunner != null) &#123;</span><br><span class="line">        final Counters.Counter combineOutputCounter =</span><br><span class="line">          reporter.getCounter(TaskCounter.COMBINE_OUTPUT_RECORDS);</span><br><span class="line">        combineCollector= new CombineOutputCollector&lt;K,V&gt;(combineOutputCounter, reporter, job);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        combineCollector = null;</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">      spillThread.setDaemon(true);</span><br><span class="line">      spillThread.setName(&quot;SpillThread&quot;);</span><br><span class="line">      spillLock.lock();</span><br><span class="line">      try &#123;</span><br><span class="line">        spillThread.start();</span><br><span class="line">        while (!spillThreadRunning) &#123;</span><br><span class="line">          spillDone.await();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        throw new IOException(&quot;Spill thread failed to initialize&quot;, e);</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        spillLock.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">      if (sortSpillException != null) &#123;</span><br><span class="line">        throw new IOException(&quot;Spill thread failed to initialize&quot;,</span><br><span class="line">            sortSpillException);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>下面的粗略的的分组,代码分别是</p>
 <ul>
 <li>设置缓冲取大小和溢写百分比(默认100M和0.8)</li>
@@ -380,6 +389,7 @@
   </footer>
 
   
+  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
@@ -388,11 +398,21 @@
 
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
 
+  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
 
   
 
 
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
 
 
