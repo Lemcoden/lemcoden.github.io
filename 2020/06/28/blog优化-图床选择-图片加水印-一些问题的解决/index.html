@@ -22,18 +22,18 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="前情提要:hexo优化:github+coding双搭建，域名CNAME别称指向 关于域名备案首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务 如果大家像笔者之前的那样注册了Godady的域名,请直接去阿里&amp;腾讯云社区,搜索域名转入,进行相关操作,域名转入需要多交一年的域名租赁费用 如果申请国内">
+<meta name="description" content="前情提要: hexo优化:github+coding双搭建，域名CNAME别称指向  关于域名备案 首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务 如果大家像笔者之前的那样注册了Godady的域名,请直接去阿里&amp;腾讯云社区,搜索域名转入,进行相关操作,域名转入需要多交一年的域名租赁费用 如果申">
 <meta property="og:type" content="article">
 <meta property="og:title" content="blog优化:图床选择&amp;图片加水印&amp;一些问题的解决">
 <meta property="og:url" content="https://lemcoden.github.io/2020/06/28/blog%E4%BC%98%E5%8C%96-%E5%9B%BE%E5%BA%8A%E9%80%89%E6%8B%A9-%E5%9B%BE%E7%89%87%E5%8A%A0%E6%B0%B4%E5%8D%B0-%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="前情提要:hexo优化:github+coding双搭建，域名CNAME别称指向 关于域名备案首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务 如果大家像笔者之前的那样注册了Godady的域名,请直接去阿里&amp;腾讯云社区,搜索域名转入,进行相关操作,域名转入需要多交一年的域名租赁费用 如果申请国内">
+<meta property="og:description" content="前情提要: hexo优化:github+coding双搭建，域名CNAME别称指向  关于域名备案 首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务 如果大家像笔者之前的那样注册了Godady的域名,请直接去阿里&amp;腾讯云社区,搜索域名转入,进行相关操作,域名转入需要多交一年的域名租赁费用 如果申">
 <meta property="og:locale">
 <meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/picture_sub_domain.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/pic_path.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/blog_optimize/conf_pic_go.png">
 <meta property="article:published_time" content="2020-06-28T01:53:16.000Z">
-<meta property="article:modified_time" content="2020-11-09T14:43:50.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:55:23.685Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="博客搭建">
 <meta name="twitter:card" content="summary">
@@ -129,7 +129,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9F%9F%E5%90%8D%E5%A4%87%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">关于域名备案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9B%BE%E5%BA%8A"><span class="nav-number">2.</span> <span class="nav-text">关于图床</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%8A%A0%E5%85%A5%E5%9B%BE%E7%89%87"><span class="nav-number">2.1.</span> <span class="nav-text">怎么加入图片?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%83%E7%89%9B%E4%BA%91"><span class="nav-number">2.2.</span> <span class="nav-text">七牛云</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PicGo%E7%9A%84linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">PicGo的linux安装方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9B%BE%E7%89%87%E5%8A%A0%E6%B0%B4%E5%8D%B0"><span class="nav-number">2.4.</span> <span class="nav-text">关于图片加水印</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9F%9F%E5%90%8D%E5%A4%87%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text"> 关于域名备案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9B%BE%E5%BA%8A"><span class="nav-number">2.</span> <span class="nav-text"> 关于图床</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%8A%A0%E5%85%A5%E5%9B%BE%E7%89%87"><span class="nav-number">2.1.</span> <span class="nav-text"> 怎么加入图片?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%83%E7%89%9B%E4%BA%91"><span class="nav-number">2.2.</span> <span class="nav-text"> 七牛云</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#picgo%E7%9A%84linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text"> PicGo的linux安装方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%9B%BE%E7%89%87%E5%8A%A0%E6%B0%B4%E5%8D%B0"><span class="nav-number">2.4.</span> <span class="nav-text"> 关于图片加水印</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -145,7 +145,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -156,7 +156,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -227,7 +227,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-09 22:43:50" itemprop="dateModified" datetime="2020-11-09T22:43:50+08:00">2020-11-09</time>
+        <time title="Modified: 2021-08-08 18:55:23" itemprop="dateModified" datetime="2021-08-08T18:55:23+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -249,47 +249,52 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>前情提要:<br><a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/05/20/hexo优化-github-coding双搭建，域名CNAME别称指向/">hexo优化:github+coding双搭建，域名CNAME别称指向</a></p>
-<h3 id="关于域名备案"><a href="#关于域名备案" class="headerlink" title="关于域名备案"></a>关于域名备案</h3><p>首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务</p>
+        <p>前情提要:<br />
+<a target="_blank" rel="noopener" href="https://lemcoden.xyz/2020/05/20/hexo优化-github-coding双搭建，域名CNAME别称指向/">hexo优化:github+coding双搭建，域名CNAME别称指向</a></p>
+<h3 id="关于域名备案"><a class="markdownIt-Anchor" href="#关于域名备案"></a> 关于域名备案</h3>
+<p>首先向各位读者道歉,之前向大家推荐了Godaddy的域名注册,笔者发现注册完成之后并不是非常好用,官网难以打开,客服反映慢,并且也不提供备案服务</p>
 <p>如果大家像笔者之前的那样注册了Godady的域名,请直接去阿里&amp;腾讯云社区,搜索域名转入,进行相关操作,<font color=00ff00>域名转入需要多交一年的域名租赁费用</font></p>
 <p>如果申请国内阿里,腾讯云的,可以直接去备案,<font color=00ff00>备案需要有域名提供商的云服务器,并且需要填写身份信息,备案申请,快的话一个星期才能申请下来</font></p>
-<h3 id="关于图床"><a href="#关于图床" class="headerlink" title="关于图床"></a>关于图床</h3><h4 id="怎么加入图片"><a href="#怎么加入图片" class="headerlink" title="怎么加入图片?"></a>怎么加入图片?</h4><p>关于怎么在hexo框架中加入图片,百度肯定有很多方法,笔者也尝试过,比如</p>
+<h3 id="关于图床"><a class="markdownIt-Anchor" href="#关于图床"></a> 关于图床</h3>
+<span id="more"></span>
+<h4 id="怎么加入图片"><a class="markdownIt-Anchor" href="#怎么加入图片"></a> 怎么加入图片?</h4>
+<p>关于怎么在hexo框架中加入图片,百度肯定有很多方法,笔者也尝试过,比如</p>
 <ul>
 <li>直接加到github的库当中,然后通过链接引用,但是这样速度很慢,多次打开都是图片坏掉的小图标</li>
 <li>使用<em>hexo</em>-asset-<em>image</em>,作为非nodejs的程序员,安装之后,引用图片并没有显示,并且中间还报了各种依赖异常,本人不会解决,所以直接跳过</li>
 <li>踩坑之后笔者决定选择用云存储做图床,考虑到成本问题选择七牛云,完全免费</li>
 </ul>
-<h4 id="七牛云"><a href="#七牛云" class="headerlink" title="七牛云"></a>七牛云</h4><p>关于七牛云的注册,登录,以及申请对象存储,这里笔者不再多赘述,看着官方文档说明都可以做到,这里主要聊一聊申请过程中需要注意的问题</p>
+<h4 id="七牛云"><a class="markdownIt-Anchor" href="#七牛云"></a> 七牛云</h4>
+<p>关于七牛云的注册,登录,以及申请对象存储,这里笔者不再多赘述,看着官方文档说明都可以做到,这里主要聊一聊申请过程中需要注意的问题</p>
 <ul>
 <li>千万不要使用顶级域名绑定，可以在DNSpod域名解析那里添加一个子域名，比如这个</li>
 </ul>
-<p><img src="http://picture.lemcoden.xyz/blog_optimize/picture_sub_domain.png" alt="picture_sub_domain"></p>
+<p><img src="http://picture.lemcoden.xyz/blog_optimize/picture_sub_domain.png" alt="picture_sub_domain" /></p>
 <ul>
 <li>上传图片之前记得添加前缀，多个路径用/隔开</li>
 </ul>
-<p><img src="http://picture.lemcoden.xyz/blog_optimize/pic_path.png" alt="pic_path"></p>
+<p><img src="http://picture.lemcoden.xyz/blog_optimize/pic_path.png" alt="pic_path" /></p>
 <ul>
 <li>多图上传推荐用上传工具PicGo</li>
 </ul>
-<h4 id="PicGo的linux安装方法"><a href="#PicGo的linux安装方法" class="headerlink" title="PicGo的linux安装方法"></a>PicGo的linux安装方法</h4><p><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">PicGo的github链接</a></p>
+<h4 id="picgo的linux安装方法"><a class="markdownIt-Anchor" href="#picgo的linux安装方法"></a> PicGo的linux安装方法</h4>
+<p><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">PicGo的github链接</a></p>
 <p>windows和mac直接在release里面下载相应的exe和dmg就可以</p>
 <p>linux推荐下载appImage后缀的安装包</p>
 <p>下载完成后,操作如下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp PicGo-2.3.0-beta.3.AppImage /usr/bin/PicGo</span><br><span class="line">chmod +x /usr/bin/PicGo</span><br><span class="line">PicGo</span><br></pre></td></tr></table></figure>
-
 <p>然后直接命令输入PicGo运行就可以了</p>
 <p>如果出现如下异常</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xclip not found</span><br></pre></td></tr></table></figure>
-
 <p>控制台输入</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xclip -y</span><br></pre></td></tr></table></figure>
-
 <p>安装xclip即可</p>
 <p>这里放一个PicGo的配置参考</p>
-<p><img src="http://picture.lemcoden.xyz/blog_optimize/conf_pic_go.png" alt="conf_pic_go"></p>
+<p><img src="http://picture.lemcoden.xyz/blog_optimize/conf_pic_go.png" alt="conf_pic_go" /></p>
 <p>存储区域华南,华北那些在官方文档有对应的参考映射值</p>
 <p><a target="_blank" rel="noopener" href="https://picgo.github.io/PicGo-Doc/zh/guide/config.html#%E4%B8%83%E7%89%9B%E5%9B%BE%E5%BA%8A">官方配置指南</a></p>
-<h4 id="关于图片加水印"><a href="#关于图片加水印" class="headerlink" title="关于图片加水印"></a>关于图片加水印</h4><p>为了防止别人盗图,笔者特意写了一个加水印的脚本,逻辑很简单的一个shell脚本,基于image magic库对图片进行编辑,下面放出地址</p>
+<h4 id="关于图片加水印"><a class="markdownIt-Anchor" href="#关于图片加水印"></a> 关于图片加水印</h4>
+<p>为了防止别人盗图,笔者特意写了一个加水印的脚本,逻辑很简单的一个shell脚本,基于image magic库对图片进行编辑,下面放出地址</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Lemcoden/blog.tools">https://github.com/Lemcoden/blog.tools</a></p>
 
     </div>
@@ -335,7 +340,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

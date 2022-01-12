@@ -22,15 +22,15 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="数据库设计缓存:数据可以丢 急速! 数据库:数据绝对不能丢 速度+持久性  掉电易失! redis+mysql &gt; 数据库 &lt; 不太对 redis如何持久化存储层: 1.快照&#x2F;副本 2.日志 从linux进程开始聊1234567891011graph LR	id1[单机持久化] --&gt; id2&amp;#123;RDB&amp;#125; 	id2 --&gt; id4[时点性]	id2 --&amp;">
+<meta name="description" content="数据库设计 缓存:数据可以丢 急速! 数据库:数据绝对不能丢 速度+持久性 掉电易失! redis+mysql &gt; 数据库 &lt; 不太对  redis如何持久化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis笔记03">
 <meta property="og:url" content="https://lemcoden.github.io/2020/11/18/redis%E7%AC%94%E8%AE%B003/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="数据库设计缓存:数据可以丢 急速! 数据库:数据绝对不能丢 速度+持久性  掉电易失! redis+mysql &gt; 数据库 &lt; 不太对 redis如何持久化存储层: 1.快照&#x2F;副本 2.日志 从linux进程开始聊1234567891011graph LR	id1[单机持久化] --&gt; id2&amp;#123;RDB&amp;#125; 	id2 --&gt; id4[时点性]	id2 --&amp;">
+<meta property="og:description" content="数据库设计 缓存:数据可以丢 急速! 数据库:数据绝对不能丢 速度+持久性 掉电易失! redis+mysql &gt; 数据库 &lt; 不太对  redis如何持久化">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-11-18T14:32:48.000Z">
-<meta property="article:modified_time" content="2021-01-24T08:46:26.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:57:17.103Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="内存数据库">
 <meta name="twitter:card" content="summary">
@@ -125,7 +125,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">数据库设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%A6%82%E4%BD%95%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">redis如何持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8Elinux%E8%BF%9B%E7%A8%8B%E5%BC%80%E5%A7%8B%E8%81%8A"><span class="nav-number">2.1.</span> <span class="nav-text">从linux进程开始聊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">2.2.</span> <span class="nav-text">管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%BC%94%E7%A4%BA"><span class="nav-number">2.3.</span> <span class="nav-text">进程演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB"><span class="nav-number">2.4.</span> <span class="nav-text">RDB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF"><span class="nav-number">2.5.</span> <span class="nav-text">AOF</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text"> 数据库设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%A6%82%E4%BD%95%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text"> redis如何持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8Elinux%E8%BF%9B%E7%A8%8B%E5%BC%80%E5%A7%8B%E8%81%8A"><span class="nav-number">2.1.</span> <span class="nav-text"> 从linux进程开始聊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">2.2.</span> <span class="nav-text"> 管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%BC%94%E7%A4%BA"><span class="nav-number">2.3.</span> <span class="nav-text"> 进程演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rdb"><span class="nav-number">2.4.</span> <span class="nav-text"> RDB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aof"><span class="nav-number">2.5.</span> <span class="nav-text"> AOF</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -141,7 +141,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -152,7 +152,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -223,7 +223,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:46:26" itemprop="dateModified" datetime="2021-01-24T16:46:26+08:00">2021-01-24</time>
+        <time title="Modified: 2021-08-08 18:57:17" itemprop="dateModified" datetime="2021-08-08T18:57:17+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,71 +245,95 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p>缓存:数据可以丢 急速!</p>
-<p>数据库:数据绝对不能丢 速度+持久性 </p>
+        <h3 id="数据库设计"><a class="markdownIt-Anchor" href="#数据库设计"></a> 数据库设计</h3>
+<p>缓存:数据可以丢 急速!</p>
+<p>数据库:数据绝对不能丢 速度+持久性</p>
 <p>掉电易失!</p>
 <p>redis+mysql &gt; 数据库 &lt; 不太对</p>
-<h3 id="redis如何持久化"><a href="#redis如何持久化" class="headerlink" title="redis如何持久化"></a>redis如何持久化</h3><p>存储层:</p>
+<h3 id="redis如何持久化"><a class="markdownIt-Anchor" href="#redis如何持久化"></a> redis如何持久化</h3>
+<span id="more"></span>
+<p>存储层:</p>
 <p>1.快照/副本</p>
 <p>2.日志</p>
-<h4 id="从linux进程开始聊"><a href="#从linux进程开始聊" class="headerlink" title="从linux进程开始聊"></a>从linux进程开始聊</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[单机持久化] --&gt; id2&#123;RDB&#125; </span><br><span class="line">	id2 --&gt; id4[时点性]</span><br><span class="line">	id2 --&gt; id6[save]</span><br><span class="line">	id6 --&gt; id10[明确:比如,关机维护]</span><br><span class="line">	id2 --&gt; id7[bgsave]</span><br><span class="line">	id7 --&gt; id8[fork创建子进程]</span><br><span class="line">	id2 --&gt; id9[配置文件中给出bgsave的规则:save这个标识]</span><br><span class="line">	id2 --&gt; id11[弊端&lt;br/&gt;&lt;br/&gt;1.不支持拉链,只有一个dump.rdb&lt;br/&gt;&lt;br/&gt;2.丢失数据相对多,&lt;br/&gt;时点与时点之间窗口数据容易丢失&lt;br/&gt;8点得到一个rdb,9点刚要落一个rdb,挂机了]</span><br><span class="line">	id2 --&gt; id12[优点&lt;br/&gt;类似java中序列化,恢复的速度相对快]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id101[如果果开启了AOF,只会用AOF恢复,&lt;br/&gt;4.0之后,AOF中包含RDB全量,增加记录新的写操作]</span><br></pre></td></tr></table></figure>
-
+<h4 id="从linux进程开始聊"><a class="markdownIt-Anchor" href="#从linux进程开始聊"></a> 从linux进程开始聊</h4>
+<pre class="mermaid">graph LR
+	id1[单机持久化] --> id2{RDB} 
+	id2 --> id4[时点性]
+	id2 --> id6[save]
+	id6 --> id10[明确:比如,关机维护]
+	id2 --> id7[bgsave]
+	id7 --> id8[fork创建子进程]
+	id2 --> id9[配置文件中给出bgsave的规则:save这个标识]
+	id2 --> id11[弊端<br/><br/>1.不支持拉链,只有一个dump.rdb<br/><br/>2.丢失数据相对多,<br/>时点与时点之间窗口数据容易丢失<br/>8点得到一个rdb,9点刚要落一个rdb,挂机了]
+	id2 --> id12[优点<br/>类似java中序列化,恢复的速度相对快]</pre>
+<pre class="mermaid">graph LR
+	id101[如果果开启了AOF,只会用AOF恢复,<br/>4.0之后,AOF中包含RDB全量,增加记录新的写操作]</pre>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><ol>
-<li><p>衔接,前一个命令的输出作为后一个命令的输入</p>
+<h4 id="管道"><a class="markdownIt-Anchor" href="#管道"></a> 管道</h4>
+<ol>
+<li>
+<p>衔接,前一个命令的输出作为后一个命令的输入</p>
 </li>
-<li><p>管道会触发子进程</p>
+<li>
+<p>管道会触发子进程</p>
 </li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$ | more</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8130</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8132</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8134</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8136</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="进程演示"><a href="#进程演示" class="headerlink" title="进程演示"></a>进程演示</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[使用linux的时候:&lt;br/&gt;&lt;br/&gt;父子进程&lt;br/&gt;&lt;br/&gt;常规思想,进程数据隔离的&lt;br/&gt;&lt;br/&gt;进阶思想,父进程其实可以让子进程看到数据 &lt;br/&gt;&lt;br/&gt;linux中&lt;br/&gt;export的环境变量,子进程的修改不会影响到父进程&lt;br/&gt;&lt;br/&gt;父进程不会破坏子进程&lt;br/&gt;] --&gt; id2[创建子进程应该是什么程度&lt;br/&gt;如果父进程是redis,内存数据10G&lt;br/&gt; 1.速度&lt;br/&gt;2.内存空间够不够]</span><br><span class="line">	id2--&gt;id3((&quot;fork&quot;))</span><br><span class="line">	id3 --&gt; id4[&quot;1.速度:快&lt;br/&gt;2.空间:小&quot;]</span><br></pre></td></tr></table></figure>
-
-
-
+<h4 id="进程演示"><a class="markdownIt-Anchor" href="#进程演示"></a> 进程演示</h4>
+<pre class="mermaid">graph LR
+	id1[使用linux的时候:<br/><br/>父子进程<br/><br/>常规思想,进程数据隔离的<br/><br/>进阶思想,父进程其实可以让子进程看到数据 <br/><br/>linux中<br/>export的环境变量,子进程的修改不会影响到父进程<br/><br/>父进程不会破坏子进程<br/>] --> id2[创建子进程应该是什么程度<br/>如果父进程是redis,内存数据10G<br/> 1.速度<br/>2.内存空间够不够]
+	id2-->id3(("fork"))
+	id3 --> id4["1.速度:快<br/>2.空间:小"]</pre>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ exit</span><br><span class="line">exit</span><br><span class="line">[lemcoden@hadoop01 ~]$ export num</span><br><span class="line">[lemcoden@hadoop01 ~]$ /bin/bash</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<p>test.sh</p>
+<p><a target="_blank" rel="noopener" href="http://test.sh">test.sh</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo $$</span><br><span class="line">echo $num</span><br><span class="line">num=999</span><br><span class="line">echo num:$num</span><br><span class="line"></span><br><span class="line">sleep 20</span><br><span class="line"></span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure>
-
 <p>执行状况(子进程不会修改父进程)</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8558</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8558</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">8454</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
-
 <p>执行状况(父进程不会破坏子进程)</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8623</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8623</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ num=888</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">888</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
-
-<h4 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h4><p>redis实现持久化需要解决两个问题:</p>
+<h4 id="rdb"><a class="markdownIt-Anchor" href="#rdb"></a> RDB</h4>
+<p>redis实现持久化需要解决两个问题:</p>
 <ol>
-<li><p>非阻塞,redis继续对外提供服务</p>
+<li>
+<p>非阻塞,redis继续对外提供服务</p>
 </li>
-<li><p>将数据落地</p>
+<li>
+<p>将数据落地</p>
 </li>
 </ol>
 <p>通过fork和copy on  write实现</p>
 <p>时点.png</p>
 <p><strong>RDB配置要点</strong></p>
-<hr>
+<hr />
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">######################## SNAPSHOTTING  ########################</span><br><span class="line">#   save &quot;&quot;</span><br><span class="line"></span><br><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line">rdbchecksum yes 文件末尾写入校验位</span><br><span class="line"></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line">dir /var/lib/redis/6379</span><br></pre></td></tr></table></figure>
-
 <p><strong>为什么一般redis设置1到10个G,而不占满内存?</strong></p>
 <p>因为做数据持久化的时候,磁盘IO的瓶颈,为了保证redis的速度,不能有太大的数据量做持久化.</p>
-<h4 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[主从复制] --&gt; id3&#123;AOF&#125;</span><br><span class="line">	id3 --&gt; id5[redis的写操作记录到文件中]</span><br><span class="line">	id5 --&gt; id22[丢失数据少]</span><br><span class="line">	id5 --&gt; id23[rdb和aof可以同时开启]</span><br><span class="line">	id5 --&gt; id24[弊端:体量无限变大,恢复慢]</span><br><span class="line">	id24 --&gt; id25[日志:优点如果能保住&lt;br/&gt;还是可以用的&lt;br/&gt;&lt;br/&gt;设计方案-&gt;AOF足够小]</span><br><span class="line">	</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	hdfs[hdfs:fsimage+edits.log&lt;br/&gt;&lt;br/&gt;让日志记录增量&lt;br/&gt;&lt;br/&gt;合并过程]</span><br><span class="line">	hdfs --&gt; id0[4.0以前]</span><br><span class="line">	id0 --&gt; id2[重写&lt;br/&gt;删除抵消的命令&lt;br/&gt;合并重复的命令]</span><br><span class="line">	id2 --&gt; id4[最终也是纯指令文件]</span><br><span class="line">	hdfs --&gt; id10[4.0以后]</span><br><span class="line">	id10 --&gt;id11[重写&lt;br/&gt;将老的数据RDB到aof文件中&lt;br/&gt;将增量以指令的方式&lt;br/&gt;append到AOF]</span><br><span class="line">	id11 --&gt; id12[AOF是一个混合体,利用RDB的快,日志的全量]</span><br></pre></td></tr></table></figure>
-
-
-
+<h4 id="aof"><a class="markdownIt-Anchor" href="#aof"></a> AOF</h4>
+<pre class="mermaid">graph LR
+	id[主从复制] --> id3{AOF}
+	id3 --> id5[redis的写操作记录到文件中]
+	id5 --> id22[丢失数据少]
+	id5 --> id23[rdb和aof可以同时开启]
+	id5 --> id24[弊端:体量无限变大,恢复慢]
+	id24 --> id25[日志:优点如果能保住<br/>还是可以用的<br/><br/>设计方案->AOF足够小]</pre>
+<pre class="mermaid">graph LR
+	hdfs[hdfs:fsimage+edits.log<br/><br/>让日志记录增量<br/><br/>合并过程]
+	hdfs --> id0[4.0以前]
+	id0 --> id2[重写<br/>删除抵消的命令<br/>合并重复的命令]
+	id2 --> id4[最终也是纯指令文件]
+	hdfs --> id10[4.0以后]
+	id10 -->id11[重写<br/>将老的数据RDB到aof文件中<br/>将增量以指令的方式<br/>append到AOF]
+	id11 --> id12[AOF是一个混合体,利用RDB的快,日志的全量]</pre>
 <p>redis运行了10年</p>
 <p>开启了AOF</p>
 <p>10年头,redis挂了</p>
 <ol>
-<li><p>AOF多大:10T</p>
+<li>
+<p>AOF多大:10T</p>
 <p><strong>恢复:会不会溢出</strong></p>
 </li>
-<li><p>恢复要多久:恢复5年</p>
+<li>
+<p>恢复要多久:恢复5年</p>
 </li>
 </ol>
 <p><strong>redis内存数据库</strong></p>
@@ -318,25 +342,17 @@
 <p>NO</p>
 <p>aways</p>
 <p>每秒</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id1[java] --&gt; id2[kenel fd8 buffer]</span><br><span class="line">	id2 --&gt; id3[磁盘]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
+<pre class="mermaid">graph TB
+	id1[java] --> id2[kenel fd8 buffer]
+	id2 --> id3[磁盘]</pre>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">############################## APPEND ONLY MODE ###############################</span><br><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly.aof</span><br><span class="line"># appendfsync always</span><br><span class="line">appendfsync everysec</span><br><span class="line"># appendfsync no 等内核buffer快满了.kernel自动flush</span><br><span class="line"></span><br><span class="line">no-appendfsync-on-rewrite no </span><br><span class="line">redis有一个正在进行rdb的子进程时,此值为true,就不会产生AOF写</span><br><span class="line">???</span><br><span class="line"># When rewriting the AOF file, Redis is able to use an RDB preamble in the</span><br><span class="line"># AOF file for faster rewrites and recoveries. When this option is turned</span><br><span class="line"># on the rewritten AOF file is composed of two different stanzas:</span><br><span class="line">#</span><br><span class="line">#   [RDB file][AOF tail]</span><br><span class="line">#</span><br><span class="line"># When loading Redis recognizes that the AOF file starts with the &quot;REDIS&quot;</span><br><span class="line"># string and loads the prefixed RDB file, and continues loading the AOF</span><br><span class="line"># tail.</span><br><span class="line">aof-use-rdb-preamble yes</span><br></pre></td></tr></table></figure>
-
 <p><strong>AOF实操</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">daemonize no</span><br><span class="line">#logfile /var/log/redis_6379</span><br><span class="line">aof-use-rdb-preamble no</span><br><span class="line">[lemcoden@hadoop01 6379]$cd /var/lib/redis/6379</span><br><span class="line">[lemcoden@hadoop01 6379]$rm -f dump.rdb</span><br><span class="line">[lemcoden@hadoop01 6379]$ systemctl stop redis_6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ sudo ./redis-server /etc/redis/6379.conf </span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">set</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$5</span><br><span class="line">hello</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; bgsave</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-check-rdb  dump.rdb </span><br><span class="line">[offset 0] Checking RDB file dump.rdb</span><br><span class="line">[offset 26] AUX FIELD redis-ver = &#x27;5.0.5&#x27;</span><br><span class="line">[offset 40] AUX FIELD redis-bits = &#x27;64&#x27;</span><br><span class="line">[offset 52] AUX FIELD ctime = &#x27;1605840860&#x27;</span><br><span class="line">[offset 67] AUX FIELD used-mem = &#x27;853472&#x27;</span><br><span class="line">[offset 83] AUX FIELD aof-preamble = &#x27;0&#x27;</span><br><span class="line">[offset 85] Selecting DB ID 0</span><br><span class="line">[offset 107] Checksum OK</span><br><span class="line">[offset 107] \o/ RDB looks OK! \o/</span><br><span class="line">[info] 1 keys read</span><br><span class="line">[info] 0 expires</span><br><span class="line">[info] 0 already expired</span><br></pre></td></tr></table></figure>
-
 <p><strong>重写AOF</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">Backgrou*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">SET</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$1</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
-
 <p><strong>AOF &amp; RDB混合</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">aof-use-rdb-preamble yes</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">REDIS0009ú      redis-ver^E5.0.5ú</span><br><span class="line">redis-bitsÀ@ú^EctimeÂK3·_ú^Hused-memÂÐ^E^M^@ú^Laof-preambleÀ^Aþ^@û^A^@^@^Bk1^Acÿ&lt;84&gt;^Q·&lt;9e&gt;^T&quot;&lt;96&gt;]</span><br><span class="line">~                     </span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Automatic rewrite of the append only file.</span><br><span class="line"># Redis is able to automatically rewrite the log file implicitly calling</span><br><span class="line"># BGREWRITEAOF when the AOF log size grows by the specified percentage.</span><br><span class="line">#</span><br><span class="line"># This is how it works: Redis remembers the size of the AOF file after the</span><br><span class="line"># latest rewrite (if no rewrite has happened since the restart, the size of</span><br><span class="line"># the AOF at startup is used).</span><br><span class="line">#</span><br><span class="line"># This base size is compared to the current size. If the current size is</span><br><span class="line"># bigger than the specified percentage, the rewrite is triggered. Also</span><br><span class="line"># you need to specify a minimal size for the AOF file to be rewritten, this</span><br><span class="line"># is useful to avoid rewriting the AOF file even if the percentage increase</span><br><span class="line"># is reached but it is still pretty small.</span><br><span class="line">#</span><br><span class="line"># Specify a percentage of zero in order to disable the automatic AOF</span><br><span class="line"># rewrite feature.</span><br><span class="line"></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 
     </div>
 
@@ -381,7 +397,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

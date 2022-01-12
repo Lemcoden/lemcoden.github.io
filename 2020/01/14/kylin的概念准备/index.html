@@ -22,17 +22,17 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="为什么要使用Kylin在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，">
+<meta name="description" content="为什么要使用Kylin 在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。 那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。 在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kyli">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用kylin前，你需要知道？">
 <meta property="og:url" content="https://lemcoden.github.io/2020/01/14/kylin%E7%9A%84%E6%A6%82%E5%BF%B5%E5%87%86%E5%A4%87/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="为什么要使用Kylin在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，">
+<meta property="og:description" content="为什么要使用Kylin 在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。 那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。 在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kyli">
 <meta property="og:locale">
 <meta property="og:image" content="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/kylin/kylin_architecture.png">
 <meta property="article:published_time" content="2020-01-14T12:23:58.000Z">
-<meta property="article:modified_time" content="2020-06-25T04:02:34.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:56:42.711Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="数据仓库框架">
 <meta name="twitter:card" content="summary">
@@ -128,7 +128,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8Kylin"><span class="nav-number">1.</span> <span class="nav-text">为什么要使用Kylin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8kylin%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">使用kylin前的几个概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kylin%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">kylin的工作过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%8C%87%E5%AE%9A%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%AE%9A%E4%B9%89%E7%BB%B4%E5%BA%A6%E5%92%8C%E5%BA%A6%E9%87%8F%E3%80%82%EF%BC%88%E8%BF%99%E4%B8%AA%E9%9C%80%E8%A6%81%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E6%A0%B9%E6%8D%AE%E9%9C%80%E6%B1%82%E8%87%AA%E5%B7%B1%E8%AE%BE%E7%BD%AE%EF%BC%8C%E5%8D%9A%E4%B8%BB%E4%BC%9A%E5%9C%A8%E5%90%8E%E7%BB%AD%E7%9A%84%E5%8D%9A%E5%AE%A2%E4%B8%AD%E8%AF%B4%E6%98%8E%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%A2%84%E8%AE%A1%E7%AE%97Cube%EF%BC%8C%E8%AE%A1%E7%AE%97%E6%89%80%E6%9C%89Cuboid%E5%B9%B6%E4%BF%9D%E5%AD%98%E4%B8%BA%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE%E3%80%82"><span class="nav-number">3.2.</span> <span class="nav-text">2.预计算Cube，计算所有Cuboid并保存为物化视图。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%89%A7%E8%A1%8C%E6%9F%A5%E8%AF%A2%E6%97%B6%EF%BC%8C%E8%AF%BB%E5%8F%96Cuboid%EF%BC%8C%E8%BF%90%E7%AE%97%EF%BC%8C%E4%BA%A7%E7%94%9F%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C%E3%80%82"><span class="nav-number">3.3.</span> <span class="nav-text">3.执行查询时，读取Cuboid，运算，产生查询结果。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kylin%E7%9A%84%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">kylin的技术架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kylin%E7%9A%84%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">Kylin的主要特点</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8kylin"><span class="nav-number">1.</span> <span class="nav-text"> 为什么要使用Kylin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8kylin%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text"> 使用kylin前的几个概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kylin%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text"> kylin的工作过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E6%8C%87%E5%AE%9A%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89%E7%BB%B4%E5%BA%A6%E5%92%8C%E5%BA%A6%E9%87%8F-%E8%BF%99%E4%B8%AA%E9%9C%80%E8%A6%81%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E6%A0%B9%E6%8D%AE%E9%9C%80%E6%B1%82%E8%87%AA%E5%B7%B1%E8%AE%BE%E7%BD%AE%E5%8D%9A%E4%B8%BB%E4%BC%9A%E5%9C%A8%E5%90%8E%E7%BB%AD%E7%9A%84%E5%8D%9A%E5%AE%A2%E4%B8%AD%E8%AF%B4%E6%98%8E"><span class="nav-number">3.1.</span> <span class="nav-text"> 1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E9%A2%84%E8%AE%A1%E7%AE%97cube%E8%AE%A1%E7%AE%97%E6%89%80%E6%9C%89cuboid%E5%B9%B6%E4%BF%9D%E5%AD%98%E4%B8%BA%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE"><span class="nav-number">3.2.</span> <span class="nav-text"> 2.预计算Cube，计算所有Cuboid并保存为物化视图。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E6%89%A7%E8%A1%8C%E6%9F%A5%E8%AF%A2%E6%97%B6%E8%AF%BB%E5%8F%96cuboid%E8%BF%90%E7%AE%97%E4%BA%A7%E7%94%9F%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text"> 3.执行查询时，读取Cuboid，运算，产生查询结果。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kylin%E7%9A%84%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text"> kylin的技术架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kylin%E7%9A%84%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text"> Kylin的主要特点</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -144,7 +144,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -155,7 +155,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -226,7 +226,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-06-25 12:02:34" itemprop="dateModified" datetime="2020-06-25T12:02:34+08:00">2020-06-25</time>
+        <time title="Modified: 2021-08-08 18:56:42" itemprop="dateModified" datetime="2021-08-08T18:56:42+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -248,11 +248,39 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="为什么要使用Kylin"><a href="#为什么要使用Kylin" class="headerlink" title="为什么要使用Kylin"></a>为什么要使用Kylin</h3><p>在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。<br>那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。<br>在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，它通过自己所独有的预计算功能，将原来查询所需的几个小时缩短为秒内返回。</p>
-<h3 id="使用kylin前的几个概念"><a href="#使用kylin前的几个概念" class="headerlink" title="使用kylin前的几个概念"></a>使用kylin前的几个概念</h3><p><font color="#FFA500">维度</font>：看待事物的角度，比如时间，地点，销售量，销售物品类别<br><font color="#FFA500">度量</font>：被聚合的统计值，也就是聚合运算的结果，它一般事连续的值。<br><font color="#FFA500">Cube</font>：数据魔方，我们传统的数据库的表字段在数据仓库的分析前，会先把字段转化为相应的维度和度量，维度和度量组成了整体的Cube<br><font color="#FFA500">Cubeboid</font>：我们通过维度和度量预先计算出所有查询的可能结果，每种可能结果的实体我们称之为Cuboid<br><font color="#FFA500">星型模型</font>：星型模型，雪花模型，事实星座模型主要是数据建模相关工作需要深度了解的知识，这里我简单举个例子，有兴趣的小伙伴可以自行查询。</p>
-<h3 id="kylin的工作过程"><a href="#kylin的工作过程" class="headerlink" title="kylin的工作过程"></a>kylin的工作过程</h3><h4 id="1-指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）"><a href="#1-指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）" class="headerlink" title="1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）"></a>1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）</h4><h4 id="2-预计算Cube，计算所有Cuboid并保存为物化视图。"><a href="#2-预计算Cube，计算所有Cuboid并保存为物化视图。" class="headerlink" title="2.预计算Cube，计算所有Cuboid并保存为物化视图。"></a>2.预计算Cube，计算所有Cuboid并保存为物化视图。</h4><p>这个我们举个例子，比如我们有一个电商的销售数据集，其中维度包括时间（Time）,商品（Item）,地点（Location）和供应商（Supplier），度量为销售额（GMV）那么所有的维度组合就有2^4=16种组合，其维度所构成的所有组合表如下<br><img src="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png" alt="kylin_all_cuboid"><br>上图每个原点代表一个cubiod，中括号的标识，表示这个cubiod所包含的查询维度<br>那么具体的内容是什么样的？<br>我们以Cuboid[Time，Location]为例，它所对应的SQL语句如下：<br>select Time，Location，Sum（GMV） as GMV from Sales group by Time, Location<br>根据以上SQL语句，我们不难想象出其查询的具体内容</p>
-<h4 id="3-执行查询时，读取Cuboid，运算，产生查询结果。"><a href="#3-执行查询时，读取Cuboid，运算，产生查询结果。" class="headerlink" title="3.执行查询时，读取Cuboid，运算，产生查询结果。"></a>3.执行查询时，读取Cuboid，运算，产生查询结果。</h4><h3 id="kylin的技术架构"><a href="#kylin的技术架构" class="headerlink" title="kylin的技术架构"></a>kylin的技术架构</h3><p>和其他经典的大数据框架一样，我们先给出技术架构图<br><img src="http://picture.lemcoden.xyz/kylin/kylin_architecture.png" alt="kylin技术架构"><br>我们先看最左边，kylin以hive作为数据源，数据格式为星型模式的关系表形式（只支持星型模式，雪花模式可以自行转换），通过mapreduce作为计算框架来构建cube，构建完成后，保存cube的索引值到右侧的HBase当中，当用户有查询需求的时候，可以通过Kylin开放的RestApi,JDBC/ODBC接口。<br>PS：路由功能已弃用，数据源，构建引擎以及存储引擎可以替换，比如把hive替换为Kafka，Mapreduce替换为Spark，Hbase可以替换为Kudu等等。</p>
-<h3 id="Kylin的主要特点"><a href="#Kylin的主要特点" class="headerlink" title="Kylin的主要特点"></a>Kylin的主要特点</h3><p><font color="#FFA500">SQL接口</font>：对用户提供最简单的SQL接口，降低使用要求<br><font color="#FFA500">支持超大数据集</font>：理论上Kylin可以支撑的数据集大小没有上限，仅受限于存储系统的分布式计算系统的承载能力<br><font color="#FFA500">压秒级查询</font>：得益于Kylin的预计算，比如连接、聚合，在理想的预计算过程种就已经完成，这大大降低了查询实课所需要的计算量，提高了响应速度。<br><font color="#FFA500">BI及可视化工具集成</font>：ODBC接口,JDBC接口，Rest API，分析师可以沿用最熟悉的BI工具于Kylin一同工作。<br><font color="#FFA500">查询速度</font>：0（1）常数计划别的查询速度。也就是说查询速度并不是随数据量大小线性增长，而是不论数据量怎么增长，查询速度都不变。</p>
+        <h3 id="为什么要使用kylin"><a class="markdownIt-Anchor" href="#为什么要使用kylin"></a> 为什么要使用Kylin</h3>
+<p>在使用一个框架之前我们都要问问自己为什么要使用这个框架，他要解决什么问题，这个框架在解决这方面问题有什么样的优势，Kylin也如此。<br />
+那么他是解决什么问题的呢？他是解决数据仓库工程的最后阶段，OLAP（联机分析处理）的查询慢的问题。<br />
+在实际的数据仓库项目中，我们需要在几亿甚至上百亿条的数据当中聚合查询我们所需要的信息，但是这对于批处理来说是非常缓慢的查询过程。但是kylin不同，它通过自己所独有的预计算功能，将原来查询所需的几个小时缩短为秒内返回。</p>
+<h3 id="使用kylin前的几个概念"><a class="markdownIt-Anchor" href="#使用kylin前的几个概念"></a> 使用kylin前的几个概念</h3>
+<span id="more"></span>
+<p><font color="#FFA500">维度</font>：看待事物的角度，比如时间，地点，销售量，销售物品类别<br />
+<font color="#FFA500">度量</font>：被聚合的统计值，也就是聚合运算的结果，它一般事连续的值。<br />
+<font color="#FFA500">Cube</font>：数据魔方，我们传统的数据库的表字段在数据仓库的分析前，会先把字段转化为相应的维度和度量，维度和度量组成了整体的Cube<br />
+<font color="#FFA500">Cubeboid</font>：我们通过维度和度量预先计算出所有查询的可能结果，每种可能结果的实体我们称之为Cuboid<br />
+<font color="#FFA500">星型模型</font>：星型模型，雪花模型，事实星座模型主要是数据建模相关工作需要深度了解的知识，这里我简单举个例子，有兴趣的小伙伴可以自行查询。</p>
+<h3 id="kylin的工作过程"><a class="markdownIt-Anchor" href="#kylin的工作过程"></a> kylin的工作过程</h3>
+<h4 id="1指定数据模型定义维度和度量-这个需要开发人员根据需求自己设置博主会在后续的博客中说明"><a class="markdownIt-Anchor" href="#1指定数据模型定义维度和度量-这个需要开发人员根据需求自己设置博主会在后续的博客中说明"></a> 1.指定数据模型，定义维度和度量。（这个需要开发人员根据需求自己设置，博主会在后续的博客中说明）</h4>
+<h4 id="2预计算cube计算所有cuboid并保存为物化视图"><a class="markdownIt-Anchor" href="#2预计算cube计算所有cuboid并保存为物化视图"></a> 2.预计算Cube，计算所有Cuboid并保存为物化视图。</h4>
+<p>这个我们举个例子，比如我们有一个电商的销售数据集，其中维度包括时间（Time）,商品（Item）,地点（Location）和供应商（Supplier），度量为销售额（GMV）那么所有的维度组合就有2^4=16种组合，其维度所构成的所有组合表如下<br />
+<img src="http://picture.lemcoden.xyz/kylin/kylin_all_cuboid.png" alt="kylin_all_cuboid" /><br />
+上图每个原点代表一个cubiod，中括号的标识，表示这个cubiod所包含的查询维度<br />
+那么具体的内容是什么样的？<br />
+我们以Cuboid[Time，Location]为例，它所对应的SQL语句如下：<br />
+select Time，Location，Sum（GMV） as GMV from Sales group by Time, Location<br />
+根据以上SQL语句，我们不难想象出其查询的具体内容</p>
+<h4 id="3执行查询时读取cuboid运算产生查询结果"><a class="markdownIt-Anchor" href="#3执行查询时读取cuboid运算产生查询结果"></a> 3.执行查询时，读取Cuboid，运算，产生查询结果。</h4>
+<h3 id="kylin的技术架构"><a class="markdownIt-Anchor" href="#kylin的技术架构"></a> kylin的技术架构</h3>
+<p>和其他经典的大数据框架一样，我们先给出技术架构图<br />
+<img src="http://picture.lemcoden.xyz/kylin/kylin_architecture.png" alt="kylin技术架构" /><br />
+我们先看最左边，kylin以hive作为数据源，数据格式为星型模式的关系表形式（只支持星型模式，雪花模式可以自行转换），通过mapreduce作为计算框架来构建cube，构建完成后，保存cube的索引值到右侧的HBase当中，当用户有查询需求的时候，可以通过Kylin开放的RestApi,JDBC/ODBC接口。<br />
+PS：路由功能已弃用，数据源，构建引擎以及存储引擎可以替换，比如把hive替换为Kafka，Mapreduce替换为Spark，Hbase可以替换为Kudu等等。</p>
+<h3 id="kylin的主要特点"><a class="markdownIt-Anchor" href="#kylin的主要特点"></a> Kylin的主要特点</h3>
+<p><font color="#FFA500">SQL接口</font>：对用户提供最简单的SQL接口，降低使用要求<br />
+<font color="#FFA500">支持超大数据集</font>：理论上Kylin可以支撑的数据集大小没有上限，仅受限于存储系统的分布式计算系统的承载能力<br />
+<font color="#FFA500">压秒级查询</font>：得益于Kylin的预计算，比如连接、聚合，在理想的预计算过程种就已经完成，这大大降低了查询实课所需要的计算量，提高了响应速度。<br />
+<font color="#FFA500">BI及可视化工具集成</font>：ODBC接口,JDBC接口，Rest API，分析师可以沿用最熟悉的BI工具于Kylin一同工作。<br />
+<font color="#FFA500">查询速度</font>：0（1）常数计划别的查询速度。也就是说查询速度并不是随数据量大小线性增长，而是不论数据量怎么增长，查询速度都不变。</p>
 
     </div>
 
@@ -297,7 +325,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

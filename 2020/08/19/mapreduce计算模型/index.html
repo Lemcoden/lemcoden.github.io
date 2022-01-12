@@ -22,19 +22,19 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="背景,为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型 计算模型  map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出 reduce 端负责将数据整合归纳,缩小,分解,一般是一组数据进N出 不管是map还是reduce处理的数据结构基本都是&lt;key,value&gt;的形式划分的 最基本的数据格式确定后,会有数据迁移更">
+<meta name="description" content="背景, 为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型  计算模型   map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mapreduce&amp;yarn笔记总结 01">
 <meta property="og:url" content="https://lemcoden.github.io/2020/08/19/mapreduce%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="背景,为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型 计算模型  map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出 reduce 端负责将数据整合归纳,缩小,分解,一般是一组数据进N出 不管是map还是reduce处理的数据结构基本都是&lt;key,value&gt;的形式划分的 最基本的数据格式确定后,会有数据迁移更">
+<meta property="og:description" content="背景, 为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型  计算模型   map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出">
 <meta property="og:locale">
 <meta property="og:image" content="http://picture.lemcoden.xyz/mapreduce/mr_mod.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/mapreduce/mr_arch_client.jpg">
 <meta property="og:image" content="http://picture.lemcoden.xyz/mapreduce/mr_arch_job.jpg">
 <meta property="og:image" content="http://picture.lemcoden.xyz/mapreduce/mr_arch_yarn.png">
 <meta property="article:published_time" content="2020-08-19T13:14:32.000Z">
-<meta property="article:modified_time" content="2020-08-19T08:22:18.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:57:01.043Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="计算模型">
@@ -131,7 +131,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景,</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">计算模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">架构设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%A5%E8%BF%9C%E7%9A%84hadoop1-x"><span class="nav-number">4.</span> <span class="nav-text">遥远的hadoop1.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E5%90%8E%E7%9A%84Hadoop2-x"><span class="nav-number">5.</span> <span class="nav-text">改进后的Hadoop2.x</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text"> 背景,</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text"> 计算模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text"> 架构设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%A5%E8%BF%9C%E7%9A%84hadoop1x"><span class="nav-number">4.</span> <span class="nav-text"> 遥远的hadoop1.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E5%90%8E%E7%9A%84hadoop2x"><span class="nav-number">5.</span> <span class="nav-text"> 改进后的Hadoop2.x</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -147,7 +147,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -158,7 +158,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -221,10 +221,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-08-19 21:14:32 / Modified: 16:22:18" itemprop="dateCreated datePublished" datetime="2020-08-19T21:14:32+08:00">2020-08-19</time>
+      <time title="Created: 2020-08-19 21:14:32" itemprop="dateCreated datePublished" datetime="2020-08-19T21:14:32+08:00">2020-08-19</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-08-08 18:57:01" itemprop="dateModified" datetime="2021-08-08T18:57:01+08:00">2021-08-08</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -245,10 +251,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h4 id="背景"><a href="#背景" class="headerlink" title="背景,"></a>背景,</h4><p>为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型</p>
-<h4 id="计算模型"><a href="#计算模型" class="headerlink" title="计算模型"></a>计算模型</h4><p><img src="http://picture.lemcoden.xyz/mapreduce/mr_mod.png" alt="计算模型"></p>
+        <h4 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景,</h4>
+<p>为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型</p>
+<h4 id="计算模型"><a class="markdownIt-Anchor" href="#计算模型"></a> 计算模型</h4>
+<p><img src="http://picture.lemcoden.xyz/mapreduce/mr_mod.png" alt="计算模型" /></p>
 <ul>
-<li>map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出</li>
+<li>map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出<span id="more"></span></li>
 <li>reduce 端负责将数据整合归纳,缩小,分解,一般是一组数据进N出</li>
 <li>不管是map还是reduce处理的数据结构基本都是&lt;key,value&gt;的形式划分的</li>
 <li>最基本的数据格式确定后,会有数据迁移更加细致的流程</li>
@@ -259,9 +267,13 @@
 <li>默认一个reduce进程对应一个partition,再次体现分而治之的理念</li>
 <li>map段的数据经过buffer之后会为reduce分区作准备,所以会先进行分区,对key进行取模操作划分出partition,会将数据结构转换成&lt;key,value,partition&gt;的形式.</li>
 <li>进行partition之后,为减少reduce的拉取IO操作(总不能一条数据拉取查找一次吧),会将partition按照进行再次分片(split).</li>
-<li>数据进行分片之后,再按照partition进行小文件排序(sort),同时还会进行key的第二次排序,关于为什么还会进行key的排序,到reduce端会解释<h4 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h4><h4 id="遥远的hadoop1-x"><a href="#遥远的hadoop1-x" class="headerlink" title="遥远的hadoop1.x"></a>遥远的hadoop1.x</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ps:因为找不到合适的图,就分开为client端和job端的架构)</span><br></pre></td></tr></table></figure>
-计算模型出现后,就需要搭建整体的框架,首先我们说我们的主要角色有client,JobTracker,TaskTracker<br><img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_client.jpg" alt="clinet架构"></li>
+<li>数据进行分片之后,再按照partition进行小文件排序(sort),同时还会进行key的第二次排序,关于为什么还会进行key的排序,到reduce端会解释</li>
 </ul>
+<h4 id="架构设计"><a class="markdownIt-Anchor" href="#架构设计"></a> 架构设计</h4>
+<h4 id="遥远的hadoop1x"><a class="markdownIt-Anchor" href="#遥远的hadoop1x"></a> 遥远的hadoop1.x</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ps:因为找不到合适的图,就分开为client端和job端的架构)</span><br></pre></td></tr></table></figure>
+<p>计算模型出现后,就需要搭建整体的框架,首先我们说我们的主要角色有client,JobTracker,TaskTracker<br />
+<img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_client.jpg" alt="clinet架构" /></p>
 <p>我们client端主要做四件事:</p>
 <ul>
 <li>会根据每次的计算数据,咨询NN元数据(block) =&gt; 算出spilt切片清单</li>
@@ -269,7 +281,7 @@
 <li>将jar包,split的切片清单,配置文件上传到HDFS目录当中</li>
 <li>cli调用jobTracker,通知启动一个计算程序,并且告知文件都放在了hdfs的哪些地方</li>
 </ul>
-<p><img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_job.jpg" alt="job架构"></p>
+<p><img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_job.jpg" alt="job架构" /></p>
 <ul>
 <li>jobTracker会根据cli提交的信息,去HDFS上寻找Jar包程序,split清单,以及配置文件</li>
 <li>根据拿到的切片清单和配置文件,以及收到的TaskTracker汇报的资源,最终确定每一个spilt应该去往哪个个节点</li>
@@ -281,8 +293,13 @@
 <ol>
 <li>任务调度框架jobTracker和TaskTracker使用的是主从架构,那必将出现两个问题,一个是单点故障问题</li>
 <li>另一个则是主节点压力过大的问题</li>
-<li>JobTracker同时负责资源的调度以及计算任务管理,两者耦合,如果引入新的计算框架则不能复用资源管理<h4 id="改进后的Hadoop2-x"><a href="#改进后的Hadoop2-x" class="headerlink" title="改进后的Hadoop2.x"></a>改进后的Hadoop2.x</h4>hadoop2.x后将JobTraker的资源调度功能抽出,封装为Yarn资源管理框架,并配置了高可用.<br>hadoop2.x的计算与资源管理架构如下<br><img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_yarn.png" alt="job架构"><br>主要角色有client,ResourceManager,NodeManager,ApplicatioMaster以及Container</li>
+<li>JobTracker同时负责资源的调度以及计算任务管理,两者耦合,如果引入新的计算框架则不能复用资源管理</li>
 </ol>
+<h4 id="改进后的hadoop2x"><a class="markdownIt-Anchor" href="#改进后的hadoop2x"></a> 改进后的Hadoop2.x</h4>
+<p>hadoop2.x后将JobTraker的资源调度功能抽出,封装为Yarn资源管理框架,并配置了高可用.<br />
+hadoop2.x的计算与资源管理架构如下<br />
+<img src="http://picture.lemcoden.xyz/mapreduce/mr_arch_yarn.png" alt="job架构" /><br />
+主要角色有client,ResourceManager,NodeManager,ApplicatioMaster以及Container</p>
 <ul>
 <li>client与之前的流程一致</li>
 <li>client会将job提交到ResourceManager</li>
@@ -291,7 +308,8 @@
 <li>ResouceManager会根据清单计算出使用多少资源,并将根据现有资源通知NodeManager启动相应的Container容器</li>
 <li>Container向App Mstr(Application Master)反向注册,此时App Mstr才知道有多少Container可以执行任务</li>
 <li>App Mstr会向Container发送Map Task消息.</li>
-<li>Container受到消息后,会从hdfs下载jar包,并通过反射取出对象执行MapReduce任务<br>相较于Hadoop1.x,2.x的框架很好的解决的1.x框架出现的问题:</li>
+<li>Container受到消息后,会从hdfs下载jar包,并通过反射取出对象执行MapReduce任务<br />
+相较于Hadoop1.x,2.x的框架很好的解决的1.x框架出现的问题:</li>
 </ul>
 <ol>
 <li>单点故障<br/></li>
@@ -360,7 +378,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -49,7 +49,119 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -135,7 +247,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -146,7 +258,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -176,6 +288,192 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/01/07/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A803/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lemcoden">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/07/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A803/" class="post-title-link" itemprop="url">机械学习算法入门03</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-07 21:00:08" itemprop="dateCreated datePublished" datetime="2021-01-07T21:00:08+08:00">2021-01-07</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-08-08 18:58:23" itemprop="dateModified" datetime="2021-08-08T18:58:23+08:00">2021-08-08</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="逻辑回归算法"><a class="markdownIt-Anchor" href="#逻辑回归算法"></a> 逻辑回归算法</h3>
+<h4 id="算法公式"><a class="markdownIt-Anchor" href="#算法公式"></a> 算法公式</h4>
+<p>逻辑回归算法是一种广义的线型回归分析模型</p>
+<p>我们之前聊的线型回归模型,它只能预测一个与实际误差较小的具体值,而没有办法满足二分类的要求.</p>
+<p>而逻辑回归就是一种专门解决二分类问题的算法,但是二分类的算法不止能用于二分类,还可以用于多分类.</p>
+<p>在聊完逻辑回归怎么用于二分类之后,我们再聊怎么将它用于多分类.</p>
+<p>我们知道我们逻辑回归的函数长这个样子</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><msub><mi>w</mi><mn>0</mn></msub><mo>+</mo><msub><mi>w</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>w</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msub><mi>w</mi><mi>n</mi></msub><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">H(\theta)=w_0+w_1x_1+w_2x_2+......+w_{n}x_{n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/01/07/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A803/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/12/30/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A802/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lemcoden">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/12/30/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A802/" class="post-title-link" itemprop="url">机械学习算法入门02</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-30 21:43:10" itemprop="dateCreated datePublished" datetime="2020-12-30T21:43:10+08:00">2020-12-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-08-08 18:58:18" itemprop="dateModified" datetime="2021-08-08T18:58:18+08:00">2021-08-08</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="贝叶斯分类算法"><a class="markdownIt-Anchor" href="#贝叶斯分类算法"></a> 贝叶斯分类算法</h3>
+<p>一种先验概率计算后验概率的算法,什么是先验概率,啥是后验概率?</p>
+<p>emmmmm,先走起来再找路,我先给出公式,然后再慢慢解释</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mi mathvariant="normal">∣</mi><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>∗</mo><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mi mathvariant="normal">∣</mi><mi>A</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(A|B)=\frac {P(A)*P(B|A)}{P(B)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">A</span><span class="mord">∣</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">A</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord">∣</span><span class="mord mathdefault">A</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/30/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A802/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -216,7 +514,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-05-27 14:33:22" itemprop="dateModified" datetime="2021-05-27T14:33:22+08:00">2021-05-27</time>
+        <time title="Modified: 2021-08-08 18:58:13" itemprop="dateModified" datetime="2021-08-08T18:58:13+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -238,146 +536,25 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="大数据框架总结"><a href="#大数据框架总结" class="headerlink" title="大数据框架总结"></a>大数据框架总结</h4><p>我们平常使用到的大数据开发的框架有hdfs,mapreduce,yarn,hbase,hive,spark,flink等等</p>
+          <h4 id="大数据框架总结"><a class="markdownIt-Anchor" href="#大数据框架总结"></a> 大数据框架总结</h4>
+<p>我们平常使用到的大数据开发的框架有hdfs,mapreduce,yarn,hbase,hive,spark,flink等等</p>
 <p>林林总总的框架,经过归纳整理,我们可以总结一个大数据通用的技术架构图</p>
 <p>首先大数据主要是指对大数据的计算处理,然这个大前提在于数据从哪来,数据来了我们存到哪里.</p>
 <p>数据来源主要有两个,(其实细分各个部门各个系统数据极其多,这里只是总结最通用的)</p>
 <ul>
-<li>服务器产生的积累起来的业务数据,通常存储在mysql,sql server,orcale等数据库当中</li>
-<li>对前端(网页,移动终端)埋点产生的日志操作数据</li>
-</ul>
-<p>这样的业务数据,经过我们设计业务指标,通过我们的mapreduce,spark,flink等计算框架,进行数据清洗,或者ETL之后,存储到我们的分布式文件系统中</p>
-<p>我们前面说大数据通用的技术架构图,</p>
-<p>现在图的基底出现了,就是我们的hdfs分布式文件系统中,它将文件以block块为单位进行数据存储,这一点非常重要,分布式文件系统那么多,为什么apache还要开发自己的文件系统,主要原因就在此,大数据处理离不开分布式的计算,而分布式的计算数据的IO,数据的存取很重要,而block块的设计,可以让计算框架在分布式的情况下,能够灵活的存取文件系统上的数据.</p>
-<p><strong>这个是分布式文件系统的基底,所有的数据存取基本在在hdfs上进行</strong></p>
-<p>hdfs有了,就可以开始进行数据计算汇总了,怎么具体的进行计算汇总我们先隔过去,先从一个最粗的粒度去认识,就是计算资源如何去管理,去调度,</p>
-<p><strong>这就需要我们的yarn资源调度框架,将我们的CPU核数和内存抽象成计算资源进行调度.(调度分为公平调度,FIFO先入先出调度,容量调度)</strong></p>
-<p>PS:一般企业级的大数据架构不会使用spark的standalone.资源调度框架一个就够了,这个必须统一化,否则不同的项目不同的资源管理,每个资源管理都把整个集群的CPU和内存当作资源,肯定会乱套的</p>
-<p>现在有文件系统和资源管理框架了</p>
-<p>接下来就是<strong>框架到业务的过渡</strong>.</p>
-<p>大数据有很多业务,基本的BI系统,数据体量大的会建立数据仓库,之后有基于数据仓库的用户画像系统,业务报表的展示,推荐系统等等.</p>
-<p>我们操作业务数据一般使用SQL语言,这个已经是一个约定俗成的习惯,于是有了hive这种,将SQL语句转换成计算任务的数据仓库工具.</p>
-<p>说到这里有一个问题就是,<strong>为什么出来impla,spark sql这样的计算速度快的工具,hive却依然能活下来呢?</strong></p>
-<p>因为hive的元数据管理这个轮子没必要再造一次.大数据当中凡是遇到sql的地方都需要和元数据挂钩,没有元数据sql就没办法生成查询计划,所以hive的底层计算框架可以换(mr-spark),sql解析到任务的程序可以换(hive driver –&gt; spark sql),但其元数据服务完全没有必要再开发一份</p>
-<p>好的,然后到目前位置所说的这些框架都有自己落地架构即都有自己相关的角色,</p>
-<ul>
-<li>hdfs NN DN</li>
-<li>yarn resourcemanager nodemanager</li>
-<li>hive driver metadata-server hiveserver2</li>
-</ul>
-<p>再分布式情况下需要有一个服务协调这些角色相互协作,</p>
-<p><strong>于是zookeeper就出来了,它是一个轻量级的分布式协调服务</strong>,可以用来做统一配置,注册发现和组服务等,其实zookeeper不止我们想象的那样只是做大数据框架的高可用.</p>
-<p>粗粒度的架构有了,就可以开始继续聊</p>
-<p><strong>细粒度的计算框架,即mapreduce,spark</strong></p>
-<p>计算框架现在基本很少使用mapreduce,大多数使用的spark,</p>
-<p>spark计算速度比mapreduce快的原因有两个,一个是粗粒度的资源调用(spark的进程启动起来之后就会迅速将CPU核心和内存占慢,而不像mapreduce那样一次任务启动一个JVM进程),而是类似于pipeline的处理模式,除非遇到shuffle或者持久化,否则数据都只会一条一条在管道中迅速流通.</p>
-<p>而随着人们对计算速度的要求越来越高,流式计算的概念应运而生,spark 也衍生出了微批处理的spark streaming框架,spark steaming 的bacth, window,slide windows,有状态计算 概念这里就不再多加进行赘述.</p>
-<p>流式计算速度下,对数据存取的速度必定有要求,所以</p>
-<p><strong>流式计算下特别适合使用HBase这样的列式数据库进行存取,</strong></p>
-<p>hbase 除了使用内存缓存加速存取,并且使用布隆过滤器减少磁盘IO请求.</p>
-<p>最后是数据拉取,数据迁移的框架flume和kafka</p>
-<p>flume不用说太多日志收集框架,基于source和sink的协议API开发的</p>
-<p>kafka有很多聊头,它是基于生产者消费者模式的消息队列,起到解耦各个子系统传输的中间件,在数据业务处理中也起到了削峰填谷的作用,并且kafka数据是怼磁盘的,速度却仍然很快,主要有两个原因,一个是顺序写,一个是zero-copy</p>
-<p>好了整个大数据框架基本溜了一遍</p>
-<p>我们一般将之前的所聊应用于数据指标的分析,汇总上,重点在于数据的梳理总结归纳,而人工智能应用于大数据技术上,就是展望未来,提供对未来模型的一个预测</p>
-<h4 id="从模型的一个预测开始讲起"><a href="#从模型的一个预测开始讲起" class="headerlink" title="从模型的一个预测开始讲起"></a>从模型的一个预测开始讲起</h4><blockquote>
-<p>在人工智能领域有一句话叫做:</p>
-<p><strong>数据量决定了模型的高度,而算法只是逼近这个高度</strong></p>
-<p>所以评价一个人工智能领域的好坏,在于数据量的大小与否,如果数据量极小,那只能说明它可能只是为了人工智能而人工智能.</p>
-<p>但是作为大数据开发如果对算法本身不理解,那么在项目的实际落地时,对相关函数库,机械学习的相关API是很难知道怎么调用的.</p>
-<p>所以理解简单的机械学习算法是开发人工智能+大数据项目的必备知识</p>
-</blockquote>
-<p>那么我们先从最简单的机械学习算法,即线性回归算法开始聊起.先把线性回归算法的<strong>误差函数</strong>摆出来<br>$$<br>J(\theta)=\frac{1}{2m}\sum^{m}_{i=0}{(h_\theta(x^{(i)})-y^{i})}^{2}<br>$$<br>等等,等等,什么鬼?一堆数学符号?</p>
-<p>不要紧,下面会对这个公式进行细致的讲解.</p>
-<p>首先,<strong>机械学习主要做的事情就是输入一堆数据,数据有标签和结果值,我们通过相应的算法计算这堆数据,计算出一个数学模型,让这个数据模型能够通过输入标签预测出结果</strong></p>
-<p>那么我们通过简单的二维坐标系去理解这个过程,如下:</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression.png" alt="line_regression"></p>
-<p>假设我们的x是输入的标签值,y是我们的结果值,而中间的这个根线是我们的通过算法计算出来的数学模型,那怎么衡量我们的训练出来的模型好不好呢?</p>
-<p>我们可以通过求均方差的方式,来计算误差值,现在再看一下我们的误差函数<br>$$<br>J(\theta)=\frac{1}{2m}\sum^{m}_{i=0}{(h_\theta(x^{(i)})-y^{i})}^{2}<br>$$</p>
-<p>首先其中的</p>
-<p>$$<br>H_\theta(x)<br>$$</p>
-<p>指代的就是那条回归线,具体公式如下</p>
-<p>$$<br>H_\theta(x)=w_{0}x_{0}+w_{1}x_{1}+…..+w_{i}x{i}<br>$$</p>
-<p>实际开发过程中有很多x自变量和w控制变量,为了能让这个函数在图上显示,所以x和w精简为一个</p>
-<p>然后在把H函数代入到上面的误差函数中,其中M的意思为输入数据的条数,有多少条数据就计算多少条数据的均方差.</p>
-<p>这个均方差就是测试我们这个数学模型是否精准的误差值.但是到这里就会有一个<strong>问题就是分母多出来的2是什么意思?</strong>.</p>
-<p>紧接着下面的剃度下降法使用的函数会聊到,</p>
-<p>好了,现在我们的误差函数有了,但是得到我们模型的误差值之后,应该如何调整我们的数学模型呢?</p>
-<p>这里也是使用一个函数公式进行的调整</p>
-<p>$$<br>w_0=w_0-\alpha\frac{\partial J(\theta)}{\partial w_0}<br>$$</p>
-<p>求误差函数的偏导数,并且人为给定一个步长<em>α</em></p>
-<p>而刚才我们的分母为二主要是为了求偏导数方便.</p>
-<p>这个就是指导调整w控制变量的函数.</p>
-<p>我们调整线性回归的数学模型.说白了,其是就是调整W<font size=1>0</font>W<font size=1>1</font>W<font size=1>2</font>,这些控制变量.</p>
-<p><strong>为什么要减去一个导数?而不是固定值</strong></p>
-<p>首先我们可以确定的是,这个误差函数是一个凹函数,那么它肯定有一个极小值在里面,而我们之所以要将导数放入我们的调整公式里面主要是因为两点原因:</p>
-<ol>
-<li><p>导数的函数值在极小值前是负值,在极小值后是正值,这样,导数可以指导我们的调整方向</p>
-<p>这里画一个简单的图解验证一下</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_daoshu.png" alt="导数"></p>
-<p>如上所述,W<font size=1>0</font>值处于导数A值的时候为负,代入调整公式W<font size=1>0</font>就会增加,W<font size=1>0</font>处于导数B值的时候为正,代入公式W<font size=1>0</font>就会减少</p>
+<li>
+<p>服务器产生的积累起来的业务数据,通常存储在mysql,sql server,orcale等数据库当中</p>
 </li>
-<li><p>导数的函数值可以解决如果步长过大,导致调节时W值来回振荡的问题</p>
-<p>现在假设我们的调整公式长这样子<br>$$<br>w_0 = \frac{\partial J(\theta)}{\partial w_0}&lt;0<br>\begin{cases}<br>w_0-\alpha,  if\quad\frac{\partial J(\theta)}{\partial w_0}&gt; 0 \<br>w_0+\alpha,   if\quad\frac{\partial J(\theta)}{\partial w_0}&lt;0<br>\end{cases}<br>$$</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_zhendang.png" alt="A_B"></p>
-<p>那当W<font size=1>0</font>在A点的时候,如果我们一不小心将<em>α</em>的值调整过大,就可能会将W<font size=1>0</font>+<em>α</em>调整到B点,然后再代入到调整函数中W<font size=1>0</font>-<em>α</em>调整到A点,W<font size=1>0</font>只会再A点B点中间来回振荡</p>
-<p><strong>但是使用导数就不一样了</strong></p>
-<p>​    <img src="http://picture.lemcoden.xyz/machine_learning/line_regression_daoshu.png" alt="导数"></p>
-<p>我们知道,导数绝对值的大小大概使用斜率表示,我们B点导数的斜率明显小于A点,也就是说如果<em>α</em>的值过大,A点跳到到了B点,但是B点的导数小一点,所以B点代入调整公式之后,调整步长会变小.不会再次调整到A点.</p>
-<p>就这样,W<font size=1>0</font>不断调整,并且调整幅度越来越小,慢慢逼近极小值.这个调整方法也就是大家经常听到的所谓的<strong>梯度下降法</strong>   </p>
-</li>
-</ol>
-<p>**不过需要知道的是,我们实际的生产环境当中,我们很难把模型调整到最准确的极小值,也不能把模型调到准确极小值.**为什么?</p>
-<p>假设我们把数据调整到极小值这里,也就是说我们的误差函数为0,那情况就像下面这种:</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_overfitting.png" alt="导数"></p>
-<p>反映历史非常准确,完完全全就是个历史折线图,这样的图对数据的分布规律的探究没有任何的意义,我们想要的是数据的一个分布趋势,即其背后的规律.这种情况就叫做<strong>过拟合</strong>,可见和历史数据太贴近也不是什么好事.</p>
-<p><strong>那我们怎么防止我们训练出的模型出现过拟合的状况呢?</strong></p>
-<p>从工程的角度可以这样做:</p>
-<p>将数据分为训练集,验证集和测试集</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_error.png" alt="过拟合处理"></p>
-<p>图中的百分比例仅供参考</p>
-<p>然后利用训练集,训练出我们的数学模型,再通过验证集来验证我们的模型,得出一个误差值,</p>
-<p>之后再训练一个模型,训练模型之后,再通过验证集验证出一个误差值,</p>
-<p>整个过程验证集不参与训练,</p>
-<p>只是为了求出误差值.这样循环往复,</p>
-<p>按道理来说,通过训练集不断的训练,</p>
-<p>误差值应该越来越低,但是,当产生过拟合之后,通过验证集进行验证的误差值会变得越来越大,</p>
-<p>所以我们就寻找验证集验证出来误差值的转折点,这样,训练出来的模型是最贴合数据规律的.</p>
-<p>再回顾一下之前的误差函数,大家有没有什么问题?</p>
-<p><strong>比如,为什么用均方差,平均的绝对值差不可以吗?</strong></p>
-<p>这个可以举个例子</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_abs.png" alt="abs"></p>
-<p>比如出现如上述的数据</p>
-<p>假如我们使用绝对值来训练模型,那么模型是这样子的</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_abs1.png" alt="abs1">把</p>
-<p>而均方差的模型大概率是这样的</p>
-<p><img src="http://picture.lemcoden.xyz/machine_learning/line_regression_abs2.png" alt="abs2"></p>
-<p>这怎么可能?????博主你又乱说</p>
-<p>我真没乱说,我们可以直接将相应的数值代入公式,</p>
-<p>绝对值第一条回归线误差值:8+0+0+0=8</p>
-<p>绝对值第二条回归线误差值:6+2+2+2=12</p>
-<p>均方差第一条回归线误差值:8^2+0^2+0^2+0^2=64</p>
-<p>均方长第二条回归线误差值:6^2+2^2+2^2+2^2=48</p>
-<p>很明绝对值选择误差值小的第一条回归线,均方差选第二条</p>
-<p>但是第一条回归线并没有很好的照顾到第一个离群值,这也就是为什么选均方差的原因.</p>
-<p>其实训练出一条回归线还有另一种方法,就是求出所有W值的偏导数并且求出极小值,不过这种方法计算量很大,大数据环境下不适用,下面给出偏导求解公式</p>
-<p>$$<br>\frac{\partial J(\theta)}{\partial w_0}=\frac{1}{m}\sum^m_{i=0}(h_\theta(x^{(i)}-y^{(i)}))\frac {\partial(h_\theta(x^{(i)}-y^{(i)})}{\partial w_0} \<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})\frac{\partial(w_0+w_1x^{(i)}-y{(i)})}{\partial w_0} \<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})(1)<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})<br>$$</p>
-<p>$$<br>\frac{\partial J(\theta)}{\partial w_1}=\frac{1}{m}\sum^m_{i=0}(h_\theta(x^{(i)}-y^{(i)}))\frac {\partial(h_\theta(x^{(i)}-y^{(i)})}{\partial w_1}<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})\frac{\partial(w_0+w_1x^{(i)}-y{(i)})}{\partial w_0}<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})(x^{(i)})<br>$$</p>
-<p>$$<br>=\frac{1}{m}(w_0+w_1x^{(i)}-y^{(i)})x{(i)}<br>$$</p>
-<p>最后我们整理一下线性回归,其实不仅是线性回归,而是一般机械学习项目的一般套路:</p>
-<ol>
-<li>随机产生w参数</li>
-<li>把w参数与样本数据代入到误差函数中,求解误差值</li>
-<li>误差值与用户指定的误差阈值比较</li>
-<li> 如果大于用户的误差阈值,继续通过调整函数调整w参数,重复二到三步</li>
-<li>如果误差小于用户指定的误差阈值,那么此时的w参数就是最佳的w参数</li>
-</ol>
-
+<li>
+<p>对前端(网页,移动终端)埋点产生的日志操作数据</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/25/%E6%9C%BA%E6%A2%B0%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A801/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -434,7 +611,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:46:00" itemprop="dateModified" datetime="2021-01-24T16:46:00+08:00">2021-01-24</time>
+        <time title="Modified: 2021-08-08 18:57:26" itemprop="dateModified" datetime="2021-08-08T18:57:26+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -456,53 +633,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="redis常见问题"><a href="#redis常见问题" class="headerlink" title="redis常见问题"></a>redis常见问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jedis,luttce,springboot:low/high level</span><br></pre></td></tr></table></figure>
-
-<h4 id="击穿"><a href="#击穿" class="headerlink" title="击穿"></a>击穿</h4><p><strong><font color=MediumVioletRed>key过期造成并发访问数据库</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id0((用户&lt;br/&gt;client)) --&gt; id2</span><br><span class="line">	id2[nginx] --&gt; id3[ ]</span><br><span class="line">	id3 --&gt; id4</span><br><span class="line">	id4((client&lt;br/&gt;server)) --1.null--&gt; id5[redis&lt;br/&gt;缓存&lt;br/&gt;key过期时间,LRU,LFU]</span><br><span class="line">	id4 --2.setInx--&gt; id5</span><br><span class="line">	id4 --3.只有获得锁的去访问DB--&gt; id1[DBMySQL]</span><br><span class="line">	id4 --&gt; id1</span><br><span class="line">	before[before&lt;br/&gt;肯定发生了高并发]</span><br></pre></td></tr></table></figure>
-
+          <h3 id="redis常见问题"><a class="markdownIt-Anchor" href="#redis常见问题"></a> redis常见问题</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jedis,luttce,springboot:low/high level</span><br></pre></td></tr></table></figure>
+<h4 id="击穿"><a class="markdownIt-Anchor" href="#击穿"></a> 击穿</h4>
+<p><strong><font color=MediumVioletRed>key过期造成并发访问数据库</font></strong></p>
+<pre class="mermaid">graph LR
+	id0((用户<br/>client)) --> id2
+	id2[nginx] --> id3[ ]
+	id3 --> id4
+	id4((client<br/>server)) --1.null--> id5[redis<br/>缓存<br/>key过期时间,LRU,LFU]
+	id4 --2.setInx--> id5
+	id4 --3.只有获得锁的去访问DB--> id1[DBMySQL]
+	id4 --> id1
+	before[before<br/>肯定发生了高并发]</pre>
 <p>解决:</p>
 <p>并发有了:阻止并发到达DB,redis又没有key</p>
 <p>redis是单进程单实例</p>
 <p>setInx() -&gt; 锁</p>
-<p>setInx() -&gt; 锁</p>
-<p>1.get key</p>
-<p>2.setInx</p>
-<p>3-1. ok ,去DB</p>
-<p>3-2.false,sleep -&gt; 1</p>
-<p>问题:</p>
-<ol>
-<li><p>如果第一个人挂了?发生死锁</p>
-<p>可以设置锁的过期时间</p>
-</li>
-<li><p>没挂,但是,锁超时了…..</p>
-<p>多线程,一个线程取库,一个线程监控,并延长时间</p>
-</li>
-</ol>
-<p><strong>自己实现分布式协调很麻烦</strong></p>
-<h4 id="穿透"><a href="#穿透" class="headerlink" title="穿透"></a>穿透</h4><p><strong><font color=MediumVioletRed>从业务接受查询的是你系统根本不存在的数据</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	</span><br><span class="line"> 	id4[布隆过滤器] --&gt; id5[client包含]</span><br><span class="line"> 	id4 --&gt; id6[client只包含算法&lt;br/&gt; bitmap-&gt;redis&lt;br/&gt;无状态]</span><br><span class="line"> 	id4 --&gt; id7[redis 集成布隆]</span><br></pre></td></tr></table></figure>
-
-<p>bloom过滤器问题:</p>
-<ul>
-<li><p><input checked="" disabled="" type="checkbox">  只能增加,不能删除</p>
-</li>
-<li><p><input checked="" disabled="" type="checkbox">  布谷鸟过滤器</p>
-</li>
-<li><p><input disabled="" type="checkbox">  空key</p>
-</li>
-</ul>
-<h4 id="雪崩"><a href="#雪崩" class="headerlink" title="雪崩"></a>雪崩</h4><p><strong><font color=MediumVioletRed>大量的key同时失效,间接的造成大量的访问到达DB</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	id4[随机过期时间] -.-&gt; id5&#123;零点&#125;</span><br><span class="line"> 	id4 --&gt; id6[时点性无关]</span><br><span class="line"> 	id5 --&gt; id7[强依赖击穿方案]</span><br><span class="line"> 	id5 --&gt; id8[业务层加判断,零点延时...]</span><br><span class="line"> 	style id5 fill:#0f0,stroke-width:2px,fill-opacity:0.5</span><br></pre></td></tr></table></figure>
-
-<h4 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h4><p>1setnx</p>
-<p>2.过期时间</p>
-<p>3.多线程(守护线程)延长过期</p>
-<p>redisson</p>
-<p>zookeeper 做分布式锁!</p>
-<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; CONFIG GET *</span><br><span class="line">127.0.0.1:6379&gt; CONFIG SET protected-mode no</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
-
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/23/redis%E7%AC%94%E8%AE%B005/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -559,7 +714,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:45:55" itemprop="dateModified" datetime="2021-01-24T16:45:55+08:00">2021-01-24</time>
+        <time title="Modified: 2021-08-08 18:57:21" itemprop="dateModified" datetime="2021-08-08T18:57:21+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -581,233 +736,24 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="AKF概述"><a href="#AKF概述" class="headerlink" title="AKF概述"></a>AKF概述</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	subgraph single</span><br><span class="line">	id1[redis 单机 单进程 缓存 数据库]</span><br><span class="line">	id1 --&gt; id((RDB AOF))</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
-
+          <h4 id="akf概述"><a class="markdownIt-Anchor" href="#akf概述"></a> AKF概述</h4>
+<pre class="mermaid">graph TB
+	subgraph single
+	id1[redis 单机 单进程 缓存 数据库]
+	id1 --> id((RDB AOF))
+	end</pre>
 <p>单机,单节点,单实例</p>
 <p>1.单点故障</p>
 <p>2.容量有限</p>
-<p>3.压力</p>
-<p><strong>AKF =&gt; xyz</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph LR	</span><br><span class="line">	subgraph redis:x</span><br><span class="line">	id&#123;client&#125; --&gt; id1((redis:rw))</span><br><span class="line">	id1 -- x --&gt; id2((redis:r))</span><br><span class="line">	id2 --&gt; id3((redis:r))</span><br><span class="line">	id --&gt; id2</span><br><span class="line">	id --&gt; id3</span><br><span class="line">	style id1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis2</span><br><span class="line">	bu3[redis:rw] --y--- id1</span><br><span class="line">	bu3 --- id11[redis]</span><br><span class="line">	id11 --- id12[redis]</span><br><span class="line">	style bu3 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis1</span><br><span class="line">	bu2[redis:rw] --- bu3</span><br><span class="line">	bu2 --- id21[redis]</span><br><span class="line">	id21 --- id22[redis]</span><br><span class="line">	style bu2 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	subgraph redis</span><br><span class="line">	bu1[redis:rw] --- bu2</span><br><span class="line">	bu1 --- id31[redis]</span><br><span class="line">	id31 --- id32[redis]</span><br><span class="line">	style bu1 fill:#f9f,stroke:#333,stroke-width:4px,fill-opacity:0.5</span><br><span class="line">	end</span><br><span class="line">	id1 --z--&gt; id11</span><br></pre></td></tr></table></figure>
-
-<p><strong>AKF一变多</strong></p>
-<p>数据一致性问题</p>
-<p>所有节点阻塞直到数据全部一致</p>
-<ul>
-<li>同步方式</li>
-</ul>
-<p>强一致性</p>
-<p>极其容易破坏可用性!反问自己:为什么一边多? 解决可用性</p>
-<ul>
-<li>通过异步方式</li>
-</ul>
-<p>容忍数据丢失一部分</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --阻塞--&gt; id3((redis))</span><br><span class="line">	sum[强一致性,破坏可用性]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	client --set k1 a--&gt; id1((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id2((redis))</span><br><span class="line">	id1 --非阻塞--&gt; id3((redis))</span><br><span class="line">	sum[弱一致性&lt;br/&gt;丢失数据]</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	client --set k1 a--&gt; id1((redis))</span><br><span class="line"> 	id1 --同步阻塞--&gt; id4[kafka &lt;br/&gt; 可靠,集群&lt;br/&gt;响应速度够快]</span><br><span class="line">    id4 --&gt; id2((redis))</span><br><span class="line">	id4 --&gt; id3((redis))</span><br><span class="line">	sum[最终数据会一致&lt;br/&gt; 有可能数据不一致]</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>主从:</strong></p>
-<p>主从复制,主机有的数据从机也有</p>
-<p>客户端主从都可以访问</p>
-<p><strong>主备:</strong></p>
-<p>客户端只访问master</p>
-<p>备用机不参业务</p>
-<p><strong>主机</strong></p>
-<p>负责读写</p>
-<p>自己又是一个:单点</p>
-<p><strong><center>一般对主做高可用,自动的故障转移:代替人</center></strong></p>
-<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
-
-<center>人是怎么做监控的</center>
-
-<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
-
-<center>由一个技术,程序实现<br/>只要是一个程序就会有单点故障的问题,一变多的集群</center>
-
-<center><i class="fa fa-long-arrow-down" aria-hidden="true"></i><center>
-
-<center>有一些不一样的地方</center>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id((redis)) --&gt; id1[监控]</span><br><span class="line">	id --&gt; id2[监控]</span><br><span class="line">	id --&gt; id3[监控]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">	id1[监控] --&gt; id((redis)) </span><br><span class="line">	id2[监控] --&gt; id</span><br><span class="line">	id3[监控] --&gt; id</span><br></pre></td></tr></table></figure>
-
-<p>都给出 OK</p>
-<p>强一致性</p>
-<p>一部分给出OK</p>
-<p>另一部分不算数</p>
-<p>几个?</p>
-<p>1,2</p>
-<p>推导:</p>
-<p><strong>1</strong>台统计不准确,不够势力范围</p>
-<p>问题:网络分区</p>
-<p>脑裂</p>
-<p><strong>2</strong> 在3个节点成功解决脑裂问题</p>
-<p><strong>3</strong> 在4个节点成功解决脑裂问题</p>
-<p><strong>4</strong> 在5个节点成功解决脑裂问题</p>
-<p>n/2+1 过半!</p>
-<p>使用奇数台!</p>
-<h4 id="x实际操作-主从复制"><a href="#x实际操作-主从复制" class="headerlink" title="x实际操作:主从复制"></a>x实际操作:主从复制</h4><p>启动安装redis-server脚本,6379,6380,6381</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 utils]$ sudo ./install_server.sh </span><br><span class="line">Welcome to the redis service installer</span><br><span class="line">This script will help you easily set up a running redis server</span><br><span class="line"></span><br><span class="line">Please select the redis port for this instance: [6379] 6380</span><br><span class="line">Please select the redis config file name [/etc/redis/6380.conf] </span><br><span class="line">Selected default - /etc/redis/6380.conf</span><br><span class="line">Please select the redis log file name [/var/log/redis_6380.log] </span><br><span class="line">Selected default - /var/log/redis_6380.log</span><br><span class="line">Please select the data directory for this instance [/var/lib/redis/6380] </span><br><span class="line">Selected default - /var/lib/redis/6380</span><br><span class="line">Please select the redis executable path [] /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Selected config:</span><br><span class="line">Port           : 6380</span><br><span class="line">Config file    : /etc/redis/6380.conf</span><br><span class="line">Log file       : /var/log/redis_6380.log</span><br><span class="line">Data dir       : /var/lib/redis/6380</span><br><span class="line">Executable     : /opt/bigdata/module/redis5/bin/redis-server</span><br><span class="line">Cli Executable : /opt/bigdata/module/redis5/bin/redis-cli</span><br><span class="line">Is this ok? Then press ENTER to go on or Ctrl-C to abort.</span><br><span class="line">Copied /tmp/6380.conf =&gt; /etc/init.d/redis_6380</span><br><span class="line">Installing service...</span><br><span class="line">Successfully added to chkconfig!</span><br><span class="line">Successfully added to runlevels 345!</span><br><span class="line">Starting Redis server...</span><br><span class="line">Installation successful!</span><br></pre></td></tr></table></figure>
-
-<p>拷贝配置文件到测试目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ cp /etc/redis/* ./</span><br><span class="line">[lemcoden@hadoop01 test]$ ls</span><br><span class="line">6379.conf  6380.conf  6381.conf</span><br><span class="line">[lemcoden@hadoop01 test]$ vim 6379.conf </span><br><span class="line">daemonize no</span><br><span class="line">#logfile /var/lib/redis/6379.log</span><br><span class="line">appendonly no</span><br></pre></td></tr></table></figure>
-
-<p>启动redis-server</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">终端01</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端02</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br><span class="line">终端03</span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6379</span><br></pre></td></tr></table></figure>
-
-<p>启动redis-cli(略过)</p>
-<p>REPLICAOF命令 降级主机slave</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6380&gt; get k1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6380&gt; set k1 222</span><br><span class="line">(error) READONLY You can&#x27;t write against a read only replica.</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; set key2 ccc</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6381&gt; get key2</span><br><span class="line">&quot;ccc&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; get key2 </span><br><span class="line">(nil)</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; REPLICAOF 127.0.0.1 6379</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br></pre></td></tr></table></figure>
-
-<p>kill 6381主机后,6379设置多个key,然后启动6381(增量同步)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k3 aaa</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k4 444</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k2 4123313</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k5 141jddpfipj</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k6 sada</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379</span><br><span class="line"></span><br><span class="line">127.0.0.1:6381&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k5&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line">5) &quot;k6&quot;</span><br><span class="line">6) &quot;k2&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果6381开启AOF ,则会产生RDB sync</p>
-<p>!!!!<strong>且RDB文件中不存在replicaID号</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/6381.conf  --replicaof 127.0.0.1 6379 --appendonly yes</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.820 * Full resync from master: d93b72c43fc1777195b07d7546baf1b34a92fb4f:12772</span><br><span class="line"> 16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: receiving 240 bytes from master</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.870 * MASTER &lt;-&gt; REPLICA sync: Flushing old data</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Loading DB in memory</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.874 * MASTER &lt;-&gt; REPLICA sync: Finished with success</span><br><span class="line">16071:S 21 Nov 2020 05:05:29.919 * Background AOF rewrite terminated with success</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 6381]$ vim dump.rdb </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>假如Master宕掉,SLAVE升级为Master</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6381&gt; REPLICAOF no one </span><br><span class="line">OK</span><br><span class="line">16192:M 21 Nov 2020 05:18:36.965 * MASTER MODE enabled</span><br><span class="line">127.0.0.1:6380&gt; REPLICAOF 127.0.0.1 6381</span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>关于主从架构,conf文件的一些配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># replicaof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"># masterauth &lt;master-password&gt;</span><br><span class="line">如果redis刚启动,从Master复制数据期间,是否还支持本机old数据查询</span><br><span class="line">replica-serve-stale-data yes</span><br><span class="line">备机是否只支持查询</span><br><span class="line">replica-read-only yes</span><br><span class="line">是否直接使用网络复制</span><br><span class="line">repl-diskless-sync no</span><br><span class="line">增量复制文件大小,salve短时间下线情况发生时</span><br><span class="line"># repl-backlog-size 1mb</span><br><span class="line">最少几个replica写成功</span><br><span class="line"># min-replicas-to-write 3</span><br><span class="line"># min-replicas-max-lag 10</span><br></pre></td></tr></table></figure>
-
-<p>主从复制配置,需要人工维护主的故障问题</p>
-<h4 id="x实际操作-HA哨兵"><a href="#x实际操作-HA哨兵" class="headerlink" title="x实际操作:HA哨兵"></a>x实际操作:HA哨兵</h4><p>新建哨兵conf文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br></pre></td></tr></table></figure>
-
-<p>启动服务器,启动哨兵26379,26380,26381</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 bin]$ sudo ./redis-server /home/lemcoden/test/26379.conf --sentinel</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.434 # +monitor master mymaster 127.0.0.1 6379 quorum 2</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.435 * +slave slave 127.0.0.1:6381 127.0.0.1 6381 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 05:57:09.442 * +slave slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:34.614 * +sentinel sentinel aea8334513cd9abf6b18c40262915bd337033350 127.0.0.1 26380 @ mymaster 127.0.0.1 6379</span><br><span class="line">16806:X 21 Nov 2020 06:00:54.877 * +sentinel sentinel f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3 127.0.0.1 26381 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
-
-<p> 退出6379,master,sentinal推演出新的leader,</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">16806:X 21 Nov 2020 06:04:32.642 * +failover-state-send-slaveof-noone slave 127.0.0.1:6380 127.0.0.1 6380 @ mymaster 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
-
-<p><strong>sentinel通过发布订阅知道其他sentinel</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; PSUBSCRIBE *</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;psubscribe&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) (integer) 1</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26380,aea8334513cd9abf6b18c40262915bd337033350,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br><span class="line">3) &quot;__sentinel__:hello&quot;</span><br><span class="line">4) &quot;127.0.0.1,26381,f95f1b3b18e56f7bda1bdf5e8b39baa9400cb3d3,1,mymaster,127.0.0.1,6380,1&quot;</span><br><span class="line">1) &quot;pmessage&quot;</span><br><span class="line">2) &quot;*&quot;</span><br></pre></td></tr></table></figure>
-
-<p>sentinel 配置文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$REDIS_SRC/sentinel.conf</span><br><span class="line">port 26379</span><br><span class="line">daemonize no</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
-
-<h4 id="y概述"><a href="#y概述" class="headerlink" title="y概述"></a>y概述</h4><p>单节点副本解决了单点故障和压力的问题,但是容量问题没有解决</p>
-<p>容量client端解决方式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-1:client&lt;br/&gt;融入逻辑,业务拆分&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br></pre></td></tr></table></figure>
-
-<p><em>sharding分片方式</em></p>
-<p>hash+取模</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client&lt;br/&gt;算法:hash+取模&lt;br/&gt;] --&gt; redis1</span><br><span class="line">	id --&gt; redis2</span><br><span class="line">	id1((弊端:取模的值必须固定,&lt;br/&gt;%3,&lt;br/&gt;%4&lt;br/&gt;影响分布式下的扩展性))</span><br></pre></td></tr></table></figure>
-
-<p>random lpush 适用于消息队列场景</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;random&lt;br/&gt;lpush]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br></pre></td></tr></table></figure>
-
-<p>一致性hash算法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[2-2:client] --&gt; id2[逻辑:&lt;br/&gt;kemata&lt;br/&gt;一致性hash&lt;br/&gt;没有取模&lt;br/&gt;data,node]</span><br><span class="line">	id2--&gt; redis1</span><br><span class="line">	id2 --&gt; redis2</span><br><span class="line">	redis1 --&gt; id3([2-2:client rpop])</span><br><span class="line">	redis2 --&gt; id3</span><br><span class="line">	id2 --&gt; id4((规划一个环形哈希:虚拟节点))</span><br><span class="line">	subgraph 映射算法</span><br><span class="line">	id1[hash&lt;br/&gt;crc&lt;br/&gt;fmv&lt;br/&gt;md5&lt;br/&gt;]</span><br><span class="line">	end</span><br></pre></td></tr></table></figure>
-
-<p>一致性Hash优点:</p>
-<p>你加节点,的确可以分担其他节点的压力,不会造成全局洗牌</p>
-<p>缺点:</p>
-<p>新增节点造成一小部分数据不能命中</p>
-<p>1.问题,缓存击穿,压到mysql</p>
-<p>2.方案,每次取离我最近的2个物理节点</p>
-<p>更倾向于作为缓存,而不是数据库</p>
-<p>弊端:</p>
-<p>3个模式不能做数据库用</p>
-<p>预分区</p>
-<h4 id="twemproxy安装"><a href="#twemproxy安装" class="headerlink" title="twemproxy安装"></a>twemproxy安装</h4><p>大部分直接按照官网的README操作</p>
-<p>编译完成之后,进入scrips目录</p>
-<p>将nutcracker.init copy到/etc/ini.d目录下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 scripts]$ sudo cp nutcracker.init /etc/init.d/twemproxy</span><br><span class="line">[lemcoden@hadoop01 init.d]$ sudo chmod +x twemproxy </span><br></pre></td></tr></table></figure>
-
-<p>新建/etc/nutcracker/</p>
-<p>将源码的config目录下的所有文件copy过来</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 conf]$ sudo mkdir /etc/nutcracker/</span><br><span class="line">[lemcoden@hadoop01 conf]$ ls</span><br><span class="line">nutcracker.leaf.yml  nutcracker.root.yml  nutcracker.yml</span><br><span class="line">[lemcoden@hadoop01 conf]$ cp ./* /etc/nutcracker/</span><br></pre></td></tr></table></figure>
-
-<p>将src文件夹下的nutcracker可执行文件copy到/usr/bin/目录下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 src]$ sudo cp nutcracker /usr/bin/</span><br></pre></td></tr></table></figure>
-
-<p>新建redis数据文件夹,</p>
-<p>并手动启动redis-server</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 nutcracker]$ cd ~</span><br><span class="line">[lemcoden@hadoop01 ~]$ mkdir data</span><br><span class="line">[lemcoden@hadoop01 ~]$ cd data/</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ mkdir 6380</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6379</span><br><span class="line">[lemcoden@hadoop01 data]$ cd 6380</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-server --port 6380</span><br><span class="line">启动twemproxy代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ systemctl start twemproxy</span><br><span class="line">客户端链接代理</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 22121</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">(error) ERR Connection refused</span><br><span class="line">127.0.0.1:22121&gt; set k1 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; set k2 sss</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:22121&gt; keys *</span><br><span class="line">Error: Server closed the connection</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6380</span><br><span class="line">127.0.0.1:6380&gt; keys * </span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">2) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k1&quot;</span><br><span class="line">127.0.0.1:6380&gt; keys *</span><br><span class="line">1) &quot;k3&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;k4&quot;</span><br><span class="line">4) &quot;k1&quot;</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 6379</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:22121&gt; MULTI</span><br><span class="line">Error: Server closed the connection</span><br></pre></td></tr></table></figure>
-
-<h4 id="predixy-安装"><a href="#predixy-安装" class="headerlink" title="predixy 安装"></a>predixy 安装</h4><p>上github,找到release包,下载下来,解压</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/joyieldInc/predixy/releases/download/1.0.5/predixy-1.0.5-bin-amd64-linux.tar.gz</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim predixy.conf</span><br><span class="line">#cluster.conf</span><br><span class="line">Include sentinel.conf</span><br><span class="line">#try.conf</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改conf文件</span><br><span class="line">[lemcoden@hadoop01 conf]$ vim sentinel.conf</span><br><span class="line">    Sentinels &#123;</span><br><span class="line">        + 127.0.0.1:26379</span><br><span class="line">        + 127.0.0.1:26380</span><br><span class="line">        + 127.0.0.1:26381</span><br><span class="line">    &#125;</span><br><span class="line">    Group ooxx &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    Group xxoo &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>集群文件配置(sentinel)</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26380</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line"></span><br><span class="line">port 26381</span><br><span class="line">sentinel monitor xxoo 127.0.0.1 46379 2</span><br><span class="line">sentinel monitor ooxx 127.0.0.1 36379 2</span><br></pre></td></tr></table></figure>
-
-<p><strong>集群启动</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 test]$ redis-server 26379.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26380.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 test]$ redis-server 26381.conf --sentinel</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 36380</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46379</span><br><span class="line">[lemcoden@hadoop01 36379]$ redis-server  --port 46380</span><br><span class="line">[lemcoden@hadoop01 predixy-1.0.5]$ ./bin/predixy conf/predixy.conf </span><br></pre></td></tr></table></figure>
-
-<p><strong>redis-cli实验</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p 7617</span><br><span class="line">127.0.0.1:7617&gt; set k1 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k2</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k1 sdfsdfsdfs</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; set &#123;oo&#125;k2 sdasdasfasfqad</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">(error) ERR forbid transaction in current server pool</span><br><span class="line">127.0.0.1:7617&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli -p  46379</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; keys *</span><br><span class="line">1) &quot;&#123;oo&#125;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line">3) &quot;&#123;oo&#125;k2&quot;</span><br><span class="line">127.0.0.1:46379&gt; </span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli  -p 36379</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">127.0.0.1:36379&gt; </span><br></pre></td></tr></table></figure>
-
-<p><strong>不支持事务,所以试验单主从</strong></p>
-<p>修改config</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; set k1 sdasfa</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 asdada</span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line">127.0.0.1:36379&gt; keys *</span><br><span class="line">1) &quot;k1&quot;</span><br><span class="line">2) &quot;k2&quot;</span><br><span class="line"></span><br><span class="line">127.0.0.1:7617&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:7617&gt; get k1 </span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; set k2 2222</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:7617&gt; exec</span><br><span class="line">1) &quot;sdasfa&quot;</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
-
-<p>kill掉36379进程,哨兵会自动选择,在代理层是感觉不到的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kill掉36379进程之后</span><br><span class="line">127.0.0.1:7617&gt; get k1</span><br><span class="line">&quot;sdasfa&quot;</span><br></pre></td></tr></table></figure>
-
-<h4 id="redis官方集群样例"><a href="#redis官方集群样例" class="headerlink" title="redis官方集群样例"></a>redis官方集群样例</h4><p>去redis源码的utils/create-cluster目录下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ vim create-cluster </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">Starting 30001</span><br><span class="line">Starting 30002</span><br><span class="line">Starting 30003</span><br><span class="line">Starting 30004</span><br><span class="line">Starting 30005</span><br><span class="line">Starting 30006</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster create</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:30005 to 127.0.0.1:30001</span><br><span class="line">Adding replica 127.0.0.1:30006 to 127.0.0.1:30002</span><br><span class="line">Adding replica 127.0.0.1:30004 to 127.0.0.1:30003</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">Can I set the above configuration? (type &#x27;yes&#x27; to accept): </span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">..</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: a403574ce40177866a188d16a615848bd5b5459a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 967818092ca216fe22a90160587fbdbfc23dd70b 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates a403574ce40177866a188d16a615848bd5b5459a</span><br><span class="line">S: 00e70c8bebff2e59e89ed3e1e152d6805ad36eff 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 638ac8a174e8a66b1e46bb19155860a5c3aa415b</span><br><span class="line">S: 69313ced470329f55a5bdf408e4285f345a24154 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba</span><br><span class="line">M: 638ac8a174e8a66b1e46bb19155860a5c3aa415b 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 6a2c3dd007e7d44c95c51d33002e9cc0fdc429ba 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">客户端</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -p 30001</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">(error) MOVED 12706 127.0.0.1:30003</span><br><span class="line">127.0.0.1:30001&gt; </span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli -c  -p 30001 (cluster集群模式)</span><br><span class="line">127.0.0.1:30001&gt; set k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; get k1</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; set k2 sdfsdsf</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; get k2</span><br><span class="line">&quot;sdfsdsf&quot;</span><br><span class="line">127.0.0.1:30001&gt; get k1</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">&quot;sdfsdf&quot;</span><br><span class="line">127.0.0.1:30003&gt; WATCH k2</span><br><span class="line">-&gt; Redirected to slot [449] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set k1 232323456</span><br><span class="line">-&gt; Redirected to slot [12706] located at 127.0.0.1:30003</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; set sdfsdf sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30003&gt; exec</span><br><span class="line">(error) ERR EXEC without MULTI </span><br><span class="line">(事务中重定向不同的进程的命令会失败)</span><br><span class="line"></span><br><span class="line">127.0.0.1:30003&gt; set &#123;oo&#125;k1 sdfsdf</span><br><span class="line">-&gt; Redirected to slot [1629] located at 127.0.0.1:30001</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k3 sdfsdf</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; WATCH &#123;oo&#125;k1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:30001&gt; set &#123;oo&#125;k2 234234</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; get  &#123;oo&#125;k3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:30001&gt; exec</span><br><span class="line">1) OK</span><br><span class="line">2) &quot;sdfsdf&quot;</span><br><span class="line">(可以在事务中给key添加相同的前缀)</span><br></pre></td></tr></table></figure>
-
-<h4 id="客户端分赃"><a href="#客户端分赃" class="headerlink" title="客户端分赃"></a>客户端分赃</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ ./create-cluster start</span><br><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster create 127.0.0.1:30001 127.0.0.1:30002 127.0.0.1:30003 127.0.0.1:30004 127.0.0.1:30005 127.0.0.1:30006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
-
-<p>客户端重新分片</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 create-cluster]$ redis-cli --cluster reshard 127.0.0.1:30001</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">How many slots do you want to move (from 1 to 16384)? 2000</span><br><span class="line">What is the receiving node ID? 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">Please enter all the source node IDs.</span><br><span class="line">  Type &#x27;all&#x27; to use all the nodes as source nodes for the hash slots.</span><br><span class="line">  Type &#x27;done&#x27; once you entered all the source nodes IDs.</span><br><span class="line">Source node #1: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">Source node #2: done</span><br><span class="line"></span><br><span class="line">检查使用info或者check命令</span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster info 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --cluster check 127.0.0.1:30001</span><br><span class="line">127.0.0.1:30001 (8271c8dc...) -&gt; 0 keys | 3461 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30002 (0d0f70ad...) -&gt; 0 keys | 7462 slots | 1 slaves.</span><br><span class="line">127.0.0.1:30003 (55c02c59...) -&gt; 0 keys | 5461 slots | 1 slaves.</span><br><span class="line">[OK] 0 keys in 3 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:30001)</span><br><span class="line">M: 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a 127.0.0.1:30001</span><br><span class="line">   slots:[2000-5460] (3461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: c41870d1a555d7674b8a13f2e52cfd926113fd1e 127.0.0.1:30004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 0d0f70ad6b408f7c56897450eb605aa9e95e10ab</span><br><span class="line">M: 0d0f70ad6b408f7c56897450eb605aa9e95e10ab 127.0.0.1:30002</span><br><span class="line">   slots:[0-1999],[5461-10922] (7462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 55c02c59f51913c654087fbf0ab2e8ee2464d017 127.0.0.1:30003</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8ccf40a81064e64afb56999dbd931636e7b49519 127.0.0.1:30005</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 55c02c59f51913c654087fbf0ab2e8ee2464d017</span><br><span class="line">S: 85aa8ac690ba144599e7fb47b733d22dc365c036 127.0.0.1:30006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8271c8dcb899de726fe6c6ffe0ebcdb9a494eb0a</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<head> 
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script> 
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/v4-shims.js"></script> 
-</head> 
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+<p>3.压力
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/21/redis%E7%AC%94%E8%AE%B004/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -864,7 +810,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:46:26" itemprop="dateModified" datetime="2021-01-24T16:46:26+08:00">2021-01-24</time>
+        <time title="Modified: 2021-08-08 18:57:17" itemprop="dateModified" datetime="2021-08-08T18:57:17+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -886,99 +832,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p>缓存:数据可以丢 急速!</p>
-<p>数据库:数据绝对不能丢 速度+持久性 </p>
+          <h3 id="数据库设计"><a class="markdownIt-Anchor" href="#数据库设计"></a> 数据库设计</h3>
+<p>缓存:数据可以丢 急速!</p>
+<p>数据库:数据绝对不能丢 速度+持久性</p>
 <p>掉电易失!</p>
 <p>redis+mysql &gt; 数据库 &lt; 不太对</p>
-<h3 id="redis如何持久化"><a href="#redis如何持久化" class="headerlink" title="redis如何持久化"></a>redis如何持久化</h3><p>存储层:</p>
-<p>1.快照/副本</p>
-<p>2.日志</p>
-<h4 id="从linux进程开始聊"><a href="#从linux进程开始聊" class="headerlink" title="从linux进程开始聊"></a>从linux进程开始聊</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[单机持久化] --&gt; id2&#123;RDB&#125; </span><br><span class="line">	id2 --&gt; id4[时点性]</span><br><span class="line">	id2 --&gt; id6[save]</span><br><span class="line">	id6 --&gt; id10[明确:比如,关机维护]</span><br><span class="line">	id2 --&gt; id7[bgsave]</span><br><span class="line">	id7 --&gt; id8[fork创建子进程]</span><br><span class="line">	id2 --&gt; id9[配置文件中给出bgsave的规则:save这个标识]</span><br><span class="line">	id2 --&gt; id11[弊端&lt;br/&gt;&lt;br/&gt;1.不支持拉链,只有一个dump.rdb&lt;br/&gt;&lt;br/&gt;2.丢失数据相对多,&lt;br/&gt;时点与时点之间窗口数据容易丢失&lt;br/&gt;8点得到一个rdb,9点刚要落一个rdb,挂机了]</span><br><span class="line">	id2 --&gt; id12[优点&lt;br/&gt;类似java中序列化,恢复的速度相对快]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id101[如果果开启了AOF,只会用AOF恢复,&lt;br/&gt;4.0之后,AOF中包含RDB全量,增加记录新的写操作]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><ol>
-<li><p>衔接,前一个命令的输出作为后一个命令的输入</p>
-</li>
-<li><p>管道会触发子进程</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ num=0</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++))</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ ((num++)) | echo ok</span><br><span class="line">ok</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$ | more</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID</span><br><span class="line">2236</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8130</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8132</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8134</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $BASHPID | more</span><br><span class="line">8136</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="进程演示"><a href="#进程演示" class="headerlink" title="进程演示"></a>进程演示</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id1[使用linux的时候:&lt;br/&gt;&lt;br/&gt;父子进程&lt;br/&gt;&lt;br/&gt;常规思想,进程数据隔离的&lt;br/&gt;&lt;br/&gt;进阶思想,父进程其实可以让子进程看到数据 &lt;br/&gt;&lt;br/&gt;linux中&lt;br/&gt;export的环境变量,子进程的修改不会影响到父进程&lt;br/&gt;&lt;br/&gt;父进程不会破坏子进程&lt;br/&gt;] --&gt; id2[创建子进程应该是什么程度&lt;br/&gt;如果父进程是redis,内存数据10G&lt;br/&gt; 1.速度&lt;br/&gt;2.内存空间够不够]</span><br><span class="line">	id2--&gt;id3((&quot;fork&quot;))</span><br><span class="line">	id3 --&gt; id4[&quot;1.速度:快&lt;br/&gt;2.空间:小&quot;]</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ exit</span><br><span class="line">exit</span><br><span class="line">[lemcoden@hadoop01 ~]$ export num</span><br><span class="line">[lemcoden@hadoop01 ~]$ /bin/bash</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<p>test.sh</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo $$</span><br><span class="line">echo $num</span><br><span class="line">num=999</span><br><span class="line">echo num:$num</span><br><span class="line"></span><br><span class="line">sleep 20</span><br><span class="line"></span><br><span class="line">echo $num</span><br></pre></td></tr></table></figure>
-
-<p>执行状况(子进程不会修改父进程)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8558</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8558</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $$</span><br><span class="line">8454</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
-
-<p>执行状况(父进程不会破坏子进程)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ ./test.sh &amp;</span><br><span class="line">[1] 8623</span><br><span class="line">[lemcoden@hadoop01 ~]$ 8623</span><br><span class="line">1</span><br><span class="line">num:999</span><br><span class="line"></span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">1</span><br><span class="line">[lemcoden@hadoop01 ~]$ num=888</span><br><span class="line">[lemcoden@hadoop01 ~]$ echo $num</span><br><span class="line">888</span><br><span class="line">[lemcoden@hadoop01 ~]$ 999</span><br></pre></td></tr></table></figure>
-
-<h4 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h4><p>redis实现持久化需要解决两个问题:</p>
-<ol>
-<li><p>非阻塞,redis继续对外提供服务</p>
-</li>
-<li><p>将数据落地</p>
-</li>
-</ol>
-<p>通过fork和copy on  write实现</p>
-<p>时点.png</p>
-<p><strong>RDB配置要点</strong></p>
-<hr>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">######################## SNAPSHOTTING  ########################</span><br><span class="line">#   save &quot;&quot;</span><br><span class="line"></span><br><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line">rdbchecksum yes 文件末尾写入校验位</span><br><span class="line"></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line">dir /var/lib/redis/6379</span><br></pre></td></tr></table></figure>
-
-<p><strong>为什么一般redis设置1到10个G,而不占满内存?</strong></p>
-<p>因为做数据持久化的时候,磁盘IO的瓶颈,为了保证redis的速度,不能有太大的数据量做持久化.</p>
-<h4 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id[主从复制] --&gt; id3&#123;AOF&#125;</span><br><span class="line">	id3 --&gt; id5[redis的写操作记录到文件中]</span><br><span class="line">	id5 --&gt; id22[丢失数据少]</span><br><span class="line">	id5 --&gt; id23[rdb和aof可以同时开启]</span><br><span class="line">	id5 --&gt; id24[弊端:体量无限变大,恢复慢]</span><br><span class="line">	id24 --&gt; id25[日志:优点如果能保住&lt;br/&gt;还是可以用的&lt;br/&gt;&lt;br/&gt;设计方案-&gt;AOF足够小]</span><br><span class="line">	</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	hdfs[hdfs:fsimage+edits.log&lt;br/&gt;&lt;br/&gt;让日志记录增量&lt;br/&gt;&lt;br/&gt;合并过程]</span><br><span class="line">	hdfs --&gt; id0[4.0以前]</span><br><span class="line">	id0 --&gt; id2[重写&lt;br/&gt;删除抵消的命令&lt;br/&gt;合并重复的命令]</span><br><span class="line">	id2 --&gt; id4[最终也是纯指令文件]</span><br><span class="line">	hdfs --&gt; id10[4.0以后]</span><br><span class="line">	id10 --&gt;id11[重写&lt;br/&gt;将老的数据RDB到aof文件中&lt;br/&gt;将增量以指令的方式&lt;br/&gt;append到AOF]</span><br><span class="line">	id11 --&gt; id12[AOF是一个混合体,利用RDB的快,日志的全量]</span><br></pre></td></tr></table></figure>
-
-
-
-<p>redis运行了10年</p>
-<p>开启了AOF</p>
-<p>10年头,redis挂了</p>
-<ol>
-<li><p>AOF多大:10T</p>
-<p><strong>恢复:会不会溢出</strong></p>
-</li>
-<li><p>恢复要多久:恢复5年</p>
-</li>
-</ol>
-<p><strong>redis内存数据库</strong></p>
-<p>原点:redis是内存数据库</p>
-<p>写操作会触发IO</p>
-<p>NO</p>
-<p>aways</p>
-<p>每秒</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">	id1[java] --&gt; id2[kenel fd8 buffer]</span><br><span class="line">	id2 --&gt; id3[磁盘]</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">############################## APPEND ONLY MODE ###############################</span><br><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly.aof</span><br><span class="line"># appendfsync always</span><br><span class="line">appendfsync everysec</span><br><span class="line"># appendfsync no 等内核buffer快满了.kernel自动flush</span><br><span class="line"></span><br><span class="line">no-appendfsync-on-rewrite no </span><br><span class="line">redis有一个正在进行rdb的子进程时,此值为true,就不会产生AOF写</span><br><span class="line">???</span><br><span class="line"># When rewriting the AOF file, Redis is able to use an RDB preamble in the</span><br><span class="line"># AOF file for faster rewrites and recoveries. When this option is turned</span><br><span class="line"># on the rewritten AOF file is composed of two different stanzas:</span><br><span class="line">#</span><br><span class="line">#   [RDB file][AOF tail]</span><br><span class="line">#</span><br><span class="line"># When loading Redis recognizes that the AOF file starts with the &quot;REDIS&quot;</span><br><span class="line"># string and loads the prefixed RDB file, and continues loading the AOF</span><br><span class="line"># tail.</span><br><span class="line">aof-use-rdb-preamble yes</span><br></pre></td></tr></table></figure>
-
-<p><strong>AOF实操</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">daemonize no</span><br><span class="line">#logfile /var/log/redis_6379</span><br><span class="line">aof-use-rdb-preamble no</span><br><span class="line">[lemcoden@hadoop01 6379]$cd /var/lib/redis/6379</span><br><span class="line">[lemcoden@hadoop01 6379]$rm -f dump.rdb</span><br><span class="line">[lemcoden@hadoop01 6379]$ systemctl stop redis_6379</span><br><span class="line">[lemcoden@hadoop01 6379]$ sudo ./redis-server /etc/redis/6379.conf </span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">set</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$5</span><br><span class="line">hello</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; bgsave</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-check-rdb  dump.rdb </span><br><span class="line">[offset 0] Checking RDB file dump.rdb</span><br><span class="line">[offset 26] AUX FIELD redis-ver = &#x27;5.0.5&#x27;</span><br><span class="line">[offset 40] AUX FIELD redis-bits = &#x27;64&#x27;</span><br><span class="line">[offset 52] AUX FIELD ctime = &#x27;1605840860&#x27;</span><br><span class="line">[offset 67] AUX FIELD used-mem = &#x27;853472&#x27;</span><br><span class="line">[offset 83] AUX FIELD aof-preamble = &#x27;0&#x27;</span><br><span class="line">[offset 85] Selecting DB ID 0</span><br><span class="line">[offset 107] Checksum OK</span><br><span class="line">[offset 107] \o/ RDB looks OK! \o/</span><br><span class="line">[info] 1 keys read</span><br><span class="line">[info] 0 expires</span><br><span class="line">[info] 0 already expired</span><br></pre></td></tr></table></figure>
-
-<p><strong>重写AOF</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">Backgrou*2</span><br><span class="line">$6</span><br><span class="line">SELECT</span><br><span class="line">$1</span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line">$3</span><br><span class="line">SET</span><br><span class="line">$2</span><br><span class="line">k1</span><br><span class="line">$1</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
-
-<p><strong>AOF &amp; RDB混合</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">aof-use-rdb-preamble yes</span><br><span class="line">[lemcoden@hadoop01 6379]$ redis-cli </span><br><span class="line">127.0.0.1:6379&gt; set k1 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  set k1 c</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; BGREWRITEAOF</span><br><span class="line">[lemcoden@hadoop01 6379]$ vim appendonly.aof </span><br><span class="line">REDIS0009ú      redis-ver^E5.0.5ú</span><br><span class="line">redis-bitsÀ@ú^EctimeÂK3·_ú^Hused-memÂÐ^E^M^@ú^Laof-preambleÀ^Aþ^@û^A^@^@^Bk1^Acÿ&lt;84&gt;^Q·&lt;9e&gt;^T&quot;&lt;96&gt;]</span><br><span class="line">~                     </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Automatic rewrite of the append only file.</span><br><span class="line"># Redis is able to automatically rewrite the log file implicitly calling</span><br><span class="line"># BGREWRITEAOF when the AOF log size grows by the specified percentage.</span><br><span class="line">#</span><br><span class="line"># This is how it works: Redis remembers the size of the AOF file after the</span><br><span class="line"># latest rewrite (if no rewrite has happened since the restart, the size of</span><br><span class="line"># the AOF at startup is used).</span><br><span class="line">#</span><br><span class="line"># This base size is compared to the current size. If the current size is</span><br><span class="line"># bigger than the specified percentage, the rewrite is triggered. Also</span><br><span class="line"># you need to specify a minimal size for the AOF file to be rewritten, this</span><br><span class="line"># is useful to avoid rewriting the AOF file even if the percentage increase</span><br><span class="line"># is reached but it is still pretty small.</span><br><span class="line">#</span><br><span class="line"># Specify a percentage of zero in order to disable the automatic AOF</span><br><span class="line"># rewrite feature.</span><br><span class="line"></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
+<h3 id="redis如何持久化"><a class="markdownIt-Anchor" href="#redis如何持久化"></a> redis如何持久化</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/18/redis%E7%AC%94%E8%AE%B003/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1348,176 +1215,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/" class="post-title-link" itemprop="url">sql语句笔记01</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-11-12 22:15:03" itemprop="dateCreated datePublished" datetime="2020-11-12T22:15:03+08:00">2020-11-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-14 17:51:39" itemprop="dateModified" datetime="2020-12-14T17:51:39+08:00">2020-12-14</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="mysql四大排名函数"><a href="#mysql四大排名函数" class="headerlink" title="mysql四大排名函数"></a>mysql四大排名函数</h4><p>row_number: 连续 不重复 </p>
-<p>rank: 不连续 重复</p>
-<p>dense_rank: 连续 重复</p>
-<p>ntile:有参数 入参group_num, 将数据分成group_num个组排序编号</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/12/sql%E8%AF%AD%E5%8F%A5%E7%AC%94%E8%AE%B001/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/11/10/sqoop-%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/11/10/sqoop-%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">sqoop 简单安装配置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-11-10 09:52:14" itemprop="dateCreated datePublished" datetime="2020-11-10T09:52:14+08:00">2020-11-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-15 16:47:24" itemprop="dateModified" datetime="2020-11-15T16:47:24+08:00">2020-11-15</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$HIVE_SRC/build/dist/bin/hive </span><br><span class="line">--auxpath $HIVE_SRC/build/dist/lib/hive-hbase-handler-0.9.0.jar,</span><br><span class="line">$HIVE_SRC/build/dist/lib/hbase-0.92.0.jar,</span><br><span class="line">$HIVE_SRC/build/dist/lib/zookeeper-3.3.4.jar,</span><br><span class="line">$HIVE_SRC/build/dist/lib/guava-r09.jar</span><br><span class="line">--hiveconf </span><br><span class="line">hbase.zookeeper.quorum=zk1.yoyodyne.com,zk2.yoyodyne.com,zk3.yoyodyne.com</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/10/sqoop-%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 <script src="/js/comments.js"></script>
 </div>
@@ -1529,7 +1228,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1564,7 +1263,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

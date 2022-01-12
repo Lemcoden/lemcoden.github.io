@@ -22,15 +22,15 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="es踩坑日记(持续更新……..)最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化. 提前说明:  目前的两次踩坑基于Java的RestHighLevelClient 本人是根据mysql的sql基础进行从已知推未知,精通es开发的小伙伴可以略过  多条件查询前提本次业务需要进行多条件的查询,如果mysql的话好说,直接">
+<meta name="description" content="es踩坑日记(持续更新…) 最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化. 提前说明:  目前的两次踩坑基于Java的RestHighLevelClient 本人是根据mysql的sql基础进行从已知推未知,精通es开发的小伙伴可以略过   多条件查询前提">
 <meta property="og:type" content="article">
 <meta property="og:title" content="es踩坑日记(持续更新)">
 <meta property="og:url" content="https://lemcoden.github.io/2021/07/19/es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="es踩坑日记(持续更新……..)最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化. 提前说明:  目前的两次踩坑基于Java的RestHighLevelClient 本人是根据mysql的sql基础进行从已知推未知,精通es开发的小伙伴可以略过  多条件查询前提本次业务需要进行多条件的查询,如果mysql的话好说,直接">
+<meta property="og:description" content="es踩坑日记(持续更新…) 最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化. 提前说明:  目前的两次踩坑基于Java的RestHighLevelClient 本人是根据mysql的sql基础进行从已知推未知,精通es开发的小伙伴可以略过   多条件查询前提">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-07-19T03:52:37.000Z">
-<meta property="article:modified_time" content="2021-07-19T03:54:07.261Z">
+<meta property="article:modified_time" content="2021-08-08T10:55:31.037Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="es">
 <meta property="article:tag" content="elasticsearch">
@@ -126,7 +126,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E2%80%A6%E2%80%A6"><span class="nav-number">1.</span> <span class="nav-text">es踩坑日记(持续更新……..)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%E5%89%8D%E6%8F%90"><span class="nav-number">1.0.1.</span> <span class="nav-text">多条件查询前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E7%A1%AE%E6%9F%A5%E8%AF%A2%E7%9A%84%E5%9D%91"><span class="nav-number">1.0.2.</span> <span class="nav-text">精确查询的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2%E7%9A%84%E5%9D%91"><span class="nav-number">1.0.3.</span> <span class="nav-text">模糊查询的坑</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0"><span class="nav-number">1.</span> <span class="nav-text"> es踩坑日记(持续更新…)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%E5%89%8D%E6%8F%90"><span class="nav-number">1.0.1.</span> <span class="nav-text"> 多条件查询前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E7%A1%AE%E6%9F%A5%E8%AF%A2%E7%9A%84%E5%9D%91"><span class="nav-number">1.0.2.</span> <span class="nav-text"> 精确查询的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2%E7%9A%84%E5%9D%91"><span class="nav-number">1.0.3.</span> <span class="nav-text"> 模糊查询的坑</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -142,7 +142,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -153,7 +153,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,10 +216,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-07-19 11:52:37 / Modified: 11:54:07" itemprop="dateCreated datePublished" datetime="2021-07-19T11:52:37+08:00">2021-07-19</time>
+      <time title="Created: 2021-07-19 11:52:37" itemprop="dateCreated datePublished" datetime="2021-07-19T11:52:37+08:00">2021-07-19</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-08-08 18:55:31" itemprop="dateModified" datetime="2021-08-08T18:55:31+08:00">2021-08-08</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -240,13 +246,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="es踩坑日记-持续更新……"><a href="#es踩坑日记-持续更新……" class="headerlink" title="es踩坑日记(持续更新……..)"></a>es踩坑日记(持续更新……..)</h1><p>最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化.</p>
+        <h1 id="es踩坑日记持续更新"><a class="markdownIt-Anchor" href="#es踩坑日记持续更新"></a> es踩坑日记(持续更新…)</h1>
+<p>最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化.</p>
 <p>提前说明:</p>
 <ol>
 <li>目前的两次踩坑基于Java的<font color= #FFA500>RestHighLevelClient</font></li>
 <li>本人是根据mysql的<font color= #FFA500>sql基础</font>进行从已知推未知,精通es开发的小伙伴可以略过</li>
 </ol>
-<h3 id="多条件查询前提"><a href="#多条件查询前提" class="headerlink" title="多条件查询前提"></a>多条件查询前提</h3><p>本次业务需要进行多条件的查询,如果mysql的话好说,直接在where 后面加字段名=查询值,就可以了</p>
+<h3 id="多条件查询前提"><a class="markdownIt-Anchor" href="#多条件查询前提"></a> 多条件查询前提</h3>
+<span id="more"></span>
+<p>本次业务需要进行多条件的查询,如果mysql的话好说,直接在where 后面加字段名=查询值,就可以了</p>
 <p>,但是在es中不一样,需要在<font color= #FFA500>布尔查询</font>下添加相应的子句,布尔查询有四种查询子句:</p>
 <ul>
 <li>must</li>
@@ -261,7 +270,8 @@
 <p>然后说<font color= #FFA500>must not</font> 这个不用解释,就是must的非版本</p>
 <p><font color= #FFA500>should</font> 这个也简单,相当于sql当中的or,用should拼接的两个条件,只要满足其中的一个条件就可以返回</p>
 <p>所以,我们多条件查询使用的filter,因为我们有自己业务上的排序字段,并不需要通过分值进行排序,并且filter少了分值的计算,返回也更快</p>
-<h3 id="精确查询的坑"><a href="#精确查询的坑" class="headerlink" title="精确查询的坑"></a>精确查询的坑</h3><p>多条件查询可以通过布尔查询来实现,那么具体的子句呢?比如我想精确查询字段id = 12345,怎么查询?</p>
+<h3 id="精确查询的坑"><a class="markdownIt-Anchor" href="#精确查询的坑"></a> 精确查询的坑</h3>
+<p>多条件查询可以通过布尔查询来实现,那么具体的子句呢?比如我想精确查询字段id = 12345,怎么查询?</p>
 <p>当然是通过<font color= #FFA500>term查询</font>进行精确查询了,查询也简单,只要输入字段值和字段名就可以了,</p>
 <p>但是有个问题就是</p>
 <p><em><strong>会出现查询某个text类型的字段时,明明应该有的数据,但是查询不出来的状况.</strong></em></p>
@@ -269,12 +279,13 @@
 <p>而如果插入的是字符串,<font color= #FFA500>es会创建两种类型,一种是text,一种是keyword,</font>而这两种类型对应两种不同的查询方式,即(full text)和(exact value)</p>
 <p><font color= #FFA500>text</font>类型对应<font color= #FFA500>full text</font>查询方式:首先,会将text进行分词,大写转小写等操作,为转换后的数据内容建立索引,所以我们通过term查询text会走索引,找那些已经被拆分和转为小写的词汇,当然查询不到了.</p>
 <p><font color= #FFA500>keyword</font> 类型对应<font color= #FFA500>exact alue</font>查询方式:它不会对数据内容进行任何的操作,直接保留原数据进行查询,</p>
-<p>那怎么查询keyword的数据呢? </p>
+<p>那怎么查询keyword的数据呢?</p>
 <p>查询的时候,通过字段名.keyword进行查询即可</p>
-<h3 id="模糊查询的坑"><a href="#模糊查询的坑" class="headerlink" title="模糊查询的坑"></a>模糊查询的坑</h3><p>模糊查询,sql当中通过like关键子实现,查询内容通过加类似正则通配符的符号,实现各种模糊查询,但是在全文搜索下的模糊查询和sql下的模糊查询并不是一回事</p>
+<h3 id="模糊查询的坑"><a class="markdownIt-Anchor" href="#模糊查询的坑"></a> 模糊查询的坑</h3>
+<p>模糊查询,sql当中通过like关键子实现,查询内容通过加类似正则通配符的符号,实现各种模糊查询,但是在全文搜索下的模糊查询和sql下的模糊查询并不是一回事</p>
 <p>当我以sql的方式构建es下的fuzzy查询条件,结果都查不出来,回头查询资料才发现,es的模糊查询是这样的:</p>
 <p>比如我们本来像在百度搜索框中输入suprise,但是一不小心打错了写成了suprize,在这种查询下,模糊查询依然能查询到suprise相应的条目,也就是说es当中的查询是模糊拼写查询,并非sql当中的查询语义</p>
-<p>所以,在es当中,我们想实现”模糊查询”,应该使用以下三种:</p>
+<p>所以,在es当中,我们想实现&quot;模糊查询&quot;,应该使用以下三种:</p>
 <ul>
 <li>prefix</li>
 <li>wildcard</li>
@@ -331,7 +342,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -22,18 +22,18 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="关于HDFS原理在此写个总结前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统后两点主要围绕hdfs的高可用问题 1.HDFS存储模型 1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一的计算单">
+<meta name="description" content="关于HDFS原理在此写个总结 前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统 后两点主要围绕hdfs的高可用问题  1.HDFS存储模型  1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hdfs文件系统笔记总结">
 <meta property="og:url" content="https://lemcoden.github.io/2020/08/16/hdfs%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="关于HDFS原理在此写个总结前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统后两点主要围绕hdfs的高可用问题 1.HDFS存储模型 1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一的计算单">
+<meta property="og:description" content="关于HDFS原理在此写个总结 前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统 后两点主要围绕hdfs的高可用问题  1.HDFS存储模型  1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一">
 <meta property="og:locale">
 <meta property="og:image" content="http://picture.lemcoden.xyz/hdfs/hdfs_write.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/hdfs/hdfs_read.png">
 <meta property="og:image" content="http://picture.lemcoden.xyz/hdfs/HA">
 <meta property="article:published_time" content="2020-08-16T13:03:36.000Z">
-<meta property="article:modified_time" content="2020-08-17T05:31:32.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:55:56.406Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="hadoop生态">
 <meta property="article:tag" content="分布式">
@@ -130,7 +130,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-HDFS%E5%AD%98%E5%82%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">1.HDFS存储模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HDFS%E7%9A%84%E8%A7%92%E8%89%B2"><span class="nav-number">2.</span> <span class="nav-text">2.HDFS的角色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HDFS%E4%B8%BB%E8%A6%81%E8%A7%92%E8%89%B2"><span class="nav-number">2.1.</span> <span class="nav-text">HDFS主要角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AC%A1%E8%A6%81%E8%A7%92%E8%89%B2-SecodaryNamenode"><span class="nav-number">2.2.</span> <span class="nav-text">次要角色:SecodaryNamenode</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%A7%92%E8%89%B2%E4%BA%A4%E4%BA%92%E4%BA%A7%E7%94%9F%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">3.角色交互产生的机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">安全模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text">副本放置策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HDFS%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text">HDFS写流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text">HDFS读流程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-HDFS%E8%AE%BE%E7%BD%AE%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">5.HDFS设置高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88"><span class="nav-number">4.1.</span> <span class="nav-text">为什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.2.</span> <span class="nav-text">开始实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAP%E5%AE%9A%E7%90%86"><span class="nav-number">4.3.</span> <span class="nav-text">CAP定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAP%E5%A5%97%E7%94%A8%E5%88%86%E6%9E%90"><span class="nav-number">4.4.</span> <span class="nav-text">CAP套用分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%98%E8%A1%B7%E5%8A%9E%E6%B3%95-%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">4.5.</span> <span class="nav-text">折衷办法:最终一致性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zookeeper%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2"><span class="nav-number">4.6.</span> <span class="nav-text">zookeeper分布式协调系统自动切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E8%A7%92%E8%89%B2ZK-zookeeper-%E5%92%8CZKFC-ZookeeperFailOver"><span class="nav-number">4.7.</span> <span class="nav-text">新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E4%B8%BB%E5%A4%87%E5%88%87%E6%8D%A2%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%BF%B0"><span class="nav-number">4.8.</span> <span class="nav-text">自动主备切换流程详述</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1hdfs%E5%AD%98%E5%82%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text"> 1.HDFS存储模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2hdfs%E7%9A%84%E8%A7%92%E8%89%B2"><span class="nav-number">2.</span> <span class="nav-text"> 2.HDFS的角色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hdfs%E4%B8%BB%E8%A6%81%E8%A7%92%E8%89%B2"><span class="nav-number">2.1.</span> <span class="nav-text"> HDFS主要角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AC%A1%E8%A6%81%E8%A7%92%E8%89%B2secodarynamenode"><span class="nav-number">2.2.</span> <span class="nav-text"> 次要角色:SecodaryNamenode</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E8%A7%92%E8%89%B2%E4%BA%A4%E4%BA%92%E4%BA%A7%E7%94%9F%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text"> 3.角色交互产生的机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text"> 安全模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text"> 副本放置策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hdfs%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text"> HDFS写流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hdfs%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text"> HDFS读流程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5hdfs%E8%AE%BE%E7%BD%AE%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text"> 5.HDFS设置高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88"><span class="nav-number">4.1.</span> <span class="nav-text"> 为什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.2.</span> <span class="nav-text"> 开始实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cap%E5%AE%9A%E7%90%86"><span class="nav-number">4.3.</span> <span class="nav-text"> CAP定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cap%E5%A5%97%E7%94%A8%E5%88%86%E6%9E%90"><span class="nav-number">4.4.</span> <span class="nav-text"> CAP套用分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%98%E8%A1%B7%E5%8A%9E%E6%B3%95%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">4.5.</span> <span class="nav-text"> 折衷办法:最终一致性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zookeeper%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2"><span class="nav-number">4.6.</span> <span class="nav-text"> zookeeper分布式协调系统自动切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E8%A7%92%E8%89%B2zkzookeeper%E5%92%8Czkfczookeeperfailover"><span class="nav-number">4.7.</span> <span class="nav-text"> 新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E4%B8%BB%E5%A4%87%E5%88%87%E6%8D%A2%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%BF%B0"><span class="nav-number">4.8.</span> <span class="nav-text"> 自动主备切换流程详述</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -146,7 +146,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -157,7 +157,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -228,7 +228,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-08-17 13:31:32" itemprop="dateModified" datetime="2020-08-17T13:31:32+08:00">2020-08-17</time>
+        <time title="Modified: 2021-08-08 18:55:56" itemprop="dateModified" datetime="2021-08-08T18:55:56+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -250,28 +250,54 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>关于HDFS原理在此写个总结<br>前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统<br>后两点主要围绕hdfs的高可用问题</p>
-<h3 id="1-HDFS存储模型"><a href="#1-HDFS存储模型" class="headerlink" title="1.HDFS存储模型"></a>1.HDFS存储模型</h3><ul>
-<li><p>1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一的计算单位,这个统一的计算单位block不是固定的,需要根据具体的I/O特性进行调整.</p>
-</li>
-<li><p>2.除了围绕块之外存储模型还有一个核心是存储副本(replication),副本可以冗余数据保证系统的可靠性.并多个副本存储在不同主机当中可以增加计算程序与数据在同一集群的概率,提升计算的性能.</p>
-<h3 id="2-HDFS的角色"><a href="#2-HDFS的角色" class="headerlink" title="2.HDFS的角色"></a>2.HDFS的角色</h3><h4 id="HDFS主要角色"><a href="#HDFS主要角色" class="headerlink" title="HDFS主要角色"></a>HDFS主要角色</h4><p>主要角色有两个namenode和datanode,主要功能包括如下:</p>
-</li>
-<li><p>1.namenode主要维护文件的元数据</p>
-</li>
-<li><p>2.datanode主要维护负责block的读和写</p>
-</li>
-<li><p>3.datanode会与namenode维持心跳,并汇报自己持有的block信息和列表</p>
-</li>
-<li><p>4.clinet向Namenode交互文件元数据.和datanode交互文件blocks数据<br/></p>
-</li>
+        <p>关于HDFS原理在此写个总结<br />
+前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统<br />
+后两点主要围绕hdfs的高可用问题</p>
+<h3 id="1hdfs存储模型"><a class="markdownIt-Anchor" href="#1hdfs存储模型"></a> 1.HDFS存储模型</h3>
+<ul>
+<li>1.hdfs的存储模型第一个核心为block(块),hdfs的所有存储文件都是按照块来进行划分的,每个文件可以有不同的块,但是文件中除了最后一个块,每个块的大小必须相同,这个为了保证可以和hadoop计算框架,相适应能够有一个统一的计算单位,这个统一的计算单位block不是固定的,需要根据具体的I/O特性进行调整.</li>
+<li>2.除了围绕块之外存储模型还有一个核心是存储副本(replication),副本可以冗余数据保证系统的可靠性.并多个副本存储在不同主机当中可以增加计算程序与数据在同一集群的概率,提升计算的性能.</li>
 </ul>
-<h4 id="次要角色-SecodaryNamenode"><a href="#次要角色-SecodaryNamenode" class="headerlink" title="次要角色:SecodaryNamenode"></a>次要角色:SecodaryNamenode</h4><p>要聊SecondaryNamenode就需要先知道Namenode是如何持久化元数据文件的<br>首先,NameNode维护元数据是在内存中,如果机器突然宕掉,如果不把元数据写在磁盘上,那时没有办法恢复的,元数据会永久丢失<br/><br>  目前持久化有两种方式:</p>
+<span id="more"></span>
+<h3 id="2hdfs的角色"><a class="markdownIt-Anchor" href="#2hdfs的角色"></a> 2.HDFS的角色</h3>
+<h4 id="hdfs主要角色"><a class="markdownIt-Anchor" href="#hdfs主要角色"></a> HDFS主要角色</h4>
+<p>主要角色有两个namenode和datanode,主要功能包括如下:</p>
+<ul>
+<li>1.namenode主要维护文件的元数据</li>
+<li>2.datanode主要维护负责block的读和写</li>
+<li>3.datanode会与namenode维持心跳,并汇报自己持有的block信息和列表</li>
+<li>4.clinet向Namenode交互文件元数据.和datanode交互文件blocks数据<br/></li>
+</ul>
+<h4 id="次要角色secodarynamenode"><a class="markdownIt-Anchor" href="#次要角色secodarynamenode"></a> 次要角色:SecodaryNamenode</h4>
+<p>要聊SecondaryNamenode就需要先知道Namenode是如何持久化元数据文件的<br />
+首先,NameNode维护元数据是在内存中,如果机器突然宕掉,如果不把元数据写在磁盘上,那时没有办法恢复的,元数据会永久丢失<br/><br />
+目前持久化有两种方式:</p>
 <ul>
 <li>1.通过操作日志文件(EditLog)恢复,也就是每当NameNode有一条对元数据的操作,就会增加一条日志,但是这样的方式有两个缺点,第一随着运行时间的增长,NN的log会变得及大,很浪费磁盘空间,第二点也是运行时间长的话,要恢复需要很长时间,比如这台机器运行了十年,宕掉之后可能机器需要五年的时间恢复.</li>
-<li>2.通过内存的快照(fsImage)恢复,就是将某个时间点的内存状态溢写到磁盘上,但这种方式没办法实时的保存,磁盘IO是有瓶颈的,我们不可能隔一两分钟就保存内存的镜像<br>而NameNode保存选择了一个折衷的方式来规避两者明显的缺点:<br>每相隔一个时间点,将Editlog里面的操作写入到fsImage当中,合并成为一个新的fsImage,然后将在之前产生旧EditLog,只保留最近fsImage时间点之后产生EditLog删掉,这样让fsImage滚动更新的方法,使得占少量的磁盘的情况下,能让NN恢复到机器宕掉那一刻的状态.<br>但是如果把这个保存合并快照的工作全都的交给Namenode的话,此节点的压力会很大,所以关于fsImage的滚动合并工作便交给另一个工作节点SecondaryNamenode来执行<h3 id="3-角色交互产生的机制"><a href="#3-角色交互产生的机制" class="headerlink" title="3.角色交互产生的机制"></a>3.角色交互产生的机制</h3><h4 id="安全模式"><a href="#安全模式" class="headerlink" title="安全模式"></a>安全模式</h4>每次NN启动的时候,都会将最近时间点的fsImage加载进来,然后将EditLog操作合并到系统内存当中,最后将新的fsImage写入,并删除EditLog<br>NN会文件的属性作为元数据,但不包括datanode列表,<br>主要是为了防止<br/><br>NN重启后,DN(DataNode)列表中,有启动不起来DN,此时正好有客户端请求,NN返回了不可靠的DN列表<br/><br>这样的情况发生<br>所以NN,在重启后,会接受所有DN心跳信号和状态报告.<br>当确定NameNode检测某个数据块的副本达到最小值,那么他会被认为副本安全的,当有一定百分比的数据被确认是安全后,NameNode将会退出安全模式.<h4 id="副本放置策略"><a href="#副本放置策略" class="headerlink" title="副本放置策略"></a>副本放置策略</h4>第一个副本放置在本机,第二个副本放在不同机架,第三副本放置在同一机架,之后的副本随机.<br>原因:</li>
+<li>2.通过内存的快照(fsImage)恢复,就是将某个时间点的内存状态溢写到磁盘上,但这种方式没办法实时的保存,磁盘IO是有瓶颈的,我们不可能隔一两分钟就保存内存的镜像<br />
+而NameNode保存选择了一个折衷的方式来规避两者明显的缺点:<br />
+每相隔一个时间点,将Editlog里面的操作写入到fsImage当中,合并成为一个新的fsImage,然后将在之前产生旧EditLog,只保留最近fsImage时间点之后产生EditLog删掉,这样让fsImage滚动更新的方法,使得占少量的磁盘的情况下,能让NN恢复到机器宕掉那一刻的状态.<br />
+但是如果把这个保存合并快照的工作全都的交给Namenode的话,此节点的压力会很大,所以关于fsImage的滚动合并工作便交给另一个工作节点SecondaryNamenode来执行</li>
+</ul>
+<h3 id="3角色交互产生的机制"><a class="markdownIt-Anchor" href="#3角色交互产生的机制"></a> 3.角色交互产生的机制</h3>
+<h4 id="安全模式"><a class="markdownIt-Anchor" href="#安全模式"></a> 安全模式</h4>
+<p>每次NN启动的时候,都会将最近时间点的fsImage加载进来,然后将EditLog操作合并到系统内存当中,最后将新的fsImage写入,并删除EditLog<br />
+NN会文件的属性作为元数据,但不包括datanode列表,<br />
+主要是为了防止<br/><br />
+NN重启后,DN(DataNode)列表中,有启动不起来DN,此时正好有客户端请求,NN返回了不可靠的DN列表<br/><br />
+这样的情况发生<br />
+所以NN,在重启后,会接受所有DN心跳信号和状态报告.<br />
+当确定NameNode检测某个数据块的副本达到最小值,那么他会被认为副本安全的,当有一定百分比的数据被确认是安全后,NameNode将会退出安全模式.</p>
+<h4 id="副本放置策略"><a class="markdownIt-Anchor" href="#副本放置策略"></a> 副本放置策略</h4>
+<p>第一个副本放置在本机,第二个副本放在不同机架,第三副本放置在同一机架,之后的副本随机.<br />
+原因:</p>
+<ul>
 <li>为了能在程序计算的时候找到最近的block数据</li>
-<li>为了能在机架损毁的时候仍然能保留其完整的<h4 id="HDFS写流程"><a href="#HDFS写流程" class="headerlink" title="HDFS写流程"></a>HDFS写流程</h4><img src="http://picture.lemcoden.xyz/hdfs/hdfs_write.png" alt="读流程"></li>
+<li>为了能在机架损毁的时候仍然能保留其完整的</li>
+</ul>
+<h4 id="hdfs写流程"><a class="markdownIt-Anchor" href="#hdfs写流程"></a> HDFS写流程</h4>
+<p><img src="http://picture.lemcoden.xyz/hdfs/hdfs_write.png" alt="读流程" /></p>
+<ul>
 <li>Client与NN创建连接</li>
 <li>NN建立元数据</li>
 <li>NN验证元数据是否合理</li>
@@ -281,27 +307,59 @@
 <li>第二个DN发送到第三个DN</li>
 <li>当block传输完成,DN分别向各NN汇报,同时Client继续传输下一个block</li>
 <li>所以client和block汇报也是并行的</li>
-<li>数据分割是为了保证DN可以在第一个数据包发送完成之后,可以立刻发送给第二个DN,保证传输效率以及传输的一致性,并且这样传输,对客户端来说是透明,客户端只要保证给第一个DataNode传输完整数据就可以.<h4 id="HDFS读流程"><a href="#HDFS读流程" class="headerlink" title="HDFS读流程"></a>HDFS读流程</h4><img src="http://picture.lemcoden.xyz/hdfs/hdfs_read.png" alt="写流程"></li>
+<li>数据分割是为了保证DN可以在第一个数据包发送完成之后,可以立刻发送给第二个DN,保证传输效率以及传输的一致性,并且这样传输,对客户端来说是透明,客户端只要保证给第一个DataNode传输完整数据就可以.</li>
+</ul>
+<h4 id="hdfs读流程"><a class="markdownIt-Anchor" href="#hdfs读流程"></a> HDFS读流程</h4>
+<p><img src="http://picture.lemcoden.xyz/hdfs/hdfs_read.png" alt="写流程" /></p>
+<ul>
 <li>为了降低整体的带宽消耗和读延迟，HDFS会尽量让读取程序读取离他最近的副本</li>
 <li>如果再读取程序的同一个机架上有一个副本，那么就读该副本</li>
 <li>如果一个HDFS集群跨越多个数据中心，那么客户端也将首先读本地数据中心的副本</li>
-<li>语义：<br>　　 download a file<br>　　 Client和NN交互文件元数据获取fileBlockLocation<br>　　 NN按距离策略排序返回<br>　　 Client尝试下载Block并且校验数据完整性（校验盒校验）</li>
-<li>语义：下载一个文件其实是获取文件的所有的Block元数据，那么子集获取block应该成立<br>　　Hdfs支持Client输出文件的offset自定义连接哪些Block的DN，自定义获取数据<br>　　这个是支持计算层的分治，并行计算的核心（牢记）</li>
+<li>语义：<br />
+　　 download a file<br />
+　　 Client和NN交互文件元数据获取fileBlockLocation<br />
+　　 NN按距离策略排序返回<br />
+　　 Client尝试下载Block并且校验数据完整性（校验盒校验）</li>
+<li>语义：下载一个文件其实是获取文件的所有的Block元数据，那么子集获取block应该成立<br />
+　　Hdfs支持Client输出文件的offset自定义连接哪些Block的DN，自定义获取数据<br />
+　　这个是支持计算层的分治，并行计算的核心（牢记）</li>
 </ul>
-<h3 id="5-HDFS设置高可用"><a href="#5-HDFS设置高可用" class="headerlink" title="5.HDFS设置高可用"></a>5.HDFS设置高可用</h3><h4 id="为什么"><a href="#为什么" class="headerlink" title="为什么"></a>为什么</h4><p>为了提升NN的可靠性,如果集群当中只有一个NN,那么在某些情况下Namenode宕机,那么整个集群就不可用了,所以为了提升整个集群的可用性,我们设置两个NN,一主一备,确保主NN宕掉之后,备用NN能启动起来.</p>
-<h4 id="开始实现"><a href="#开始实现" class="headerlink" title="开始实现"></a>开始实现</h4><p>要想让两个NN能够无缝切换,我们必须先实现两个进程的内存同步,有两种方法进行两个机器的进程同步:</p>
+<h3 id="5hdfs设置高可用"><a class="markdownIt-Anchor" href="#5hdfs设置高可用"></a> 5.HDFS设置高可用</h3>
+<h4 id="为什么"><a class="markdownIt-Anchor" href="#为什么"></a> 为什么</h4>
+<p>为了提升NN的可靠性,如果集群当中只有一个NN,那么在某些情况下Namenode宕机,那么整个集群就不可用了,所以为了提升整个集群的可用性,我们设置两个NN,一主一备,确保主NN宕掉之后,备用NN能启动起来.</p>
+<h4 id="开始实现"><a class="markdownIt-Anchor" href="#开始实现"></a> 开始实现</h4>
+<p>要想让两个NN能够无缝切换,我们必须先实现两个进程的内存同步,有两种方法进行两个机器的进程同步:</p>
 <ul>
 <li>阻塞同步,就是需要同步数据的时候,主NN进入阻塞状态,等待备用NN同步完毕,然后继续运行,但是在现实生产生活中,这种方式显然是行不通的,我们保证了两个NN的强一致性,但是主NameNode的可用性却大大降低了,也就是Namenode同步数据的时候,我们无法使用这个NN.</li>
 <li>非阻塞异步,就是主NN需要同步数据时直接发给备用NN,同时NN保持运行接受客户端请求,等待备用NN同步完毕回调通知主NN.但是这样NN的一致性就无法保证</li>
 </ul>
-<h4 id="CAP定理"><a href="#CAP定理" class="headerlink" title="CAP定理"></a>CAP定理</h4><p>说到这么不得不谈谈CAP定理,即一致性(Consistency),可用性(Avalible),分区容错性(Partition tolerance)三者只可满足其二</p>
+<h4 id="cap定理"><a class="markdownIt-Anchor" href="#cap定理"></a> CAP定理</h4>
+<p>说到这么不得不谈谈CAP定理,即一致性(Consistency),可用性(Avalible),分区容错性(Partition tolerance)三者只可满足其二</p>
 <ul>
 <li>分区容错性,当分布式系统中遇到任何网络分区故障时,仍然需要能够保证对外提供满足一致性和可用性的服务,除非整个网络发生故障,通俗一点说,我将数据副本设置到多个节点上,其中一个节点故障了,因为其他节点持有数据副本,仍能对外保持可用一致的服务,我称这个分布式系统具有分区容忍性.</li>
 <li>可用性,是指系统提供的服务必须一直处于可用的状态,对于每一个从操作请求总是能够在有限的时间内返回结果.</li>
-<li>一致性,指的是数据在多个副本之间能够保持一致的特性,在一致性的需求下,当一个系统在数据一致的状态执行更新操作后,应该保证系统为数据仍然处于一致的状态<h4 id="CAP套用分析"><a href="#CAP套用分析" class="headerlink" title="CAP套用分析"></a>CAP套用分析</h4>我们套用CAP定理再回顾一下之前NN的同步的两种方法,</li>
+<li>一致性,指的是数据在多个副本之间能够保持一致的特性,在一致性的需求下,当一个系统在数据一致的状态执行更新操作后,应该保证系统为数据仍然处于一致的状态</li>
+</ul>
+<h4 id="cap套用分析"><a class="markdownIt-Anchor" href="#cap套用分析"></a> CAP套用分析</h4>
+<p>我们套用CAP定理再回顾一下之前NN的同步的两种方法,</p>
+<ul>
 <li>两个方法都满足分区容忍性,</li>
 <li>第一个阻塞同步方法,会影响可用性,导致系统没办法在系统规定时间内返回正确的响应结果,</li>
-<li>第二个异步非阻塞方法,没有办法保证一致性,异步回调没有办法保证备用的NN能完全将数据保持同步一致.<h4 id="折衷办法-最终一致性"><a href="#折衷办法-最终一致性" class="headerlink" title="折衷办法:最终一致性"></a>折衷办法:最终一致性</h4>既然CAP没办法全部满足,那么我们能不能选择一个折衷的方法呢?<br>当然有,NN就是使用这种方法,即通过Poxas选举算法保持数据的最终一致性<br>首先,添加一个角色较jounralNode,当NN的命名空间有任何修改时,会告知大部分的JounralNodes进程,standby状态的NN会读取JNs中的信息,并监控EditLog的变化,把变化与应用于自己的命名空间.<br/><br>那如何保证数据的一致性呢?<br>JounralNode一般会大于等于3的基数个,首先JounralNode根据少数服从多数的原则,选择出其中的Leader,Leader只有一个,它负责记录自己和其他的JounralNode是否接受到NameNode的变更信息,超过半数的JounralNode接收到NN的变更信息时,才承认作数据同步是可靠的.通知备用的NN读取JounralNode的信息.这样我们即保证了可用性,也保证了数据同步的最终一致性(弱一致性)<h4 id="zookeeper分布式协调系统自动切换"><a href="#zookeeper分布式协调系统自动切换" class="headerlink" title="zookeeper分布式协调系统自动切换"></a>zookeeper分布式协调系统自动切换</h4>上面我们解决的NN之间的数据同步问题,但是现实是active的NN出现故障的时候,我们只能手动其切换NN,所以我们还需要zookeeper的帮助.<h4 id="新增角色ZK-zookeeper-和ZKFC-ZookeeperFailOver"><a href="#新增角色ZK-zookeeper-和ZKFC-ZookeeperFailOver" class="headerlink" title="新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)"></a>新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)</h4>当我们启动zookeeper进程的时候,会有两个进程监控我们的NN,一个是zookeeper本身的进程,和JounralNode有着相似的选举算法,也是进程数必须超过zookeeper的奇数倍,zkfc要与zk进程保持心跳,而zkfc主要负责监控和切换主备的Namenode<h4 id="自动主备切换流程详述"><a href="#自动主备切换流程详述" class="headerlink" title="自动主备切换流程详述"></a>自动主备切换流程详述</h4><img src="http://picture.lemcoden.xyz/hdfs/HA" alt="主备切换"></li>
+<li>第二个异步非阻塞方法,没有办法保证一致性,异步回调没有办法保证备用的NN能完全将数据保持同步一致.</li>
+</ul>
+<h4 id="折衷办法最终一致性"><a class="markdownIt-Anchor" href="#折衷办法最终一致性"></a> 折衷办法:最终一致性</h4>
+<p>既然CAP没办法全部满足,那么我们能不能选择一个折衷的方法呢?<br />
+当然有,NN就是使用这种方法,即通过Poxas选举算法保持数据的最终一致性<br />
+首先,添加一个角色较jounralNode,当NN的命名空间有任何修改时,会告知大部分的JounralNodes进程,standby状态的NN会读取JNs中的信息,并监控EditLog的变化,把变化与应用于自己的命名空间.<br/><br />
+那如何保证数据的一致性呢?<br />
+JounralNode一般会大于等于3的基数个,首先JounralNode根据少数服从多数的原则,选择出其中的Leader,Leader只有一个,它负责记录自己和其他的JounralNode是否接受到NameNode的变更信息,超过半数的JounralNode接收到NN的变更信息时,才承认作数据同步是可靠的.通知备用的NN读取JounralNode的信息.这样我们即保证了可用性,也保证了数据同步的最终一致性(弱一致性)</p>
+<h4 id="zookeeper分布式协调系统自动切换"><a class="markdownIt-Anchor" href="#zookeeper分布式协调系统自动切换"></a> zookeeper分布式协调系统自动切换</h4>
+<p>上面我们解决的NN之间的数据同步问题,但是现实是active的NN出现故障的时候,我们只能手动其切换NN,所以我们还需要zookeeper的帮助.</p>
+<h4 id="新增角色zkzookeeper和zkfczookeeperfailover"><a class="markdownIt-Anchor" href="#新增角色zkzookeeper和zkfczookeeperfailover"></a> 新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)</h4>
+<p>当我们启动zookeeper进程的时候,会有两个进程监控我们的NN,一个是zookeeper本身的进程,和JounralNode有着相似的选举算法,也是进程数必须超过zookeeper的奇数倍,zkfc要与zk进程保持心跳,而zkfc主要负责监控和切换主备的Namenode</p>
+<h4 id="自动主备切换流程详述"><a class="markdownIt-Anchor" href="#自动主备切换流程详述"></a> 自动主备切换流程详述</h4>
+<p><img src="http://picture.lemcoden.xyz/hdfs/HA" alt="主备切换" /></p>
+<ul>
 <li>启动两个NN进程,此时两个NN都处于备用的状态</li>
 <li>启动zk进程和zkfc进程,当zk进程启动之后,zkfc进程争相在最近的zk进程上建立节点(抢锁),第一个成功建立节点的zkfc进程会将它操控的NN设置为Active,另一个就会被定义为standby</li>
 <li>假如zkfc挂掉了,zk进程监控不到zkfc的心跳,会将在zkfc建立的节点删掉,而监控standby的zkfc进程看到zk上的节点消失了,会主动建立节点,并先将active的NN节点降级为standby,自己监控的NN节点升级为active</li>
@@ -353,7 +411,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

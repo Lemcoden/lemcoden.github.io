@@ -22,15 +22,15 @@
   <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="redis常见问题1jedis,luttce,springboot:low&#x2F;high level  击穿key过期造成并发访问数据库 123456789graph LR	id0((用户&lt;br&#x2F;&gt;client)) --&gt; id2	id2[nginx] --&gt; id3[ ]	id3 --&gt; id4	id4((client&lt;br&#x2F;&gt;server)) --1.nu">
+<meta name="description" content="redis常见问题 1jedis,luttce,springboot:low&#x2F;high level  击穿 key过期造成并发访问数据库 graph LR 	id0((用户client)) --&gt; id2 	id2[nginx] --&gt; id3[ ] 	id3 --&gt; id4 	id4((clientserver)) --1.null--&gt; id5[redis缓存key过期时间,LRU,LFU]">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis笔记05">
 <meta property="og:url" content="https://lemcoden.github.io/2020/11/23/redis%E7%AC%94%E8%AE%B005/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="redis常见问题1jedis,luttce,springboot:low&#x2F;high level  击穿key过期造成并发访问数据库 123456789graph LR	id0((用户&lt;br&#x2F;&gt;client)) --&gt; id2	id2[nginx] --&gt; id3[ ]	id3 --&gt; id4	id4((client&lt;br&#x2F;&gt;server)) --1.nu">
+<meta property="og:description" content="redis常见问题 1jedis,luttce,springboot:low&#x2F;high level  击穿 key过期造成并发访问数据库 graph LR 	id0((用户client)) --&gt; id2 	id2[nginx] --&gt; id3[ ] 	id3 --&gt; id4 	id4((clientserver)) --1.null--&gt; id5[redis缓存key过期时间,LRU,LFU]">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-11-23T14:32:48.000Z">
-<meta property="article:modified_time" content="2021-01-24T08:46:00.000Z">
+<meta property="article:modified_time" content="2021-08-08T10:57:26.699Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="内存数据库">
 <meta name="twitter:card" content="summary">
@@ -125,7 +125,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">redis常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BB%E7%A9%BF"><span class="nav-number">1.1.</span> <span class="nav-text">击穿</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BF%E9%80%8F"><span class="nav-number">1.2.</span> <span class="nav-text">穿透</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%AA%E5%B4%A9"><span class="nav-number">1.3.</span> <span class="nav-text">雪崩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">1.4.</span> <span class="nav-text">分布式锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API"><span class="nav-number">2.</span> <span class="nav-text">API</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text"> redis常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BB%E7%A9%BF"><span class="nav-number">1.1.</span> <span class="nav-text"> 击穿</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BF%E9%80%8F"><span class="nav-number">1.2.</span> <span class="nav-text"> 穿透</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%AA%E5%B4%A9"><span class="nav-number">1.3.</span> <span class="nav-text"> 雪崩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">1.4.</span> <span class="nav-text"> 分布式锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#api"><span class="nav-number">2.</span> <span class="nav-text"> API</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -141,7 +141,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -152,7 +152,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -223,7 +223,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:46:00" itemprop="dateModified" datetime="2021-01-24T16:46:00+08:00">2021-01-24</time>
+        <time title="Modified: 2021-08-08 18:57:26" itemprop="dateModified" datetime="2021-08-08T18:57:26+08:00">2021-08-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,15 +245,24 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="redis常见问题"><a href="#redis常见问题" class="headerlink" title="redis常见问题"></a>redis常见问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jedis,luttce,springboot:low/high level</span><br></pre></td></tr></table></figure>
-
-<h4 id="击穿"><a href="#击穿" class="headerlink" title="击穿"></a>击穿</h4><p><strong><font color=MediumVioletRed>key过期造成并发访问数据库</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id0((用户&lt;br/&gt;client)) --&gt; id2</span><br><span class="line">	id2[nginx] --&gt; id3[ ]</span><br><span class="line">	id3 --&gt; id4</span><br><span class="line">	id4((client&lt;br/&gt;server)) --1.null--&gt; id5[redis&lt;br/&gt;缓存&lt;br/&gt;key过期时间,LRU,LFU]</span><br><span class="line">	id4 --2.setInx--&gt; id5</span><br><span class="line">	id4 --3.只有获得锁的去访问DB--&gt; id1[DBMySQL]</span><br><span class="line">	id4 --&gt; id1</span><br><span class="line">	before[before&lt;br/&gt;肯定发生了高并发]</span><br></pre></td></tr></table></figure>
-
+        <h3 id="redis常见问题"><a class="markdownIt-Anchor" href="#redis常见问题"></a> redis常见问题</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jedis,luttce,springboot:low/high level</span><br></pre></td></tr></table></figure>
+<h4 id="击穿"><a class="markdownIt-Anchor" href="#击穿"></a> 击穿</h4>
+<p><strong><font color=MediumVioletRed>key过期造成并发访问数据库</font></strong></p>
+<pre class="mermaid">graph LR
+	id0((用户<br/>client)) --> id2
+	id2[nginx] --> id3[ ]
+	id3 --> id4
+	id4((client<br/>server)) --1.null--> id5[redis<br/>缓存<br/>key过期时间,LRU,LFU]
+	id4 --2.setInx--> id5
+	id4 --3.只有获得锁的去访问DB--> id1[DBMySQL]
+	id4 --> id1
+	before[before<br/>肯定发生了高并发]</pre>
 <p>解决:</p>
 <p>并发有了:阻止并发到达DB,redis又没有key</p>
 <p>redis是单进程单实例</p>
 <p>setInx() -&gt; 锁</p>
+<span id="more"></span>
 <p>setInx() -&gt; 锁</p>
 <p>1.get key</p>
 <p>2.setInx</p>
@@ -261,36 +270,57 @@
 <p>3-2.false,sleep -&gt; 1</p>
 <p>问题:</p>
 <ol>
-<li><p>如果第一个人挂了?发生死锁</p>
+<li>
+<p>如果第一个人挂了?发生死锁</p>
 <p>可以设置锁的过期时间</p>
 </li>
-<li><p>没挂,但是,锁超时了…..</p>
+<li>
+<p>没挂,但是,锁超时了…</p>
 <p>多线程,一个线程取库,一个线程监控,并延长时间</p>
 </li>
 </ol>
 <p><strong>自己实现分布式协调很麻烦</strong></p>
-<h4 id="穿透"><a href="#穿透" class="headerlink" title="穿透"></a>穿透</h4><p><strong><font color=MediumVioletRed>从业务接受查询的是你系统根本不存在的数据</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	</span><br><span class="line"> 	id4[布隆过滤器] --&gt; id5[client包含]</span><br><span class="line"> 	id4 --&gt; id6[client只包含算法&lt;br/&gt; bitmap-&gt;redis&lt;br/&gt;无状态]</span><br><span class="line"> 	id4 --&gt; id7[redis 集成布隆]</span><br></pre></td></tr></table></figure>
-
+<h4 id="穿透"><a class="markdownIt-Anchor" href="#穿透"></a> 穿透</h4>
+<p><strong><font color=MediumVioletRed>从业务接受查询的是你系统根本不存在的数据</font></strong></p>
+<pre class="mermaid">graph LR
+ 	id0{业务} --> id1((client<br/>service))
+ 	id1 --> id2[redis<br/>缓存]
+ 	id1 --> id3[DB]
+ 	
+ 	id4[布隆过滤器] --> id5[client包含]
+ 	id4 --> id6[client只包含算法<br/> bitmap->redis<br/>无状态]
+ 	id4 --> id7[redis 集成布隆]</pre>
 <p>bloom过滤器问题:</p>
 <ul>
-<li><p><input checked="" disabled="" type="checkbox">  只能增加,不能删除</p>
+<li>
+<p>[x] 只能增加,不能删除</p>
 </li>
-<li><p><input checked="" disabled="" type="checkbox">  布谷鸟过滤器</p>
+<li>
+<p>[x] 布谷鸟过滤器</p>
 </li>
-<li><p><input disabled="" type="checkbox">  空key</p>
+<li>
+<p>[ ] 空key</p>
 </li>
 </ul>
-<h4 id="雪崩"><a href="#雪崩" class="headerlink" title="雪崩"></a>雪崩</h4><p><strong><font color=MediumVioletRed>大量的key同时失效,间接的造成大量的访问到达DB</font></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line"> 	id0&#123;业务&#125; --&gt; id1((client&lt;br/&gt;service))</span><br><span class="line"> 	id1 --&gt; id2[redis&lt;br/&gt;缓存]</span><br><span class="line"> 	id1 --&gt; id3[DB]</span><br><span class="line"> 	id4[随机过期时间] -.-&gt; id5&#123;零点&#125;</span><br><span class="line"> 	id4 --&gt; id6[时点性无关]</span><br><span class="line"> 	id5 --&gt; id7[强依赖击穿方案]</span><br><span class="line"> 	id5 --&gt; id8[业务层加判断,零点延时...]</span><br><span class="line"> 	style id5 fill:#0f0,stroke-width:2px,fill-opacity:0.5</span><br></pre></td></tr></table></figure>
-
-<h4 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h4><p>1setnx</p>
+<h4 id="雪崩"><a class="markdownIt-Anchor" href="#雪崩"></a> 雪崩</h4>
+<p><strong><font color=MediumVioletRed>大量的key同时失效,间接的造成大量的访问到达DB</font></strong></p>
+<pre class="mermaid">graph LR
+ 	id0{业务} --> id1((client<br/>service))
+ 	id1 --> id2[redis<br/>缓存]
+ 	id1 --> id3[DB]
+ 	id4[随机过期时间] -.-> id5{零点}
+ 	id4 --> id6[时点性无关]
+ 	id5 --> id7[强依赖击穿方案]
+ 	id5 --> id8[业务层加判断,零点延时...]
+ 	style id5 fill:#0f0,stroke-width:2px,fill-opacity:0.5</pre>
+<h4 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h4>
+<p>1setnx</p>
 <p>2.过期时间</p>
 <p>3.多线程(守护线程)延长过期</p>
 <p>redisson</p>
 <p>zookeeper 做分布式锁!</p>
-<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; CONFIG GET *</span><br><span class="line">127.0.0.1:6379&gt; CONFIG SET protected-mode no</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
-
+<h3 id="api"><a class="markdownIt-Anchor" href="#api"></a> API</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; CONFIG GET *</span><br><span class="line">127.0.0.1:6379&gt; CONFIG SET protected-mode no</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -335,7 +365,7 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
