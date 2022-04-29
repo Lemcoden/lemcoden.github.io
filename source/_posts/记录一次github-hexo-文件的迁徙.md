@@ -4,7 +4,7 @@ date: 2020-01-06 21:57:35
 categories: 建站
 tags:
     - 博客搭建
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 ### 起因
 事情是这样子的，我很早之前注册的名为longzuzero的github账号，当时名字是随便想，用《龙族》小说名的汉语拼音加上英文的零，当时n年后，我准备开始写属于自己的技术博客时，才发现，这个名字没有任何意义，所以建立博客之初我把名字定义为
@@ -18,7 +18,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 所以，我重新注册了账号并做了代码迁徙，中间踩过不少坑，特此记录下来，以供大家参考
 ### 过程记录
 关于github，如果注册新建库名就不多缀述，注册完新建项目，所以我的项目名如下
-![新项目名](http://picture.lemcoden.xyz/github_blog_name.png)
+![新项目名](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/github_blog_name.png)
 首先点击项目下方的ADD README.md 选项
 为什么？
 因为如果不通过自己的账号新建README.md文件，github不会把你的项目作为个人主页，添加到域名当中，

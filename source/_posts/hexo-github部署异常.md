@@ -4,7 +4,7 @@ date: 2020-11-17 09:49:32
 categories: 建站
 tags:
 	--博客搭建
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 
 #### 邮箱收到github构建异常

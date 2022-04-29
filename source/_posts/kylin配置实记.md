@@ -4,7 +4,7 @@ date: 2019-12-31 10:59:44
 categories: hadoop生态
 tags:
 	- 数据仓库框架
-cover_picture: http://picture.lemcoden.xyz/cover_picture/kylin_logo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/kylin_logo.jpg
 ---
 ### 介绍
 Apache Kylin是Hadoop大数据平台上的一个开源OLAP引擎。它采用多维立方体预计算技术，可以将大数据的SQL查询速度提升到亚秒级别。相对于之前的分钟乃至小时级别的查询速度，亚秒级别速度是百倍到千倍的提升，该引擎为超大规模数据集上的交互式大数据分析打开了大门。

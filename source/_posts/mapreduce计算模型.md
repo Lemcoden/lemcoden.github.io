@@ -5,12 +5,12 @@ categories: hadoop生态
 tags:
     - 计算模型
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/mapreduce.jpg
 ---
 #### 背景,
 为了体现分布式计算的优点,将数据分而治之再进行相应方面的计算.hadoop提出了mapreduce计算模型
 #### 计算模型
-![计算模型](http://picture.lemcoden.xyz/mapreduce/mr_mod.png)
+![计算模型](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/mapreduce/mr_mod.png)
 * map 端负责将拆分出来的数据进行映射,变换,过滤.体现在一进N出<!--more-->
 * reduce 端负责将数据整合归纳,缩小,分解,一般是一组数据进N出
 * 不管是map还是reduce处理的数据结构基本都是<key,value>的形式划分的
@@ -29,7 +29,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
 (ps:因为找不到合适的图,就分开为client端和job端的架构)
 ```
 计算模型出现后,就需要搭建整体的框架,首先我们说我们的主要角色有client,JobTracker,TaskTracker
-![clinet架构](http://picture.lemcoden.xyz/mapreduce/mr_arch_client.jpg)
+![clinet架构](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/mapreduce/mr_arch_client.jpg)
 
 我们client端主要做四件事:
 * 会根据每次的计算数据,咨询NN元数据(block) => 算出spilt切片清单
@@ -37,7 +37,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
 * 将jar包,split的切片清单,配置文件上传到HDFS目录当中
 * cli调用jobTracker,通知启动一个计算程序,并且告知文件都放在了hdfs的哪些地方
 
-![job架构](http://picture.lemcoden.xyz/mapreduce/mr_arch_job.jpg)
+![job架构](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/mapreduce/mr_arch_job.jpg)
  * jobTracker会根据cli提交的信息,去HDFS上寻找Jar包程序,split清单,以及配置文件
  * 根据拿到的切片清单和配置文件,以及收到的TaskTracker汇报的资源,最终确定每一个spilt应该去往哪个个节点
  * TaskTracker会在汇报心跳的时候拿到分配给自己的人物信息
@@ -51,7 +51,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
 #### 改进后的Hadoop2.x
  hadoop2.x后将JobTraker的资源调度功能抽出,封装为Yarn资源管理框架,并配置了高可用.
  hadoop2.x的计算与资源管理架构如下
- ![job架构](http://picture.lemcoden.xyz/mapreduce/mr_arch_yarn.png)
+ ![job架构](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/mapreduce/mr_arch_yarn.png)
  主要角色有client,ResourceManager,NodeManager,ApplicatioMaster以及Container
  * client与之前的流程一致
  * client会将job提交到ResourceManager

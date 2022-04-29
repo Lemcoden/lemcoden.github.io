@@ -4,7 +4,7 @@ date: 2021-05-29 21:13:14
 categories: 建站
 tags:
 	- 博客搭建
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 
 ### 问题陈述
@@ -33,9 +33,9 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 
 当我进行毁灭性重建的时候,不小心将所看的官方文档切换到英文版,以我英文十级~~(并不)~~的水平立刻发现了不对劲,首先抛开翻译问题,官方文档的中英文排版就不一样
 
-![英文版](http://picture.lemcoden.xyz/blog_optimize/hexo_doc_en.png)
+![英文版](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/blog_optimize/hexo_doc_en.png)
 
-![中文版](http://picture.lemcoden.xyz/blog_optimize/hexo_doc_zh.png)
+![中文版](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/blog_optimize/hexo_doc_zh.png)
 
 细细读了一下英文版,发现英文版直接使用的github自带的持续集成功能(可能是新出的),大概率官方忘了同步中文文档所导致的.
 

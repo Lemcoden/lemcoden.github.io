@@ -1,0 +1,30 @@
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+wine: Read access denied for device L"\\??\\D:\\", FS volume label and serial are not available.
+[0420/224355:INFO:exception_record.cc(518)] [QB]Process ID: 8 Type: 1
+[0420/224355:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 8
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\source\\_posts\\", starting in the Windows directory.
+[0420/224502.875:ERROR:gl_surface_egl.cc(770)] ANGLE Platform initialization failed.
+[196:219:0420/224504:ERROR:network_change_notifier_win.cc(156)] WSALookupServiceBegin failed with: 122
+[196:219:0420/224504:ERROR:xwalk_net_log.cc(65)] Could not open file f:\xw_log\xw_net_log.txt for net logging
+[196:219:0420/224504:ERROR:xwalk_platform_notification_service.cc(143)] NOT IMPLEMENTED
+[196:219:0420/224504:ERROR:xwalk_browser_context.cc(88)] Failed to read preference, error num: 0
+wine: could not open working directory L"unix\\home\\lemcoden\\develop\\lemcoden.xyz\\Lemcoden.github.io\\source\\_posts\\", starting in the Windows directory.
+[0421/094133:INFO:exception_record.cc(518)] [QB]Process ID: 215 Type: 2
+[0421/094134:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+[0421/094134:WARNING:cert_verify_proc_win.cc(108)] Unknown error -2146762482 mapped to net::ERR_FAILED
+0027:err:clipboard:convert_selection Timed out waiting for SelectionNotify event
+0027:err:clipboard:convert_selection Timed out waiting for SelectionNotify event
+0027:err:clipboard:convert_selection Timed out waiting for SelectionNotify event
+0027:err:clipboard:convert_selection Timed out waiting for SelectionNotify event
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).
+X connection to :0 broken (explicit kill or server shutdown).

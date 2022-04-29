@@ -5,7 +5,7 @@ categories: 数仓建模
 tags:
    - 建模工具
    - 建模DB
-cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/mapreduce.jpg
 ---
 
 

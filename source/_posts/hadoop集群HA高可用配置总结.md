@@ -4,7 +4,7 @@ date: 2020-08-19 16:27:16
 tags:
     - hadoop生态
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hdfs.jpg
 ---
 ### 基础设施
 * 网卡静态IP

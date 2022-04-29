@@ -4,7 +4,7 @@ date: 2020-11-12 22:15:03
 categories: redis
 tags:
     - 内存数据库
-cover_picture: http://picture.lemcoden.xyz/cover_picture/redis.jpeg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/redis.jpeg
 ---
 
 ### 发展历程

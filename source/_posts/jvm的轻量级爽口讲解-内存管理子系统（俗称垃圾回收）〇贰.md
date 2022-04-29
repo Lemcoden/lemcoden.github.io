@@ -4,7 +4,7 @@ date: 2020-05-27 21:38:52
 categories: jvm虚拟机
 tags:
     - jvm虚拟机
-cover_picture: http://picture.lemcoden.xyz/cover_picture/jvm_memory_01.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/jvm_memory_01.png
 ---
 #### 前情提要
 <a href="https://lemcoden.xyz/2020/05/21/jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇壹/">jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇壹</a>
@@ -42,7 +42,7 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/>
 * 反映Java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等
 为了更形象的表示GC Root的标记过程笔者给出图片
 
-![gc_root](http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png)
+![gc_root](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/gc_root.png)
 
 图片如上。我们通过GC Root节点往下查找他引用的节点，然后再继续查找引用的节点引用的节点~~禁止套娃~~，就这样将所有关于GC Root的引用链路查找完毕，最后将那些没有在引用链路中的节点标识为垃圾节点，进行回收<br/>
 
@@ -60,13 +60,13 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/>
 关于标题的三个回收算法想必大家都已经很熟悉了，这里就简单用图提点一下概念。重点讲为什么？<br/>
 #### <font color=#3.5169E1>回收-清除算法</font>
 回收算法中简单，最基础的算法，其实就是把标记过后的内存直接清除掉，这样的处理的有点是处理方式简单，回收效率高，但是正因为简单，没有考虑之后的内存插入，可能会导致后面，大对象的插入，会让计算机查找很长时间寻找连续的内存，具体怎么回收直接看下面的简图。
-![思维导图](http://picture.lemcoden.xyz/jvm_memory_manage/gc_process.png)
+![思维导图](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/gc_process.png)
 #### <font color=#3.5169E1>标记-复制算法</font>
 为了标记清除算法的缺陷，基于标记-清除算法，又出现了标记-复制算法，简单来说，就是预留一半的内存区域，回收之后，将存活的内存对象紧密排列到预留的区域当中，这样当然可以回收过后得到规整的可用内存区域。但是缺点也很明显，我们需要两倍的内存空间来做，能不能减少预留的空间呢？当然可以，要解决这个问题，我们需要先回到GC的分代问题，为什么jvm内存要分年轻代，老年代？相信大家都知道，jvm堆内存主要分为年轻代，老年代，而年轻代，基本都是使用的标记-复制算法，所谓年轻代，就是内存区域中的大部分对象都是“朝生夕死”的。内存赋值之后，很快就会被标记为可回收，那么我们在年轻代进行回收的时候，就会回收到大量的垃圾对象，而余下存活的对象很少，这样我们就可以把标记-复制算法的预留区域设置的少一点，降低一点标记-复制算法所消耗的内存，在最常用的jvm Hotspot虚拟机当中，<font color=#00FF00>年轻代默认的主内存（eden区）和预留内存（suvivor1区和suvivor2区）</font>的内存比例就达到了8：1：1的比例，也就是两个预留区总共占用百分之20的内存
-![思维导图](http://picture.lemcoden.xyz/jvm_memory_manage/gc_process1.png)
+![思维导图](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/gc_process1.png)
 #### <font color=#3.5169E1>标记-整理算法</font>
 除了设置预留区域之外，我们还可以在内存回收之后进行内存的整理，这样我们也可以使用比较规整的内存区域，其抽象的过程就如下图，但是，如果我们内存回收之后，各个存活对象之间的空白区域很多，那么整理对于我们的回收线程是特别消耗时间和性能的事情，所以我们要找那种回收过程中要回收垃圾对象比较少的区域，这样回收之后，空白区域预留的比较少，可以消耗比较较少的计算资源进行整理，看到这里，你应该能反应到了吧，对就是老年代，这种回收方式对于老年代的内存是再合适不过了，因为老年代中的对象存活率比较高，产生的垃圾对象相对较少。
-![思维导图](http://picture.lemcoden.xyz/jvm_memory_manage/gc_process2.png)
+![思维导图](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/gc_process2.png)
 
 好的，此篇博客基本就讲到这里，我把这此所讲述的问题列出来，当然有些问题仅仅是解决了一半而已，比如说，停顿具体是怎样实现的，并发标记是如何做的，还有一个没有列出来的，记忆集是怎么来的等等，这些问题笔者会在下一篇中写出答案，以下是我的问题列表：
 * 垃圾 标记算法有哪些，为什么使用可达性分析算法，而不是引用计数器算法？

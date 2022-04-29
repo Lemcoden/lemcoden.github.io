@@ -5,7 +5,7 @@ categories: hadoop生态
 tags:
     - hadoop生态
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hbase.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hbase.jpg
 ---
 ### 1.先从关系型数据库与非关系型数据讲起
 **关系型数据库** 就是我们传统的像mysql,oracle,sql server这样的具有自己的二维固定的数据结构<br/>

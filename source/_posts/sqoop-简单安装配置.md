@@ -3,7 +3,7 @@ title: sqoop 简单安装配置
 date: 2020-11-10 09:52:14
 tags:
 	- sqoop
-cover_picture: http://picture.lemcoden.xyz/cover_picture/sqoop.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/sqoop.jpg
 ---
 
 ```

@@ -4,7 +4,7 @@ date: 2020-06-18 20:22:33
 categories: jvm虚拟机
 tags:
     - jvm虚拟机
-cover_picture: http://picture.lemcoden.xyz/cover_picture/jvm_memory_01.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/jvm_memory_01.png
 ---
 #### 前情提要
 <a href="https://lemcoden.xyz/2020/05/27/jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇贰/">jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰</a><br/>
@@ -28,19 +28,19 @@ hey！guys，I'm back,关于之前两篇的blog，博主尽可能进行debug，�
 
 好的，我们看一下标记过程的抽象图：
 初始过程，黑色的方框对象为根节点，开始向下查找。<br>
-![memory_sign1](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign1.png)
+![memory_sign1](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign1.png)
 中间标记过程，就像是波纹~~（dio：纳尼？）~~一样，以灰色对象为波峰持续推进</br>
-![memory_sign2](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign2.png)
+![memory_sign2](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign2.png)
 最后直到所有的灰色对象都查找不到引用，将最后这批灰色对象标记为黑色。</br>
-![memory_sign3](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign3.png)
+![memory_sign3](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign3.png)
 好了，<font color=#00ff00 >正常的标记过程</font>就是如此，但如果有用户线程来捣乱，那就不一样了<br/>
 那用户线程如何捣乱呢？把正在查找的灰色对象对白色对象切断？我们先试一下，以下虚线为切断的引用<br/>
-![memory_sign4](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign4.png)
+![memory_sign4](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign4.png)
 好像结果并没有什么阻碍，最终查找的结果是正确的，因为用户已经切断了引用，而我们的标记结果也实时作出了改变。<br/>
 那么添加黑色对象对已经查找的白色对象的引用呢？<br/>
-![memory_sign5](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign5.png)
+![memory_sign5](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign5.png)
 也同样的不会出现什么问题，最后的结果和原来一致，那么，如果两个同时叠加呢？<br/>
-![memory_sign6](http://picture.lemcoden.xyz/jvm_memory_manage/memory_sign6.png)
+![memory_sign6](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/memory_sign6.png)
 唉？问题就出来了，如果我们切断灰色对象对白色对象的引用，然后用一个黑色对象引用此白色对象，会让这个白色对象到扫描的最后都不会标记为黑色，但他有黑色对象的引用，照这样的标记回收会使我们的回收掉本应该存活的对象。<br/>
 现在，我们知道，要是并发收集出现错误，必须满足以下两个条件：
 * 切断从灰色对象到黑色对象的引用

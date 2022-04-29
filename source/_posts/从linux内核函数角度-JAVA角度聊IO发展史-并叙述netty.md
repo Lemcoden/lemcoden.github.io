@@ -6,7 +6,7 @@ tags:
     - IO模型
     - 高并发
     - netty
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 
 # 从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty

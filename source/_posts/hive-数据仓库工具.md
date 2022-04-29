@@ -5,7 +5,7 @@ categories: hadoop生态
 tags:
     - 数据仓库
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hive.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hive.jpg
 ---
 
 ### 安装配置

@@ -4,7 +4,7 @@ date: 2020-01-26 18:09:46
 categories: 书籍翻译
 tags:
 	- 书籍翻译
-cover_picture: http://picture.lemcoden.xyz/cover_picture/logo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/logo.jpg
 ---
 <table><tr><td bgcolor=#00FFFF>
 如果您觉得作者翻译的内容有帮助，让您学到了相关专业知识，请分享给更多人，让更多人学到大数据知识。您的分享，是作者翻译的动力！

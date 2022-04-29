@@ -5,7 +5,7 @@ categories: hadoop生态
 tags:
     - hadoop生态
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hbase.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hbase.jpg
 ---
 
 # HBase优化设计

@@ -6,7 +6,7 @@ author: Lemcoden
 tags:
     - hadoop生态
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/mapreduce.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/mapreduce.jpg
 ---
 #### 为什么要看源码
 1.为了更好的使用框架的Api解决问题,比如说我们遇到一个问题,需要修改mapreduce分片的大小,如果没看过源码,可能会写很多代码,甚至重新调整文件block的大小上传,但是看过源码的都懂,只要简单的修改minSplite和maxSplite这两个配置属性就可以.

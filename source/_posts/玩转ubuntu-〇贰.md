@@ -3,7 +3,7 @@ title: 玩转ubuntu-〇贰
 date: 2021-08-08 13:24:43
 categories: linux
 tags: linux客户端
-cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/unbuntu.jpg
 ---
 
 #### 关于Ubuntu办公软件

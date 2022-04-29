@@ -3,7 +3,7 @@ title: redis笔记04
 tags:
   - 内存数据库
 categories: redis
-cover_picture: 'http://picture.lemcoden.xyz/cover_picture/redis.jpeg'
+cover_picture: 'https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/redis.jpeg'
 date: 2020-11-21 22:32:48
 ---
 

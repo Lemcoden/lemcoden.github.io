@@ -4,7 +4,7 @@ date: 2021-05-26 19:30:26
 tags:
     - 大数据计算框架
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/spark.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/spark.png
 ---
 
 # spark-core源码分析01(RPC环境)
@@ -23,7 +23,7 @@ RPC的原理很简单,但是落地到实际生产环境中需要做的细活很�
 
 <!--more-->
 
-![http://picture.lemcoden.xyz/spark/spark_rpc.png](http://picture.lemcoden.xyz/spark/spark_rpc.png)
+![https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/spark/spark_rpc.png](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/spark/spark_rpc.png)
 
 client将实体类封装为inbox通过分发器分发到队列当中,然后传输层连接池,线程池拉取队列数据,通过网络发送二进制数据
 

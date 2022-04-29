@@ -4,7 +4,7 @@ date: 2020-06-28 09:53:16
 categories: 建站
 tags:
   - 博客搭建
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 前情提要:
 <a href="https://lemcoden.xyz/2020/05/20/hexo优化-github-coding双搭建，域名CNAME别称指向/">hexo优化:github+coding双搭建，域名CNAME别称指向</a>
@@ -37,11 +37,11 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
 
   
 
-![picture_sub_domain](http://picture.lemcoden.xyz/blog_optimize/picture_sub_domain.png)
+![picture_sub_domain](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/blog_optimize/picture_sub_domain.png)
 
 * 上传图片之前记得添加前缀，多个路径用/隔开
 
-![pic_path](http://picture.lemcoden.xyz/blog_optimize/pic_path.png)
+![pic_path](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/blog_optimize/pic_path.png)
 
 * 多图上传推荐用上传工具PicGo
 
@@ -81,7 +81,7 @@ sudo apt install xclip -y
 
 
 
-![conf_pic_go](http://picture.lemcoden.xyz/blog_optimize/conf_pic_go.png)
+![conf_pic_go](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/blog_optimize/conf_pic_go.png)
 
 存储区域华南,华北那些在官方文档有对应的参考映射值
 

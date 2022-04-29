@@ -2,7 +2,7 @@
 title: 'ubuntu20.04LTS:amule低ID问题'
 date: 2021-05-09 16:29:15
 tags: linux客户端
-cover_picture: http://picture.lemcoden.xyz/cover_picture/ubuntu.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/ubuntu.jpg
 ---
 ### 起因
 
@@ -56,7 +56,7 @@ ed2k的协议,看似不常用的协议,但是遇到了还真就很难找到除�
 
 首先我们先从amule的界面下手,
 
-![http://picture.lemcoden.xyz/ubuntu/amule.png](http://picture.lemcoden.xyz/ubuntu/amule.png)
+![https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/ubuntu/amule.png](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/ubuntu/amule.png)
 
 如上图的界面,amule需要连接特定的下载服务器,我们可以通过左上角的播放键查询服务器列表,然后双击对应服务器进行连接,一般选择延迟低并且连接人数多的
 

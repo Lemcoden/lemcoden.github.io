@@ -6,7 +6,7 @@ author: Lemcoden
 tags:
     - hadoop生态
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hdfs.jpg
 ---
 关于HDFS原理在此写个总结
 前三点主要围绕分布式文件系统那么多,为什么apache还要开发自己的文件系统
@@ -51,7 +51,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
   * 为了能在程序计算的时候找到最近的block数据
   * 为了能在机架损毁的时候仍然能保留其完整的
   #### HDFS写流程
-  ![读流程](http://picture.lemcoden.xyz/hdfs/hdfs_write.png)
+  ![读流程](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/hdfs/hdfs_write.png)
   * Client与NN创建连接
   * NN建立元数据
   * NN验证元数据是否合理
@@ -63,7 +63,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
   * 所以client和block汇报也是并行的
   * 数据分割是为了保证DN可以在第一个数据包发送完成之后,可以立刻发送给第二个DN,保证传输效率以及传输的一致性,并且这样传输,对客户端来说是透明,客户端只要保证给第一个DataNode传输完整数据就可以.
   #### HDFS读流程
-  ![写流程](http://picture.lemcoden.xyz/hdfs/hdfs_read.png)
+  ![写流程](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/hdfs/hdfs_read.png)
   * 为了降低整体的带宽消耗和读延迟，HDFS会尽量让读取程序读取离他最近的副本
   * 如果再读取程序的同一个机架上有一个副本，那么就读该副本
   * 如果一个HDFS集群跨越多个数据中心，那么客户端也将首先读本地数据中心的副本
@@ -105,7 +105,7 @@ JounralNode一般会大于等于3的基数个,首先JounralNode根据少数服�
 #### 新增角色ZK(zookeeper)和ZKFC(ZookeeperFailOver)
 当我们启动zookeeper进程的时候,会有两个进程监控我们的NN,一个是zookeeper本身的进程,和JounralNode有着相似的选举算法,也是进程数必须超过zookeeper的奇数倍,zkfc要与zk进程保持心跳,而zkfc主要负责监控和切换主备的Namenode
 #### 自动主备切换流程详述
-![主备切换](http://picture.lemcoden.xyz/hdfs/HA)
+![主备切换](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/hdfs/HA)
 * 启动两个NN进程,此时两个NN都处于备用的状态
 * 启动zk进程和zkfc进程,当zk进程启动之后,zkfc进程争相在最近的zk进程上建立节点(抢锁),第一个成功建立节点的zkfc进程会将它操控的NN设置为Active,另一个就会被定义为standby
 * 假如zkfc挂掉了,zk进程监控不到zkfc的心跳,会将在zkfc建立的节点删掉,而监控standby的zkfc进程看到zk上的节点消失了,会主动建立节点,并先将active的NN节点降级为standby,自己监控的NN节点升级为active

@@ -4,7 +4,7 @@ date: 2021-06-06 14:59:21
 tags:
     - 大数据计算框架
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/spark.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/spark.png
 ---
 
 ## 书接上文
@@ -93,7 +93,7 @@ cover_picture: http://picture.lemcoden.xyz/cover_picture/spark.png
 
 关于上次的源码分析,在此列出一张图表示,便于读者进行源码追踪
 
-![http://picture.lemcoden.xyz/spark/spark_source.png](http://picture.lemcoden.xyz/spark/spark_source.png)
+![https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/spark/spark_source.png](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/spark/spark_source.png)
 
 spark源码1
 

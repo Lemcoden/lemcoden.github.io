@@ -5,7 +5,7 @@ categories: javaWeb组件
 tags:
     - es
     - elasticsearch
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hdfs.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hdfs.jpg
 ---
 
 # es踩坑日记(持续更新........)

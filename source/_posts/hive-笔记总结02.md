@@ -4,7 +4,7 @@ date: 2020-09-04 15:44:41
 tags:
     - 数据仓库
     - 分布式
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hive.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hive.jpg
 ---
 我们接着上次的hive继续总结
 ### 配置补充,hiveserer2的高可用

@@ -4,7 +4,7 @@ date: 2020-11-09 13:29:47
 categories: linux环境
 tags: 
     - linux环境
-cover_picture: http://picture.lemcoden.xyz/cover_picture/centos.jpeg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/centos.jpeg
 ---
 
 #### 下载官方mysql源

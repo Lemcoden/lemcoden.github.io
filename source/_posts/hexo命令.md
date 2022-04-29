@@ -4,10 +4,10 @@ date: 2019-12-28 21:14:32
 categories: 建站
 tags:
     - 博客分享
-cover_picture: http://picture.lemcoden.xyz/cover_picture/hexo.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/hexo.jpg
 ---
 1.在个人博客文件夹的/source/_post目录里添加新的md文件，编写格式如下
-![编写格式](http://picture.lemcoden.xyz/hexo-update.jpg)
+![编写格式](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/hexo-update.jpg)
 <!-- more -->
 2.切换到个人博客的文件夹输入如下命令
 ```

@@ -4,7 +4,7 @@ date: 2020-05-21 21:57:35
 categories: jvm虚拟机
 tags:
     - jvm虚拟机
-cover_picture: http://picture.lemcoden.xyz/cover_picture/jvm_memory_01.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/jvm_memory_01.png
 ---
 ### 前言
 ```昨天半夜啃书时，笔者突发奇想，要开一个新的系列主题，没错，如标题所言，关于jvm虚拟机的爽口简介，众所周知jvm虚拟机的底层知识相当枯燥，就像是发柴的鸡肉，即使嚼烂也难以下咽，究其原因，是看书的时候问题不明确，只能被博客文章，书中大量知识点牵着鼻子走，因此，笔者准备以问题驱动作为主线，我们先明确要问的问题，整理好问题之间的引用链路，然后再集中解答的方式，先给知识裹一层糖色（shai），让问题变得诱人，再去吃的话就没有那么柴了。那么废话不多说，本系列篇章开始（本篇博客所有问题将有蓝色字体标出，并在博客的最后重复给出，想挑战记忆力的小伙伴可以试着去解答）。```
@@ -54,7 +54,7 @@ eclipse的MAT
 </font><br/>
 好的，第一篇我们先了解对整个的jvm虚拟机的执行子系统做一个大概的了解，接下来某些细致的问题，笔者会在接下来的文章中进行细分和拆解
 下面，今天的问题树状图奉上~~因为未解答的问题比较多读者可以只当作需要记忆的概念多读几遍(打脸)~~
-![思维导图](http://picture.lemcoden.xyz/jvm_memory_manage/jvm_preface.png)<br/>
+![思维导图](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/jvm_memory_manage/jvm_preface.png)<br/>
 下期我们从思维导图的最小叶子节点开始按顺序讲起（jvm内存为什么使用可达性分析算法而不是使用引用计数器算........）
 
 

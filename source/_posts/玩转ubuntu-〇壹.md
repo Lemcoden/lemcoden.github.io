@@ -3,7 +3,7 @@ title: 玩转ubuntu 〇壹
 date: 2020-08-13 20:00:37
 categories: linux
 tags: linux客户端
-cover_picture: http://picture.lemcoden.xyz/cover_picture/unbuntu.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/unbuntu.jpg
 ---
 
 #### 终端 => 文件管理器
@@ -64,9 +64,9 @@ bash --version
 
 效果图:
 
-![桌面系统菜单](http://picture.lemcoden.xyz/cover_picture/gsconnect.png)
+![桌面系统菜单](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/gsconnect.png)
 
-![手机kde](http://picture.lemcoden.xyz/cover_picture/phone_kde.jpg)
+![手机kde](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/phone_kde.jpg)
 
 #### 安装微信
 

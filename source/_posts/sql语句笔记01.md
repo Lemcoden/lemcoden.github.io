@@ -5,7 +5,7 @@ categories: mysql
 tags:
     - sql语句
     - sql练习
-cover_picture: http://picture.lemcoden.xyz/cover_picture/sql.jpeg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/sql.jpeg
 ---
 
 #### mysql四大排名函数

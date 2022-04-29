@@ -4,7 +4,7 @@ date: 2020-06-25 19:06:25
 categories: jvm虚拟机
 tags:
     - jvm虚拟机
-cover_picture: http://picture.lemcoden.xyz/cover_picture/jvm_memory_01.png
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/jvm_memory_01.png
 ---
 #### 前情提要
 <a href="https://lemcoden.xyz/2020/06/18/jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇叁/">jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰</a><br/>

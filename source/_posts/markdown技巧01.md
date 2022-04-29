@@ -6,7 +6,7 @@ author: Lemcoden
 tags:	 
 	- markdown
 	- 博客搭建
-cover_picture: http://picture.lemcoden.xyz/cover_picture/markdown.jpg
+cover_picture: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/cover_picture/markdown.jpg
 ---
 
 ### mermaid 流程图
