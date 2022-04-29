@@ -112,5 +112,5 @@ winetricks riched20
 
 支持视频格式动态壁纸,自定义时钟(视频壁纸平常可能会占些cpu)
 
-[动态壁纸效果]: https://picture.lemcoden.xyz/linux/komorebi.gif
+[动态壁纸效果]: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/linux/komorebi.gif
 

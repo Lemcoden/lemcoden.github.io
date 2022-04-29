@@ -40,7 +40,7 @@ lemcoden@ubuntu:~$ sudo apt-get install flameshot
 
 什么它没有快捷键? 直接在设置 ---> 快捷键 增加一条关于flameshot启动命令的快捷键设置就可以,设置图如下
 
-![flameshot设置快捷键](https://picture.lemcoden.xyz/linux/flameshot_set.png)
+![flameshot设置快捷键](https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/linux/flameshot_set.png)
 
 然后是关于录屏的,直接使用obs,简单好用没的说,没事还能做直播 
 
