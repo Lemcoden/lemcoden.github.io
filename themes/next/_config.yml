@@ -126,7 +126,7 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-  url: http://picture.lemcoden.xyz/avater.jpeg
+  url: https://cdn.jsdelivr.net/gh/lemcoden/blog_picture/avater.jpeg
   # If true, the avatar will be dispalyed in circle.
   rounded: false
   # If true, the avatar will be rotated with the cursor.
