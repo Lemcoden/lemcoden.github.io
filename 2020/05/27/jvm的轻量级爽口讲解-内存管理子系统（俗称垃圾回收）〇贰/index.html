@@ -2,57 +2,56 @@
 <html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
-
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="前情提要 jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹 上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。  jvm内存为什么使用可达性分析算法而不">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lemcoden.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前情提要 jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹 上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。  jvm内存为什么使用可达性分析算法而不">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰">
 <meta property="og:url" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/index.html">
 <meta property="og:site_name" content="Lemcoden">
 <meta property="og:description" content="前情提要 jvm的轻量级爽口讲解–内存管理子系统（俗称垃圾回收）〇壹 上回，我们就jvm虚拟机内存的问题一路问下来，整出了整个jvm虚拟的知识点大纲。这次我们就问题树的最小子树，继续往下问，继续往下回答。就上次的某些问题问的有些突然，那些新概念像是不要钱的一样直接涌过来，让人有点懵，这次，笔者会尽可能的把它从哪里来，到哪里去，它的整个来龙去脉给它溜全了。  jvm内存为什么使用可达性分析算法而不">
 <meta property="og:locale">
-<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png">
-<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process.png">
-<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process1.png">
-<meta property="og:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process2.png">
+<meta property="og:image" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/gc_root.png">
+<meta property="og:image" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/gc_process.png">
+<meta property="og:image" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/gc_process1.png">
+<meta property="og:image" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/gc_process2.png">
 <meta property="article:published_time" content="2020-05-27T13:38:52.000Z">
-<meta property="article:modified_time" content="2021-08-08T10:56:16.846Z">
+<meta property="article:modified_time" content="2023-02-20T15:20:36.115Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="jvm虚拟机">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png">
+<meta name="twitter:image" content="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/gc_root.png">
 
 
 <link rel="canonical" href="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;05&#x2F;27&#x2F;jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;05&#x2F;27&#x2F;jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇贰&#x2F;&quot;,&quot;title&quot;:&quot;jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/","path":"2020/05/27/jvm的轻量级爽口讲解-内存管理子系统（俗称垃圾回收）〇贰/","title":"jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰"}</script>
 
-<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰 | Lemcoden</title><script src="/js/config.js"></script>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰 | Lemcoden</title>
   
 
-  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
-  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
+
+
+
+
 
 
 
@@ -65,13 +64,10 @@
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
     </div>
   </div>
 
@@ -79,42 +75,27 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Lemcoden</h1>
+      <p class="site-title">Lemcoden</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
     </div>
   </div>
 </div>
 
 
 
-<nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-  </ul>
-</nav>
 
 
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -135,18 +116,15 @@
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Lemcoden"
-      src="http://picture.lemcoden.xyz/avater.jpeg">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Lemcoden</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">51</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -155,36 +133,22 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
+          <a href="/tags/">
         <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
 
-
-
         </div>
       </div>
-        <div class="back-to-top animated" role="button" aria-label="Back to top">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
 
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -200,13 +164,18 @@
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/05/27/jvm%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%88%BD%E5%8F%A3%E8%AE%B2%E8%A7%A3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BF%97%E7%A7%B0%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%89%E3%80%87%E8%B4%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="jvm的轻量级爽口讲解--内存管理子系统（俗称垃圾回收）〇贰 | Lemcoden">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -223,13 +192,13 @@
 
       <time title="Created: 2020-05-27 21:38:52" itemprop="dateCreated datePublished" datetime="2020-05-27T21:38:52+08:00">2020-05-27</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-08-08 18:56:16" itemprop="dateModified" datetime="2021-08-08T18:56:16+08:00">2021-08-08</time>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
       </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
+    </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -282,7 +251,7 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br /
 <li>反映Java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等<br />
 为了更形象的表示GC Root的标记过程笔者给出图片</li>
 </ul>
-<p><img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_root.png" alt="gc_root" /></p>
+<p><img src="gc_root.png" alt="gc_root" /></p>
 <p>图片如上。我们通过GC Root节点往下查找他引用的节点，然后再继续查找引用的节点引用的节点<s>禁止套娃</s>，就这样将所有关于GC Root的引用链路查找完毕，最后将那些没有在引用链路中的节点标识为垃圾节点，进行回收<br/></p>
 <h4 id="font-color35169e1stop-the-world并行-and-并发font"><a class="markdownIt-Anchor" href="#font-color35169e1stop-the-world并行-and-并发font"></a> <font color=#3.5169E1>Stop the world？并行 and 并发？</font></h4>
 <p>既然可达性分析算法已经讲了，那我们顺便聊聊，标记算法的重点特性，我们知道在jvm虚拟机运行过程中的线程分为两大类，分别是<font color=#00FF00> 用户线程和垃圾回收线程</font> <br><br />
@@ -298,13 +267,13 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br /
 关于标题的三个回收算法想必大家都已经很熟悉了，这里就简单用图提点一下概念。重点讲为什么？<br/></p>
 <h4 id="font-color35169e1回收-清除算法font"><a class="markdownIt-Anchor" href="#font-color35169e1回收-清除算法font"></a> <font color=#3.5169E1>回收-清除算法</font></h4>
 <p>回收算法中简单，最基础的算法，其实就是把标记过后的内存直接清除掉，这样的处理的有点是处理方式简单，回收效率高，但是正因为简单，没有考虑之后的内存插入，可能会导致后面，大对象的插入，会让计算机查找很长时间寻找连续的内存，具体怎么回收直接看下面的简图。<br />
-<img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process.png" alt="思维导图" /></p>
+<img src="gc_process.png" alt="思维导图" /></p>
 <h4 id="font-color35169e1标记-复制算法font"><a class="markdownIt-Anchor" href="#font-color35169e1标记-复制算法font"></a> <font color=#3.5169E1>标记-复制算法</font></h4>
 <p>为了标记清除算法的缺陷，基于标记-清除算法，又出现了标记-复制算法，简单来说，就是预留一半的内存区域，回收之后，将存活的内存对象紧密排列到预留的区域当中，这样当然可以回收过后得到规整的可用内存区域。但是缺点也很明显，我们需要两倍的内存空间来做，能不能减少预留的空间呢？当然可以，要解决这个问题，我们需要先回到GC的分代问题，为什么jvm内存要分年轻代，老年代？相信大家都知道，jvm堆内存主要分为年轻代，老年代，而年轻代，基本都是使用的标记-复制算法，所谓年轻代，就是内存区域中的大部分对象都是“朝生夕死”的。内存赋值之后，很快就会被标记为可回收，那么我们在年轻代进行回收的时候，就会回收到大量的垃圾对象，而余下存活的对象很少，这样我们就可以把标记-复制算法的预留区域设置的少一点，降低一点标记-复制算法所消耗的内存，在最常用的jvm Hotspot虚拟机当中，<font color=#00FF00>年轻代默认的主内存（eden区）和预留内存（suvivor1区和suvivor2区）</font>的内存比例就达到了8：1：1的比例，也就是两个预留区总共占用百分之20的内存<br />
-<img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process1.png" alt="思维导图" /></p>
+<img src="gc_process1.png" alt="思维导图" /></p>
 <h4 id="font-color35169e1标记-整理算法font"><a class="markdownIt-Anchor" href="#font-color35169e1标记-整理算法font"></a> <font color=#3.5169E1>标记-整理算法</font></h4>
 <p>除了设置预留区域之外，我们还可以在内存回收之后进行内存的整理，这样我们也可以使用比较规整的内存区域，其抽象的过程就如下图，但是，如果我们内存回收之后，各个存活对象之间的空白区域很多，那么整理对于我们的回收线程是特别消耗时间和性能的事情，所以我们要找那种回收过程中要回收垃圾对象比较少的区域，这样回收之后，空白区域预留的比较少，可以消耗比较较少的计算资源进行整理，看到这里，你应该能反应到了吧，对就是老年代，这种回收方式对于老年代的内存是再合适不过了，因为老年代中的对象存活率比较高，产生的垃圾对象相对较少。<br />
-<img src="http://picture.lemcoden.xyz/jvm_memory_manage/gc_process2.png" alt="思维导图" /></p>
+<img src="gc_process2.png" alt="思维导图" /></p>
 <p>好的，此篇博客基本就讲到这里，我把这此所讲述的问题列出来，当然有些问题仅仅是解决了一半而已，比如说，停顿具体是怎样实现的，并发标记是如何做的，还有一个没有列出来的，记忆集是怎么来的等等，这些问题笔者会在下一篇中写出答案，以下是我的问题列表：</p>
 <ul>
 <li>垃圾 标记算法有哪些，为什么使用可达性分析算法，而不是引用计数器算法？</li>
@@ -345,7 +314,7 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br /
 
 
 
-<script src="/js/comments.js"></script>
+
 </div>
   </main>
 
@@ -355,34 +324,44 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br /
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Lemcoden</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
     </div>
   </footer>
 
   
-  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
 
 
 
-  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
-  <script src="/js/third-party/tags/mermaid.js"></script>
-
-  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
-  <script src="/js/third-party/nprogress.js"></script>
-
   
 
 
@@ -390,7 +369,7 @@ A实例里面的一个变量引用B，B实例的一个变量引用A，<br/><br /
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

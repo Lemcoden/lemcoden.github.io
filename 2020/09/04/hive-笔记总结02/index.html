@@ -2,35 +2,32 @@
 <html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
-
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="我们接着上次的hive继续总结 配置补充,hiveserer2的高可用node2-hive-site.xml">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lemcoden.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="我们接着上次的hive继续总结  配置补充,hiveserer2的高可用 node2-hive-site.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hive-笔记总结02">
 <meta property="og:url" content="https://lemcoden.github.io/2020/09/04/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%9302/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="我们接着上次的hive继续总结 配置补充,hiveserer2的高可用node2-hive-site.xml">
+<meta property="og:description" content="我们接着上次的hive继续总结  配置补充,hiveserer2的高可用 node2-hive-site.xml">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-09-04T07:44:41.000Z">
-<meta property="article:modified_time" content="2020-11-15T08:52:16.000Z">
+<meta property="article:modified_time" content="2023-02-20T15:20:36.112Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="数据仓库">
@@ -41,14 +38,16 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;09&#x2F;04&#x2F;hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%9302&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;09&#x2F;04&#x2F;hive-笔记总结02&#x2F;&quot;,&quot;title&quot;:&quot;hive-笔记总结02&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lemcoden.github.io/2020/09/04/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%9302/","path":"2020/09/04/hive-笔记总结02/","title":"hive-笔记总结02"}</script>
 
-<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>hive-笔记总结02 | Lemcoden</title><script src="/js/config.js"></script>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>hive-笔记总结02 | Lemcoden</title>
   
 
-  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
-  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
+
+
+
+
 
 
 
@@ -61,13 +60,10 @@
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
     </div>
   </div>
 
@@ -75,42 +71,27 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Lemcoden</h1>
+      <p class="site-title">Lemcoden</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
     </div>
   </div>
 </div>
 
 
 
-<nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-  </ul>
-</nav>
 
 
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -126,23 +107,20 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A1%A5%E5%85%85-hiveserer2%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">配置补充,hiveserer2的高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">hive权限管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">hive优化</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A1%A5%E5%85%85hiveserer2%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text"> 配置补充,hiveserer2的高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text"> hive权限管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text"> hive优化</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Lemcoden"
-      src="http://picture.lemcoden.xyz/avater.jpeg">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Lemcoden</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">51</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -151,36 +129,22 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
+          <a href="/tags/">
         <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
 
-
-
         </div>
       </div>
-        <div class="back-to-top animated" role="button" aria-label="Back to top">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
 
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -196,13 +160,18 @@
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/09/04/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%9302/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="hive-笔记总结02 | Lemcoden">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -219,13 +188,13 @@
 
       <time title="Created: 2020-09-04 15:44:41" itemprop="dateCreated datePublished" datetime="2020-09-04T15:44:41+08:00">2020-09-04</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-15 16:52:16" itemprop="dateModified" datetime="2020-11-15T16:52:16+08:00">2020-11-15</time>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
       </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
+    </span>
 
   
 </div>
@@ -238,44 +207,58 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>我们接着上次的hive继续总结</p>
-<h3 id="配置补充-hiveserer2的高可用"><a href="#配置补充-hiveserer2的高可用" class="headerlink" title="配置补充,hiveserer2的高可用"></a>配置补充,hiveserer2的高可用</h3><p>node2-hive-site.xml</p>
+<h3 id="配置补充hiveserer2的高可用"><a class="markdownIt-Anchor" href="#配置补充hiveserer2的高可用"></a> 配置补充,hiveserer2的高可用</h3>
+<p>node2-hive-site.xml</p>
 <span id="more"></span>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;/user/hive/warehouse&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;jdbc:mysql://node01:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;     </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;root&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;123&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.support.dynamic.service.discovery&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.zookeeper.namespace&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;hiveserver2_zk&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node01:2181,node02:2181,node03:2181&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.zookeeper.client.port&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;2181&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.thrift.bind.host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node02&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.thrift.port&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;10001&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>node4-hive-site.xml</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;/user/hive/warehouse&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;jdbc:mysql://node01:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;     </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;root&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;  </span><br><span class="line">&lt;property&gt;  </span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;  </span><br><span class="line">  &lt;value&gt;123&lt;/value&gt;  </span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.support.dynamic.service.discovery&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.zookeeper.namespace&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;hiveserver2_zk&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node01:2181,node02:2181,node03:2181&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.zookeeper.client.port&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;2181&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.thrift.bind.host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node04&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.thrift.port&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;10001&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>beeline连接</strong><br/><br>!connect jdbc:hive2://node01,node02,node03/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2_zk root 123</p>
-<h4 id="hive权限管理"><a href="#hive权限管理" class="headerlink" title="hive权限管理"></a>hive权限管理</h4><p>在hiveserver2的节点添加如下配置:</p>
+<p><strong>beeline连接</strong><br/><br />
+!connect jdbc:hive2://node01,node02,node03/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2_zk root 123</p>
+<h4 id="hive权限管理"><a class="markdownIt-Anchor" href="#hive权限管理"></a> hive权限管理</h4>
+<p>在hiveserver2的节点添加如下配置:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.server2.enable.doAs&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.users.in.admin.role&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.security.authorization.manager&lt;/name&gt;  &lt;value&gt;org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdHiveAuthorizerFactory&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.security.authenticator.manager&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
-<p>中间的root改为自己启动hive的用户名,这样以后通过其他角色连接你的hive,操作数据库和表就需要更加细粒度的权限<br/><br>角色授权命令如下</p>
+<p>中间的root改为自己启动hive的用户名,这样以后通过其他角色连接你的hive,操作数据库和表就需要更加细粒度的权限<br/><br />
+角色授权命令如下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">--角色的添加、删除、查看、设置：</span><br><span class="line">-- 创建角色</span><br><span class="line">CREATE ROLE role_name;  </span><br><span class="line">-- 删除角色</span><br><span class="line">DROP ROLE role_name;</span><br><span class="line">-- 设置角色</span><br><span class="line">SET ROLE (role_name|ALL|NONE);</span><br><span class="line">-- 查看当前具有的角色</span><br><span class="line">SHOW CURRENT ROLES;  </span><br><span class="line">-- 查看所有存在的角色</span><br><span class="line">SHOW ROLES;  </span><br><span class="line"></span><br><span class="line">grant 操作名 on psn8 to user 用户名;</span><br><span class="line">为某个用户授权</span><br><span class="line">revoke 操作名 on psn8 from user 用户名;</span><br><span class="line">移除某个用户的权限</span><br></pre></td></tr></table></figure>
-<h4 id="hive优化"><a href="#hive优化" class="headerlink" title="hive优化"></a>hive优化</h4><ol>
-<li><p>查看hive的执行计划<br>hive的SQL语句在执行之前需要将SQL转换成Mapreduce任务,因此需要了解具体的转换过程.可以在SQL语句中输入如下命令查看具体的执行计划</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--查看执行计划，添加extended关键字可以查看更加详细的执行计划</span><br><span class="line">explain [extended] query</span><br></pre></td></tr></table></figure></li>
-<li><p>hive的抓取策略<br>理论上来说hive会把所有的SQL语句转换为Mapreduce操作,但实际操作中比如说select,我们看到他并没有输出mapreduce计算任务的log,只不过Hive在转换SQL语句的过程中会做部分优化,使某些简单的操作不再需要转换成MapReduce.</p>
-</li>
-<li><p>select 仅支持本表字段</p>
-</li>
-<li><p>where 仅对本表字段做条件过滤</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.fetch.task.conversion=none/more</span><br></pre></td></tr></table></figure></li>
-<li><p>hive本地模式<br>在开发测试阶段,可以设置hive的本地模式,提高SQL语句的执行效率,验证SQL是否执行正确</p>
+<h4 id="hive优化"><a class="markdownIt-Anchor" href="#hive优化"></a> hive优化</h4>
+<ol>
+<li>查看hive的执行计划<br />
+hive的SQL语句在执行之前需要将SQL转换成Mapreduce任务,因此需要了解具体的转换过程.可以在SQL语句中输入如下命令查看具体的执行计划</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--查看执行计划，添加extended关键字可以查看更加详细的执行计划</span><br><span class="line">explain [extended] query</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>hive的抓取策略<br />
+理论上来说hive会把所有的SQL语句转换为Mapreduce操作,但实际操作中比如说select,我们看到他并没有输出mapreduce计算任务的log,只不过Hive在转换SQL语句的过程中会做部分优化,使某些简单的操作不再需要转换成MapReduce.</li>
+<li>select 仅支持本表字段</li>
+<li>where 仅对本表字段做条件过滤</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.fetch.task.conversion=none/more</span><br></pre></td></tr></table></figure>
+<p>3.hive本地模式<br />
+在开发测试阶段,可以设置hive的本地模式,提高SQL语句的执行效率,验证SQL是否执行正确</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.mode.local.auto=true;</span><br></pre></td></tr></table></figure>
 <p>注意:要想使用Hive的本地模式,加载数据文件大小不能超过128MB,如果超过128M,计算设置本地模式,也会按照集群模式运行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.mode.local.auto.inputbytes.max=128M</span><br></pre></td></tr></table></figure></li>
-<li><p>hive并行模式<br>在SQL语句足够复杂的情况下,可能在一个SQL语句中包含多个子查询语句,且多个自查询语句之间没有任何任何依赖关系,此时,可以设置hive的并行度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.mode.local.auto.inputbytes.max=128M</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>hive并行模式<br />
+在SQL语句足够复杂的情况下,可能在一个SQL语句中包含多个子查询语句,且多个自查询语句之间没有任何任何依赖关系,此时,可以设置hive的并行度</li>
+</ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">允许设置hive并行执行</span><br><span class="line">set hive.exec.parallel=true;</span><br></pre></td></tr></table></figure>
 <p>hive的并行度并不是无限增加的,在一次SQL计算中,可以通过以下参数来设置并行的job的个数</p>
-<figure class="highlight plaintext"><figcaption><span>hive.exec.parallel.thread.number</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>hive严格模式<br>hive为了提高SQL语句的执行效率,可以设置严格模式,充分利用Hive的某些特点<br/></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.mapred.mode=strict;</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><figcaption><span>hive.exec.parallel.thread.number</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>hive严格模式<br />
+hive为了提高SQL语句的执行效率,可以设置严格模式,充分利用Hive的某些特点<br/></li>
 </ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set hive.mapred.mode=strict;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>对于分区表,必须添加where对于分区字段的条件过滤</li>
 <li>order by语句必须包含limit输出限制</li>
 <li>限制执行笛卡尔积的查询</li>
 </ul>
 <ol start="6">
-<li>Hive排序<br>在编写SQL语句的过程中,很多情况下徐亚对数据进行排序操作,Hive中支持多种排序操作适合不同的应用场景</li>
+<li>Hive排序<br />
+在编写SQL语句的过程中,很多情况下徐亚对数据进行排序操作,Hive中支持多种排序操作适合不同的应用场景</li>
 </ol>
 <ul>
 <li>Order By-对于查询结果做全排序,只允许有一个reduce处理</li>
@@ -288,22 +271,27 @@
 </ol>
 <ul>
 <li>Hive在多个表的join操作时尽可能多的使用相同的连接键,这样转换MR任务会转换成少的MR任务</li>
-<li>手动Map join在map端完成join操作<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--SQL方式,在SQL语句中添加Mapjoin标记</span><br><span class="line">SELECT MAPJOIN(smallTable) smallTable.Key,bigTable.value</span><br><span class="line">FROM smallTable JOIN bigTable ON smallTable.key = bigTabel.key</span><br></pre></td></tr></table></figure></li>
-<li>开启自动的Map join<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--通过修改一下配置启用自动的mapjoin;</span><br><span class="line">set hive.auto.convert.join = true;</span><br><span class="line">--（该参数为true时，Hive自动对左边的表统计量，如果是小表就加入内存，即对小表使用Map join）</span><br><span class="line">--相关配置参数：</span><br><span class="line">hive.mapjoin.smalltable.filesize;</span><br></pre></td></tr></table></figure></li>
+<li>手动Map join在map端完成join操作</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--SQL方式,在SQL语句中添加Mapjoin标记</span><br><span class="line">SELECT MAPJOIN(smallTable) smallTable.Key,bigTable.value</span><br><span class="line">FROM smallTable JOIN bigTable ON smallTable.key = bigTabel.key</span><br></pre></td></tr></table></figure>
+<ul>
+<li>开启自动的Map join</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--通过修改一下配置启用自动的mapjoin;</span><br><span class="line">set hive.auto.convert.join = true;</span><br><span class="line">--（该参数为true时，Hive自动对左边的表统计量，如果是小表就加入内存，即对小表使用Map join）</span><br><span class="line">--相关配置参数：</span><br><span class="line">hive.mapjoin.smalltable.filesize;</span><br></pre></td></tr></table></figure>
+<ul>
 <li><strong>大表join大表</strong></li>
 <li>空key过滤:有时join超时是因为某些key对应的数据太多,而相同对应的数据就会发送到相同的reducer,从而导致内存不够,此时我们应该仔细分析这些异常的key,很多情况下,这些key对应的数据是异常数据,我们需要在SQL语句进行</li>
 <li>空key转换:有时虽然某个key为空对应的数据很多,但是相应的不是异常数据,必须要包含在join的结果中,此时我们可以表a中key为空的字段赋值一个随机的值,使得数据随机均匀地分布到不同的reducer上</li>
 </ul>
 <ol start="9">
-<li>合并小文件<br>hive在操作的时候,如果文件数目小,容易在文件存储造成压力,给hdfs造成压力,影响效率</li>
+<li>合并小文件<br />
+hive在操作的时候,如果文件数目小,容易在文件存储造成压力,给hdfs造成压力,影响效率</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--设置合并属性</span><br><span class="line">--是否合并map输出文件：</span><br><span class="line">set hive.merge.mapfiles=true</span><br><span class="line">--是否合并reduce输出文件：</span><br><span class="line">set hive.merge.mapredfiles=true;</span><br><span class="line">--合并文件的大小：</span><br><span class="line">set hive.merge.size.per.task=256*1000*1000</span><br></pre></td></tr></table></figure>
-
 <ol start="10">
 <li>合理设置Map以及Reduce的数量</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">--Map数量相关的参数</span><br><span class="line">--一个split的最大值，即每个map处理文件的最大值</span><br><span class="line">set mapred.max.split.size</span><br><span class="line">--一个节点上split的最小值</span><br><span class="line">set mapred.min.split.size.per.node</span><br><span class="line">--一个机架上split的最小值</span><br><span class="line">set mapred.min.split.size.per.rack</span><br><span class="line">--Reduce数量相关的参数</span><br><span class="line">--强制指定reduce任务的数量</span><br><span class="line">set mapred.reduce.tasks</span><br><span class="line">--每个reduce任务处理的数据量</span><br><span class="line">set hive.exec.reducers.bytes.per.reducer</span><br><span class="line">--每个任务最大的reduce数</span><br><span class="line">set hive.exec.reducers.max</span><br></pre></td></tr></table></figure>
-
 <ol start="11">
 <li>JVM重用</li>
 </ol>
@@ -343,7 +331,7 @@
 
 
 
-<script src="/js/comments.js"></script>
+
 </div>
   </main>
 
@@ -353,34 +341,44 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Lemcoden</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
     </div>
   </footer>
 
   
-  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
 
 
 
-  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
-  <script src="/js/third-party/tags/mermaid.js"></script>
-
-  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
-  <script src="/js/third-party/nprogress.js"></script>
-
   
 
 
@@ -388,7 +386,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

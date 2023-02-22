@@ -2,35 +2,32 @@
 <html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
-
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="who,what,whyhive的作用按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论.但是我们可以聊聊他的作用,他是解决什么需求的:">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lemcoden.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="who,what,why  hive的作用 按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论. 但是我们可以聊聊他的作用,他是解决什么需求的:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hive-笔记总结">
 <meta property="og:url" content="https://lemcoden.github.io/2020/08/27/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="who,what,whyhive的作用按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论.但是我们可以聊聊他的作用,他是解决什么需求的:">
+<meta property="og:description" content="who,what,why  hive的作用 按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论. 但是我们可以聊聊他的作用,他是解决什么需求的:">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-08-27T12:50:49.000Z">
-<meta property="article:modified_time" content="2020-11-15T08:52:12.000Z">
+<meta property="article:modified_time" content="2023-02-20T15:20:36.113Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="数据仓库">
@@ -41,14 +38,16 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;08&#x2F;27&#x2F;hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;08&#x2F;27&#x2F;hive-笔记总结&#x2F;&quot;,&quot;title&quot;:&quot;hive-笔记总结&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lemcoden.github.io/2020/08/27/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/","path":"2020/08/27/hive-笔记总结/","title":"hive-笔记总结"}</script>
 
-<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>hive-笔记总结 | Lemcoden</title><script src="/js/config.js"></script>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>hive-笔记总结 | Lemcoden</title>
   
 
-  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
-  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
+
+
+
+
 
 
 
@@ -61,13 +60,10 @@
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
     </div>
   </div>
 
@@ -75,42 +71,27 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Lemcoden</h1>
+      <p class="site-title">Lemcoden</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
     </div>
   </div>
 </div>
 
 
 
-<nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-  </ul>
-</nav>
 
 
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -126,23 +107,20 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#who-what-why"><span class="nav-number">1.</span> <span class="nav-text">who,what,why</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">hive的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%AE%80%E7%95%A5%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">数据仓库简略介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">hive的架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93-metastore%E4%BB%A5%E5%8F%8Ahiveserer2%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">hive远程数据库,metastore以及hiveserer2的配置方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">hive远程数据库模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-metastore%E6%9C%8D%E5%8A%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">hive metastore服务模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hiveServer2-%E9%85%8D%E7%BD%AE"><span class="nav-number">3.3.</span> <span class="nav-text">hiveServer2 配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E7%9A%84SQL-%E5%87%BD%E6%95%B0-%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">hive的SQL,函数,参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL%E8%AF%AD%E5%8F%A5%E4%B9%8BDDL%E8%AF%AD%E5%8F%A5"><span class="nav-number">4.1.</span> <span class="nav-text">SQL语句之DDL语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-SQL%E8%AF%AD%E5%8F%A5%E4%B9%8BDML%E8%AF%AD%E5%8F%A5"><span class="nav-number">4.2.</span> <span class="nav-text">hive SQL语句之DML语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-serde"><span class="nav-number">4.3.</span> <span class="nav-text">hive serde</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA%E4%B8%8E%E5%88%86%E6%A1%B6"><span class="nav-number">4.4.</span> <span class="nav-text">hive 动态分区与分桶</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">4.5.</span> <span class="nav-text">hive的函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">4.6.</span> <span class="nav-text">hive的运行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E8%A7%86%E5%9B%BE"><span class="nav-number">4.7.</span> <span class="nav-text">hive视图</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#whowhatwhy"><span class="nav-number">1.</span> <span class="nav-text"> who,what,why</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text"> hive的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%AE%80%E7%95%A5%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text"> 数据仓库简略介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text"> hive的架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93metastore%E4%BB%A5%E5%8F%8Ahiveserer2%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text"> hive远程数据库,metastore以及hiveserer2的配置方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text"> hive远程数据库模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-metastore%E6%9C%8D%E5%8A%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text"> hive metastore服务模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hiveserver2-%E9%85%8D%E7%BD%AE"><span class="nav-number">3.3.</span> <span class="nav-text"> hiveServer2 配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hive%E7%9A%84sql%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text"> hive的SQL,函数,参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sql%E8%AF%AD%E5%8F%A5%E4%B9%8Bddl%E8%AF%AD%E5%8F%A5"><span class="nav-number">4.1.</span> <span class="nav-text"> SQL语句之DDL语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-sql%E8%AF%AD%E5%8F%A5%E4%B9%8Bdml%E8%AF%AD%E5%8F%A5"><span class="nav-number">4.2.</span> <span class="nav-text"> hive SQL语句之DML语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-serde"><span class="nav-number">4.3.</span> <span class="nav-text"> hive serde</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive-%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA%E4%B8%8E%E5%88%86%E6%A1%B6"><span class="nav-number">4.4.</span> <span class="nav-text"> hive 动态分区与分桶</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">4.5.</span> <span class="nav-text"> hive的函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E7%9A%84%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">4.6.</span> <span class="nav-text"> hive的运行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive%E8%A7%86%E5%9B%BE"><span class="nav-number">4.7.</span> <span class="nav-text"> hive视图</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Lemcoden"
-      src="http://picture.lemcoden.xyz/avater.jpeg">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Lemcoden</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">51</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -151,36 +129,22 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
+          <a href="/tags/">
         <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
 
-
-
         </div>
       </div>
-        <div class="back-to-top animated" role="button" aria-label="Back to top">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
 
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -196,13 +160,18 @@
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/08/27/hive-%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="hive-笔记总结 | Lemcoden">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -219,13 +188,13 @@
 
       <time title="Created: 2020-08-27 20:50:49" itemprop="dateCreated datePublished" datetime="2020-08-27T20:50:49+08:00">2020-08-27</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-15 16:52:12" itemprop="dateModified" datetime="2020-11-15T16:52:12+08:00">2020-11-15</time>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
       </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
+    </span>
 
   
 </div>
@@ -237,13 +206,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="who-what-why"><a href="#who-what-why" class="headerlink" title="who,what,why"></a>who,what,why</h3><h4 id="hive的作用"><a href="#hive的作用" class="headerlink" title="hive的作用"></a>hive的作用</h4><p>按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论.<br>但是我们可以聊聊他的作用,他是解决什么需求的:</p>
+        <h3 id="whowhatwhy"><a class="markdownIt-Anchor" href="#whowhatwhy"></a> who,what,why</h3>
+<h4 id="hive的作用"><a class="markdownIt-Anchor" href="#hive的作用"></a> hive的作用</h4>
+<p>按照做笔记的习惯来说,说一个新的大数据平台框架,一般先从模型说起,而hive本身是企业级数据仓库工具,基于mapreduce计算引擎的封装(2.x之后逐渐将官方计算引擎指定为spark)所以,就其本身而言并没有模型可以讨论.<br />
+但是我们可以聊聊他的作用,他是解决什么需求的:</p>
 <span id="more"></span>
-
 <ol>
 <li>对文件以及数据的元数据进行管理,提供统一的元数据管理方式</li>
-<li>童工更加简单的方式访问大规模的数据集,使用SQL语言进行数据分析<h4 id="数据仓库简略介绍"><a href="#数据仓库简略介绍" class="headerlink" title="数据仓库简略介绍"></a>数据仓库简略介绍</h4>说到hive就不得不提数据仓库(Data Warehouse)可简写为DW或者DWH,是为企业所有级别的决策制定过程,提供所有类型数据支持的战略集合.它是单个数据存储,处于分析性报告和决策支持目的而创建.为需要业务智能的企业,停工知道业务流程改进,监视时间,成本,质量以及控制.<br/><br>一般数据仓库是将企业业务数据库,访问产生的log,以及埋点信息进行收集,并经过多次的ETL,将数据分层冗余存储,主流分层主要有四层,ODS→DW→DWD→DWT→DM层,四层数据是递进的关系,每下一层数据由上一层转换得到,数据仓库仅仅是数据集合,要真正实现其作用,要看在其之上开发的业务系统,比如数据报表系统,用户画像系统,推荐系统,人工智能等这些方面的应用.<br/><br>一般基于数据仓库进行相关的数据分析大部分属于OLAP(联机事务分析)<br/><br>基于星形模型与雪花模型的OLAP一般涉及两个基本概念:</li>
+<li>童工更加简单的方式访问大规模的数据集,使用SQL语言进行数据分析</li>
 </ol>
+<h4 id="数据仓库简略介绍"><a class="markdownIt-Anchor" href="#数据仓库简略介绍"></a> 数据仓库简略介绍</h4>
+<p>说到hive就不得不提数据仓库(Data Warehouse)可简写为DW或者DWH,是为企业所有级别的决策制定过程,提供所有类型数据支持的战略集合.它是单个数据存储,处于分析性报告和决策支持目的而创建.为需要业务智能的企业,停工知道业务流程改进,监视时间,成本,质量以及控制.<br/><br />
+一般数据仓库是将企业业务数据库,访问产生的log,以及埋点信息进行收集,并经过多次的ETL,将数据分层冗余存储,主流分层主要有四层,ODS→DW→DWD→DWT→DM层,四层数据是递进的关系,每下一层数据由上一层转换得到,数据仓库仅仅是数据集合,要真正实现其作用,要看在其之上开发的业务系统,比如数据报表系统,用户画像系统,推荐系统,人工智能等这些方面的应用.<br/><br />
+一般基于数据仓库进行相关的数据分析大部分属于OLAP(联机事务分析)<br/><br />
+基于星形模型与雪花模型的OLAP一般涉及两个基本概念:</p>
 <ul>
 <li>度量:数据度量的指标,数据的世纪含义</li>
 <li>维度:描述与业务主题相关的一组属性</li>
@@ -256,7 +232,8 @@
 <li>多维性: 多维性是OLAP的关键属性.系统必须提供对数据的多维视图和分析,包括对层次维和多重层次维的完全支持</li>
 <li>信息性:不论数据量有多大,也不管数据存储在何处,OLAP系统应能即使获得信息,并且管理大容量信息.</li>
 </ul>
-<p>分类:<br>按存储方式分类:</p>
+<p>分类:<br />
+按存储方式分类:</p>
 <ul>
 <li>ROLAP:关系型在线分析处理</li>
 <li>MOLAP:多维在线分析处理</li>
@@ -266,7 +243,9 @@
 <ul>
 <li>Server OLAP和Client OLAP</li>
 </ul>
-<p>操作:<br/><br>下钻,上卷,切片,切块,旋转<br>数据库与数据仓库的区别:</p>
+<p>操作:<br/><br />
+下钻,上卷,切片,切块,旋转<br />
+数据库与数据仓库的区别:</p>
 <ol>
 <li>数据库是对业务系统的支承,性能要求高,相应的时间短,而数据仓库对响应时间没有太多的要求,当然也是越快越好</li>
 <li>数据库存储的是某一产品线或者名业务线的数据,数据仓库可以将多个数据源经过统一的规则清洗之后进行集中统一管理</li>
@@ -275,7 +254,9 @@
 <li>数据库使用的是实体-关系(E-R)模型,数据仓库使用的是星星模型或雪花模型</li>
 <li>数据库是面向事务级别的操作,数据仓库是面向分析的操作.</li>
 </ol>
-<h3 id="hive的架构"><a href="#hive的架构" class="headerlink" title="hive的架构"></a>hive的架构</h3><p>架构我们一般将hive中的角色分类,hive主要四角色:<br/><br><strong>1. 用户访问接口(client端)</strong></p>
+<h3 id="hive的架构"><a class="markdownIt-Anchor" href="#hive的架构"></a> hive的架构</h3>
+<p>架构我们一般将hive中的角色分类,hive主要四角色:<br/><br />
+<strong>1. 用户访问接口(client端)</strong></p>
 <ul>
 <li>CLI:用户可以使用hive自带的命令行接口执行HiveSQ 设置参数等</li>
 <li>JDBC/ODBC:用户使用JDBC或者ODBC的方式在代码中操作Hive</li>
@@ -293,46 +274,70 @@
 <ul>
 <li>Hive的元数据存储服务,一般将数据存储到关系型数据库,为了实现Hive元数据的持久化操作,Hive的安装包中自带了Derby内存数据库,但是实际的生产环境中一般使用mysql来存储元数据.</li>
 </ul>
-<h3 id="hive远程数据库-metastore以及hiveserer2的配置方法"><a href="#hive远程数据库-metastore以及hiveserer2的配置方法" class="headerlink" title="hive远程数据库,metastore以及hiveserer2的配置方法"></a>hive远程数据库,metastore以及hiveserer2的配置方法</h3><p>PS:hive本地模式配置略过,企业中基本不会使用到</p>
-<h4 id="hive远程数据库模式"><a href="#hive远程数据库模式" class="headerlink" title="hive远程数据库模式"></a>hive远程数据库模式</h4><p>(前提mysql服务已启动)</p>
+<h3 id="hive远程数据库metastore以及hiveserer2的配置方法"><a class="markdownIt-Anchor" href="#hive远程数据库metastore以及hiveserer2的配置方法"></a> hive远程数据库,metastore以及hiveserer2的配置方法</h3>
+<p>PS:hive本地模式配置略过,企业中基本不会使用到</p>
+<h4 id="hive远程数据库模式"><a class="markdownIt-Anchor" href="#hive远程数据库模式"></a> hive远程数据库模式</h4>
+<p>(前提mysql服务已启动)</p>
 <ol>
 <li>解压安装</li>
-<li>修改环境变量<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">export HIVE_HOME=/opt/bigdata/hive-2.3.4</span><br><span class="line">将bin目录添加到PATH路径中</span><br></pre></td></tr></table></figure></li>
-<li>修改配置文件<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">//修改文件名称，必须修改，文件名称必须是hive-site.xml</span><br><span class="line">		mv hive-default.xml.template hive-site.xml</span><br><span class="line">	//增加配置：</span><br><span class="line">			进入到文件之后，将文件原有的配置删除，但是保留最后一行，</span><br><span class="line">			从&lt;configuration&gt;&lt;/configuration&gt;，将光标移动到&lt;configuration&gt;这一行，</span><br><span class="line">			在vi的末行模式中输入以下命令</span><br><span class="line">			:.,$-1d</span><br><span class="line">	//增加如下配置信息：</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;/user/hive/warehouse&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;jdbc:mysql://node01:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;root&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;123&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
+<li>修改环境变量</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">export HIVE_HOME=/opt/bigdata/hive-2.3.4</span><br><span class="line">将bin目录添加到PATH路径中</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>修改配置文件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">//修改文件名称，必须修改，文件名称必须是hive-site.xml</span><br><span class="line">		mv hive-default.xml.template hive-site.xml</span><br><span class="line">	//增加配置：</span><br><span class="line">			进入到文件之后，将文件原有的配置删除，但是保留最后一行，</span><br><span class="line">			从&lt;configuration&gt;&lt;/configuration&gt;，将光标移动到&lt;configuration&gt;这一行，</span><br><span class="line">			在vi的末行模式中输入以下命令</span><br><span class="line">			:.,$-1d</span><br><span class="line">	//增加如下配置信息：</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;/user/hive/warehouse&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;jdbc:mysql://node01:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;root&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br><span class="line">			&lt;property&gt;</span><br><span class="line">				&lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">				&lt;value&gt;123&lt;/value&gt;</span><br><span class="line">			&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ol start="4">
 <li>拷贝JDBC驱动包</li>
-<li>执行元数据初始化<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">schematool -dbType mysql -initSchema</span><br></pre></td></tr></table></figure></li>
+<li>执行元数据初始化</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">schematool -dbType mysql -initSchema</span><br></pre></td></tr></table></figure>
+<ol start="6">
 <li>执行hive命令启动服务</li>
 </ol>
-<h4 id="hive-metastore服务模式"><a href="#hive-metastore服务模式" class="headerlink" title="hive metastore服务模式"></a>hive metastore服务模式</h4><p>假设四台服务器,node03作为服务端和node04作为客户端</p>
+<h4 id="hive-metastore服务模式"><a class="markdownIt-Anchor" href="#hive-metastore服务模式"></a> hive metastore服务模式</h4>
+<p>假设四台服务器,node03作为服务端和node04作为客户端</p>
 <ol>
-<li><p>向node03以及node04分发hive包</p>
-</li>
-<li><p>修改node03 hive-site.xml配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;/user/hive_remote/warehouse&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;jdbc:mysql://node01:3306/hive_remote?createDatabaseIfNotExist=true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;123&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
-<li><p>node04 hive-site.xml配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;/user/hive_remote/warehouse&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.uris&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;thrift://node03:9083&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure></li>
-<li><p>在node03服务端执行元数据初始化操作,schematool -dbType mysql -initSchema</p>
-</li>
-<li><p>在node03上执行hive –service metastore,启动hive的元数据服务,是阻塞式窗口</p>
-</li>
-<li><p>在node04上执行mysql,进入到hive的cli窗口</p>
-<h4 id="hiveServer2-配置"><a href="#hiveServer2-配置" class="headerlink" title="hiveServer2 配置"></a>hiveServer2 配置</h4><p>(在配置metastore服务的基础上)</p>
-</li>
-<li><p>在hdfs的core-site.xml中设置超级用户的管理权限,修改配置如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在hdfs集群的core-site.xml文件中添加如下配置文件</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">		&lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">配置完成之后重新启动集群，或者在namenode的节点上执行如下命令</span><br><span class="line">hdfs dfsadmin -fs hdfs://node01:8020 -refreshSuperUserGroupsConfiguration</span><br><span class="line">hdfs dfsadmin -fs hdfs://node02:8020 -refreshSuperUserGroupsConfiguration</span><br></pre></td></tr></table></figure></li>
+<li>向node03以及node04分发hive包</li>
+<li>修改node03 hive-site.xml配置</li>
 </ol>
-<p>注意,这其中的root需要改成,执行hiveserver2的linux系统用户名<br>在node03上执行hive –service metastore元数据服务<br>在node04上运行hiveserer2或者hive –service hiveserver2 <br/><br><strong>hiveserver2通过beeline进行相应的访问</strong><br/><br>beeline通过两种方式访问:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;/user/hive_remote/warehouse&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;jdbc:mysql://node01:3306/hive_remote?createDatabaseIfNotExist=true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;123&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>node04 hive-site.xml配置</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;/user/hive_remote/warehouse&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hive.metastore.uris&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;thrift://node03:9083&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>在node03服务端执行元数据初始化操作,schematool -dbType mysql -initSchema</li>
+<li>在node03上执行hive --service metastore,启动hive的元数据服务,是阻塞式窗口</li>
+<li>在node04上执行mysql,进入到hive的cli窗口</li>
+</ol>
+<h4 id="hiveserver2-配置"><a class="markdownIt-Anchor" href="#hiveserver2-配置"></a> hiveServer2 配置</h4>
+<p>(在配置metastore服务的基础上)</p>
 <ol>
-<li>通过命令行访问 beeline -u jdbc:hive2://:/ -n name</li>
-<li>通过beeline进入client模式后输入beeline&gt;!connect jdbc:hive2://:/ root 123</li>
+<li>在hdfs的core-site.xml中设置超级用户的管理权限,修改配置如下:</li>
 </ol>
-<p><strong>jdbc访问方式</strong><br/><br>将hive的lib目录里面的jar包copy到开发环境的classpath文件夹,最精简的包如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在hdfs集群的core-site.xml文件中添加如下配置文件</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">		&lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">配置完成之后重新启动集群，或者在namenode的节点上执行如下命令</span><br><span class="line">hdfs dfsadmin -fs hdfs://node01:8020 -refreshSuperUserGroupsConfiguration</span><br><span class="line">hdfs dfsadmin -fs hdfs://node02:8020 -refreshSuperUserGroupsConfiguration</span><br></pre></td></tr></table></figure>
+<p>注意,这其中的root需要改成,执行hiveserver2的linux系统用户名<br />
+在node03上执行hive --service metastore元数据服务<br />
+在node04上运行hiveserer2或者hive --service hiveserver2 <br/><br />
+<strong>hiveserver2通过beeline进行相应的访问</strong><br/><br />
+beeline通过两种方式访问:</p>
+<ol>
+<li>通过命令行访问 beeline -u jdbc:hive2://😕 -n name</li>
+<li>通过beeline进入client模式后输入beeline&gt;!connect jdbc:hive2://😕 root 123<br />
+<strong>jdbc访问方式</strong><br/><br />
+将hive的lib目录里面的jar包copy到开发环境的classpath文件夹,最精简的包如下:</li>
+</ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">commons-lang-2.6.jar</span><br><span class="line">commons-logging-1.2.jar</span><br><span class="line">curator-client-2.7.1.jar</span><br><span class="line">curator-framework-2.7.1.jar</span><br><span class="line">guava-14.0.1.jar</span><br><span class="line">hive-exec-2.3.4.jar</span><br><span class="line">hive-jdbc-2.3.4.jar</span><br><span class="line">hive-jdbc-handler-2.3.4.jar</span><br><span class="line">hive-metastore-2.3.4.jar</span><br><span class="line">hive-service-2.3.4.jar</span><br><span class="line">hive-service-rpc-2.3.4.jar</span><br><span class="line">httpclient-4.4.jar</span><br><span class="line">httpcore-4.4.jar</span><br><span class="line">libfb303-0.9.3.jar</span><br><span class="line">libthrift-0.9.3.jar</span><br><span class="line">log4j-1.2-api-2.6.2.jar</span><br><span class="line">log4j-api-2.6.2.jar</span><br><span class="line">log4j-core-2.6.2.jar</span><br><span class="line">log4j-jul-2.5.jar</span><br><span class="line">log4j-slf4j-impl-2.6.2.jar</span><br><span class="line">log4j-web-2.6.2.jar</span><br><span class="line">zookeeper-3.4.6.jar</span><br></pre></td></tr></table></figure>
 <p>下面是一个HiveJDBC连接的demo</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.mashibing;</span><br><span class="line"></span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.DriverManager;</span><br><span class="line">import java.sql.ResultSet;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line">import java.sql.Statement;</span><br><span class="line"></span><br><span class="line">public class HiveJdbcClient &#123;</span><br><span class="line"></span><br><span class="line">	private static String driverName = &quot;org.apache.hive.jdbc.HiveDriver&quot;;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) throws SQLException &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			Class.forName(driverName);</span><br><span class="line">		&#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		Connection conn = DriverManager.getConnection(&quot;jdbc:hive2://node04:10000/default&quot;, &quot;root&quot;, &quot;&quot;);</span><br><span class="line">		Statement stmt = conn.createStatement();</span><br><span class="line">		String sql = &quot;select * from psn limit 5&quot;;</span><br><span class="line">		ResultSet res = stmt.executeQuery(sql);</span><br><span class="line">		while (res.next()) &#123;</span><br><span class="line">			System.out.println(res.getString(1) + &quot;-&quot; + res.getString(&quot;name&quot;));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="hive的SQL-函数-参数"><a href="#hive的SQL-函数-参数" class="headerlink" title="hive的SQL,函数,参数"></a>hive的SQL,函数,参数</h3><h4 id="SQL语句之DDL语句"><a href="#SQL语句之DDL语句" class="headerlink" title="SQL语句之DDL语句"></a>SQL语句之DDL语句</h4><p>hive的SQL和其他的SQL语句很相似具体的数据库表操作语句语句如下:</p>
+<h3 id="hive的sql函数参数"><a class="markdownIt-Anchor" href="#hive的sql函数参数"></a> hive的SQL,函数,参数</h3>
+<h4 id="sql语句之ddl语句"><a class="markdownIt-Anchor" href="#sql语句之ddl语句"></a> SQL语句之DDL语句</h4>
+<p>hive的SQL和其他的SQL语句很相似具体的数据库表操作语句语句如下:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">create database 数据库名;  \\创建数据库</span><br><span class="line">drop database 数据库名; \\删除数据库</span><br><span class="line">drop table 表名; \\删除表</span><br><span class="line">show databses; \\显示数据库列表</span><br><span class="line">show tables; \\显示表列表</span><br><span class="line">use 数据库名; \\切换数据库</span><br><span class="line">desc 表名; \\显示表名</span><br><span class="line">desc format 表名; \\显示表明并列出详细的format信息</span><br><span class="line">创建表名,可选项比较多这里给出官方语法:</span><br><span class="line">		CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name    -- 			(Note: TEMPORARY available in Hive 0.14.0 and later)</span><br><span class="line">  		[(col_name data_type [COMMENT col_comment], ... [constraint_specification])]</span><br><span class="line">  		[COMMENT table_comment]</span><br><span class="line">  		[PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)]</span><br><span class="line">  		[CLUSTERED BY (col_name, col_name, ...) [SORTED BY (col_name [ASC|DESC], ...)] 				INTO num_buckets BUCKETS]</span><br><span class="line">  		[SKEWED BY (col_name, col_name, ...)                  -- (Note: Available in Hive 			0.10.0 and later)]</span><br><span class="line">     	ON ((col_value, col_value, ...), (col_value, col_value, ...), ...)</span><br><span class="line">     	[STORED AS DIRECTORIES]</span><br><span class="line">  		[</span><br><span class="line">   			[ROW FORMAT row_format]</span><br><span class="line">   			[STORED AS file_format]</span><br><span class="line">     		| STORED BY &#x27;storage.handler.class.name&#x27; [WITH SERDEPROPERTIES (...)]  -- 				(Note: Available in Hive 0.6.0 and later)</span><br><span class="line">  		]</span><br><span class="line">  		[LOCATION hdfs_path]</span><br><span class="line">  		[TBLPROPERTIES (property_name=property_value, ...)]   -- (Note: Available in Hive 			0.6.0 and later)</span><br><span class="line">  		[AS select_statement];   -- (Note: Available in Hive 0.5.0 and later; not 					supported for external tables)</span><br><span class="line"></span><br><span class="line">		CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name</span><br><span class="line">  			LIKE existing_table_or_view_name</span><br><span class="line">  		[LOCATION hdfs_path];</span><br><span class="line"> 		复杂数据类型</span><br><span class="line">		data_type</span><br><span class="line">  		 : primitive_type</span><br><span class="line">  		 | array_type</span><br><span class="line">  		 | map_type</span><br><span class="line">  		 | struct_type</span><br><span class="line">  		 | union_type  -- (Note: Available in Hive 0.7.0 and later)</span><br><span class="line"> 		基本数据类型</span><br><span class="line">		primitive_type</span><br><span class="line"> 		 : TINYINT</span><br><span class="line"> 		 | SMALLINT</span><br><span class="line"> 		 | INT</span><br><span class="line"> 		 | BIGINT</span><br><span class="line"> 		 | BOOLEAN</span><br><span class="line"> 		 | FLOAT</span><br><span class="line"> 		 | DOUBLE</span><br><span class="line">  		 | DOUBLE PRECISION -- (Note: Available in Hive 2.2.0 and later)</span><br><span class="line"> 		 | STRING</span><br><span class="line"> 		 | BINARY      -- (Note: Available in Hive 0.8.0 and later)</span><br><span class="line"> 		 | TIMESTAMP   -- (Note: Available in Hive 0.8.0 and later)</span><br><span class="line"> 		 | DECIMAL     -- (Note: Available in Hive 0.11.0 and later)</span><br><span class="line"> 		 | DECIMAL(precision, scale)  -- (Note: Available in Hive 0.13.0 and later)</span><br><span class="line"> 		 | DATE        -- (Note: Available in Hive 0.12.0 and later)</span><br><span class="line"> 		 | VARCHAR     -- (Note: Available in Hive 0.12.0 and later)</span><br><span class="line"> 		 | CHAR        -- (Note: Available in Hive 0.13.0 and later)</span><br><span class="line"></span><br><span class="line">		array_type</span><br><span class="line"> 		 : ARRAY &lt; data_type &gt;</span><br><span class="line"></span><br><span class="line">		map_type</span><br><span class="line"> 		 : MAP &lt; primitive_type, data_type &gt;</span><br><span class="line"></span><br><span class="line">		struct_type</span><br><span class="line"> 		 : STRUCT &lt; col_name : data_type [COMMENT col_comment], ...&gt;</span><br><span class="line"></span><br><span class="line">		union_type</span><br><span class="line">  		 : UNIONTYPE &lt; data_type, data_type, ... &gt;  -- (Note: Available in Hive 0.7.0 and 			later)</span><br><span class="line"> 		行格式规范</span><br><span class="line">		row_format</span><br><span class="line"> 		 : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS 				TERMINATED BY char]</span><br><span class="line"> 	       [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</span><br><span class="line">	       [NULL DEFINED AS char]   -- (Note: Available in Hive 0.13 and later)</span><br><span class="line">  			| SERDE serde_name [WITH SERDEPROPERTIES (property_name=property_value, 				property_name=property_value, ...)]</span><br><span class="line"> 		文件基本类型</span><br><span class="line">		file_format:</span><br><span class="line"> 		 : SEQUENCEFILE</span><br><span class="line"> 		 | TEXTFILE    -- (Default, depending on hive.default.fileformat configuration)</span><br><span class="line"> 		 | RCFILE      -- (Note: Available in Hive 0.6.0 and later)</span><br><span class="line"> 		 | ORC         -- (Note: Available in Hive 0.11.0 and later)</span><br><span class="line"> 		 | PARQUET     -- (Note: Available in Hive 0.13.0 and later)</span><br><span class="line"> 		 | AVRO        -- (Note: Available in Hive 0.14.0 and later)</span><br><span class="line"> 		 | JSONFILE    -- (Note: Available in Hive 4.0.0 and later)</span><br><span class="line"> 		 | INPUTFORMAT input_format_classname OUTPUTFORMAT output_format_classname</span><br><span class="line"> 		表约束</span><br><span class="line">		constraint_specification:</span><br><span class="line"> 		 : [, PRIMARY KEY (col_name, ...) DISABLE NOVALIDATE ]</span><br><span class="line"> 		   [, CONSTRAINT constraint_name FOREIGN KEY (col_name, ...) REFERENCES 					table_name(col_name, ...) DISABLE NOVALIDATE</span><br><span class="line">*/</span><br><span class="line">hivef分表语法:</span><br><span class="line">alter table 表名 add partition(col_name=col_value)</span><br><span class="line">alter table 表名 drop partition(col_name=col_vaule)</span><br><span class="line">注意如果是多分表,添加表要添加所有嵌套的分区值</span><br></pre></td></tr></table></figure>
-<h4 id="hive-SQL语句之DML语句"><a href="#hive-SQL语句之DML语句" class="headerlink" title="hive SQL语句之DML语句"></a>hive SQL语句之DML语句</h4><p>插入数据有三种种方式:<br/><br>load file方式</p>
+<h4 id="hive-sql语句之dml语句"><a class="markdownIt-Anchor" href="#hive-sql语句之dml语句"></a> hive SQL语句之DML语句</h4>
+<p>插入数据有三种种方式:<br/><br />
+load file方式</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--加载本地数据到hive表</span><br><span class="line">	load data local inpath &#x27;/root/data/data&#x27; into table psn;--(/root/data/data指的是本地		linux目录)</span><br><span class="line">--加载hdfs数据文件到hive表</span><br><span class="line">	load data inpath &#x27;/data/data&#x27; into table psn;--(/data/data指的是hdfs的目录)</span><br></pre></td></tr></table></figure>
 <p>insert data方式</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--从表中查询数据插入结果表</span><br><span class="line">	INSERT OVERWRITE TABLE psn9 SELECT id,name FROM psn</span><br><span class="line">--从表中获取部分列插入到新表中</span><br><span class="line">	from psn</span><br><span class="line">	insert overwrite table psn9</span><br><span class="line">	select id,name</span><br><span class="line">	insert into table psn10</span><br><span class="line">	select id</span><br></pre></td></tr></table></figure>
@@ -340,11 +345,16 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--插入数据</span><br><span class="line">	insert into psn values(1,&#x27;zhangsan&#x27;)</span><br></pre></td></tr></table></figure>
 <p>数据更新和删除平常很少用到,如果使用请参考下面配置开启事务:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">//在hive的hive-site.xml中添加如下配置：</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.support.concurrency&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;true&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.enforce.bucketing&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;true&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.exec.dynamic.partition.mode&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;nonstrict&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.txn.manager&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;org.apache.hadoop.hive.ql.lockmgr.DbTxnManager&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.compactor.initiator.on&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;true&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">	&lt;property&gt;</span><br><span class="line">		&lt;name&gt;hive.compactor.worker.threads&lt;/name&gt;</span><br><span class="line">		&lt;value&gt;1&lt;/value&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">//操作语句</span><br><span class="line">	create table test_trancaction (user_id Int,name String) clustered by (user_id) into 3 			buckets stored as orc TBLPROPERTIES (&#x27;transactional&#x27;=&#x27;true&#x27;);</span><br><span class="line">	create table test_insert_test(id int,name string) row format delimited fields 				  TERMINATED BY &#x27;,&#x27;;</span><br><span class="line">	insert into test_trancaction select * from test_insert_test;</span><br><span class="line">	update test_trancaction set name=&#x27;jerrick_up&#x27; where id=1;</span><br><span class="line">//数据文件</span><br><span class="line">	1,jerrick</span><br><span class="line">	2,tom</span><br><span class="line">	3,jerry</span><br><span class="line">	4,lily</span><br><span class="line">	5,hanmei</span><br><span class="line">	6,limlei</span><br><span class="line">	7,lucky</span><br></pre></td></tr></table></figure>
-<h4 id="hive-serde"><a href="#hive-serde" class="headerlink" title="hive serde"></a>hive serde</h4><p>如果我们数据文件是log形式像下面这样<br>192.168.57.4 - - [29/Feb/2019:18:14:35 +0800] “GET /bg-upper.png HTTP/1.1” 304 -<br>这种嵌套比较负载的方式建议使用hive serde<br>语法如下</p>
+<h4 id="hive-serde"><a class="markdownIt-Anchor" href="#hive-serde"></a> hive serde</h4>
+<p>如果我们数据文件是log形式像下面这样<br />
+192.168.57.4 - - [29/Feb/2019:18:14:35 +0800](1.1&quot; 304 -<br />
+这种嵌套比较负载的方式建议使用hive serde<br />
+语法如下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">row_format</span><br><span class="line">		: DELIMITED</span><br><span class="line">          [FIELDS TERMINATED BY char [ESCAPED BY char]]</span><br><span class="line">          [COLLECTION ITEMS TERMINATED BY char]</span><br><span class="line">          [MAP KEYS TERMINATED BY char]</span><br><span class="line">          [LINES TERMINATED BY char]</span><br><span class="line">		: SERDE serde_name [WITH SERDEPROPERTIES (property_name=property_value, 										            property_name=property_value, ...)]</span><br></pre></td></tr></table></figure>
 <p>示例如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">192.168.57.4 - - [29/Feb/2019:18:14:35 +0800] &quot;GET /bg-upper.png HTTP/1.1&quot; 304 -</span><br><span class="line">--创建表</span><br><span class="line">	CREATE TABLE logtbl (</span><br><span class="line">	    host STRING,</span><br><span class="line">	    identity STRING,</span><br><span class="line">	    t_user STRING,</span><br><span class="line">	    time STRING,</span><br><span class="line">	    request STRING,</span><br><span class="line">	    referer STRING,</span><br><span class="line">	    agent STRING)</span><br><span class="line">	  ROW FORMAT SERDE &#x27;org.apache.hadoop.hive.serde2.RegexSerDe&#x27;</span><br><span class="line">	  WITH SERDEPROPERTIES (</span><br><span class="line">	    &quot;input.regex&quot; = &quot;([^ ]*) ([^ ]*) ([^ ]*) \\[(.*)\\] \&quot;(.*)\&quot; (-|[0-9]*) (-|[0-		9]*)&quot;</span><br><span class="line">	  )</span><br><span class="line">  STORED AS TEXTFILE;</span><br><span class="line">--加载数据</span><br><span class="line">	load data local inpath &#x27;/root/data/log&#x27; into table logtbl;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="hive-动态分区与分桶"><a href="#hive-动态分区与分桶" class="headerlink" title="hive 动态分区与分桶"></a>hive 动态分区与分桶</h4><p>要开启动态分区需要先进行如下设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">192.168.57.4 - - [29/Feb/2019:18:14:35 +0800](1.1&quot; 304 -</span><br><span class="line">--创建表</span><br><span class="line">	CREATE TABLE logtbl (</span><br><span class="line">	    host STRING,</span><br><span class="line">	    identity STRING,</span><br><span class="line">	    t_user STRING,</span><br><span class="line">	    time STRING,</span><br><span class="line">	    request STRING,</span><br><span class="line">	    referer STRING,</span><br><span class="line">	    agent STRING)</span><br><span class="line">	  ROW FORMAT SERDE &#x27;org.apache.hadoop.hive.serde2.RegexSerDe&#x27;</span><br><span class="line">	  WITH SERDEPROPERTIES (</span><br><span class="line">	    &quot;input.regex&quot; = &quot;([^ ]*) ([^ ]*) ([^ ]*) \\[(.*)\\] \&quot;(.*)\&quot; (-|[0-9]*) (-|[0-		9]*)&quot;</span><br><span class="line">	  )</span><br><span class="line">  STORED AS TEXTFILE;</span><br><span class="line">--加载数据</span><br><span class="line">	load data local inpath &#x27;/root/data/log&#x27; into table logtbl;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="hive-动态分区与分桶"><a class="markdownIt-Anchor" href="#hive-动态分区与分桶"></a> hive 动态分区与分桶</h4>
+<p>要开启动态分区需要先进行如下设置</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">--hive设置hive动态分区开启</span><br><span class="line">	set hive.exec.dynamic.partition=true;</span><br><span class="line">	默认：true</span><br><span class="line">--hive的动态分区模式</span><br><span class="line">	set hive.exec.dynamic.partition.mode=nostrict;</span><br><span class="line">	默认：strict（至少有一个分区列是静态分区）</span><br><span class="line">--每一个执行mr节点上，允许创建的动态分区的最大数量(100)</span><br><span class="line">	set hive.exec.max.dynamic.partitions.pernode;</span><br><span class="line">--所有执行mr节点上，允许创建的所有动态分区的最大数量(1000)</span><br><span class="line">	set hive.exec.max.dynamic.partitions;</span><br><span class="line">--所有的mr job允许创建的文件的最大数量(100000)</span><br><span class="line">	set hive.exec.max.created.files;</span><br></pre></td></tr></table></figure>
 <p>hive动态分区语法</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-Hive extension (dynamic partition inserts):</span><br><span class="line">	INSERT OVERWRITE TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) 		select_statement FROM from_statement;</span><br><span class="line">	INSERT INTO TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) 			select_statement FROM from_statement;</span><br></pre></td></tr></table></figure>
@@ -352,10 +362,14 @@
 <ul>
 <li>hive分桶是对列值取hash值的方式,将不同的数据放到不同的文件中存储</li>
 <li>对于hive中每一个表,分区都可以进一步进行分桶</li>
-<li>由列的hash值除以桶的个数据决定每条数据划分到哪个桶中<br>hive分桶的配置<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--设置hive支持分桶</span><br><span class="line">	set hive.enforce.bucketing=true;</span><br></pre></td></tr></table></figure>
-hive分桶的抽样查询<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select * from bucket_table tablesample(bucket 1 out of 4 on columns)</span><br><span class="line">-TABLESAMPLE语法：</span><br><span class="line">	TABLESAMPLE(BUCKET x OUT OF y)</span><br><span class="line">		x：表示从哪个bucket开始抽取数据</span><br><span class="line">		y：必须为该表总bucket数的倍数或因子</span><br></pre></td></tr></table></figure>
-<h4 id="hive的函数"><a href="#hive的函数" class="headerlink" title="hive的函数"></a>hive的函数</h4>hive函数有多种设置方法</li>
+<li>由列的hash值除以桶的个数据决定每条数据划分到哪个桶中<br />
+hive分桶的配置</li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--设置hive支持分桶</span><br><span class="line">	set hive.enforce.bucketing=true;</span><br></pre></td></tr></table></figure>
+<p>hive分桶的抽样查询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select * from bucket_table tablesample(bucket 1 out of 4 on columns)</span><br><span class="line">-TABLESAMPLE语法：</span><br><span class="line">	TABLESAMPLE(BUCKET x OUT OF y)</span><br><span class="line">		x：表示从哪个bucket开始抽取数据</span><br><span class="line">		y：必须为该表总bucket数的倍数或因子</span><br></pre></td></tr></table></figure>
+<h4 id="hive的函数"><a class="markdownIt-Anchor" href="#hive的函数"></a> hive的函数</h4>
+<p>hive函数有多种设置方法</p>
 <ol>
 <li>在hive-site.xml 文件中设置</li>
 <li>在本地home文件新建一个.hiverc文件,可以在里面设置参数</li>
@@ -363,15 +377,27 @@ hive分桶的抽样查询<figure class="highlight plaintext"><table><tr><td clas
 <li>在hive命令行中用set方法设置</li>
 </ol>
 <p>通过在hive当中设置</p>
-<h4 id="hive的运行方式"><a href="#hive的运行方式" class="headerlink" title="hive的运行方式"></a>hive的运行方式</h4><p>1.命令行方式或者控制台模式<br>2.脚本运行方式<br>3.JDBC方式<br>4.WEB GUI方式<br><strong>命令行模式的一些tips</strong></p>
+<h4 id="hive的运行方式"><a class="markdownIt-Anchor" href="#hive的运行方式"></a> hive的运行方式</h4>
+<p>1.命令行方式或者控制台模式<br />
+2.脚本运行方式<br />
+3.JDBC方式<br />
+<a target="_blank" rel="noopener" href="http://4.WEB">4.WEB</a> GUI方式<br />
+<strong>命令行模式的一些tips</strong></p>
 <ul>
 <li>直接输入SQL语句,select * from table_name</li>
 <li>命令行与hdfs交互 dfs ls /</li>
-<li>命令行与linux交互 !pwd 或者!ls /</li>
-<li><em>脚本运行方式</em>*<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">--hive直接执行sql命令，可以写一个sql语句，也可以使用;分割写多个sql语句</span><br><span class="line">	hive -e &quot;&quot;</span><br><span class="line">--hive执行sql命令，将sql语句执行的结果重定向到某一个文件中</span><br><span class="line">	hive -e &quot;&quot;&gt;aaa</span><br><span class="line">--hive静默输出模式，输出的结果中不包含ok，time token等关键字</span><br><span class="line">	hive -S -e &quot;&quot;&gt;aaa</span><br><span class="line">--hive可以直接读取文件中的sql命令，进行执行</span><br><span class="line">	hive -f file</span><br><span class="line">--hive可以从文件中读取命令，并且执行初始化操作</span><br><span class="line">	hive -i /home/my/hive-init.sql</span><br><span class="line">--在hive的命令行中也可以执行外部文件中的命令</span><br><span class="line">	hive&gt; source file (在hive cli中运行)</span><br></pre></td></tr></table></figure>
-<h4 id="hive视图"><a href="#hive视图" class="headerlink" title="hive视图"></a>hive视图</h4>hive视图仅仅是数据的一种逻辑表示,本质上就是一条SQL语句的结果集,(hive3.0引入的物化视图除外)<br>当我们需要写一个非常长的SQL时可以先定义视图这样一个”中间表”<br>hive视图语法:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--创建视图：</span><br><span class="line">	CREATE VIEW [IF NOT EXISTS] [db_name.]view_name</span><br><span class="line">	  [(column_name [COMMENT column_comment], ...) ]</span><br><span class="line">	  [COMMENT view_comment]</span><br><span class="line">	  [TBLPROPERTIES (property_name = property_value, ...)]</span><br><span class="line">	  AS SELECT ... ;</span><br><span class="line">--查询视图：</span><br><span class="line">	select colums from view;</span><br><span class="line">--删除视图：</span><br><span class="line">	DROP VIEW [IF EXISTS] [db_name.]view_name;</span><br></pre></td></tr></table></figure></li>
-<li><em>hive 索引</em>*<br>索引在hive当中很少用到,因为hive中索引配置比较麻烦,每次更新数据时还需要更新一下索引,但是如果公司有需求时,请参考如下SQL:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">	create index t1_index on table psn2(name)</span><br><span class="line">	as &#x27;org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler&#x27; with deferred 			rebuild in table t1_index_table;</span><br><span class="line">--as：指定索引器；</span><br><span class="line">--in table：指定索引表，若不指定默认生成在default__psn2_t1_index__表中</span><br><span class="line">	create index t1_index on table psn2(name)</span><br><span class="line">	as &#x27;org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler&#x27; with deferred 			rebuild;</span><br><span class="line">--查询索引</span><br><span class="line">	show index on psn2;</span><br><span class="line">--重建索引（建立索引之后必须重建索引才能生效）</span><br><span class="line">	ALTER INDEX t1_index ON psn2 REBUILD;</span><br><span class="line">--删除索引</span><br><span class="line">	DROP INDEX IF EXISTS t1_index ON psn2;</span><br></pre></td></tr></table></figure></li>
+<li>命令行与linux交互 !pwd 或者!ls /<br />
+<strong>脚本运行方式</strong></li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">--hive直接执行sql命令，可以写一个sql语句，也可以使用;分割写多个sql语句</span><br><span class="line">	hive -e &quot;&quot;</span><br><span class="line">--hive执行sql命令，将sql语句执行的结果重定向到某一个文件中</span><br><span class="line">	hive -e &quot;&quot;&gt;aaa</span><br><span class="line">--hive静默输出模式，输出的结果中不包含ok，time token等关键字</span><br><span class="line">	hive -S -e &quot;&quot;&gt;aaa</span><br><span class="line">--hive可以直接读取文件中的sql命令，进行执行</span><br><span class="line">	hive -f file</span><br><span class="line">--hive可以从文件中读取命令，并且执行初始化操作</span><br><span class="line">	hive -i /home/my/hive-init.sql</span><br><span class="line">--在hive的命令行中也可以执行外部文件中的命令</span><br><span class="line">	hive&gt; source file (在hive cli中运行)</span><br></pre></td></tr></table></figure>
+<h4 id="hive视图"><a class="markdownIt-Anchor" href="#hive视图"></a> hive视图</h4>
+<p>hive视图仅仅是数据的一种逻辑表示,本质上就是一条SQL语句的结果集,(hive3.0引入的物化视图除外)<br />
+当我们需要写一个非常长的SQL时可以先定义视图这样一个&quot;中间表&quot;<br />
+hive视图语法:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--创建视图：</span><br><span class="line">	CREATE VIEW [IF NOT EXISTS] [db_name.]view_name</span><br><span class="line">	  [(column_name [COMMENT column_comment], ...) ]</span><br><span class="line">	  [COMMENT view_comment]</span><br><span class="line">	  [TBLPROPERTIES (property_name = property_value, ...)]</span><br><span class="line">	  AS SELECT ... ;</span><br><span class="line">--查询视图：</span><br><span class="line">	select colums from view;</span><br><span class="line">--删除视图：</span><br><span class="line">	DROP VIEW [IF EXISTS] [db_name.]view_name;</span><br></pre></td></tr></table></figure>
+<p><strong>hive 索引</strong><br />
+索引在hive当中很少用到,因为hive中索引配置比较麻烦,每次更新数据时还需要更新一下索引,但是如果公司有需求时,请参考如下SQL:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">	create index t1_index on table psn2(name)</span><br><span class="line">	as &#x27;org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler&#x27; with deferred 			rebuild in table t1_index_table;</span><br><span class="line">--as：指定索引器；</span><br><span class="line">--in table：指定索引表，若不指定默认生成在default__psn2_t1_index__表中</span><br><span class="line">	create index t1_index on table psn2(name)</span><br><span class="line">	as &#x27;org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler&#x27; with deferred 			rebuild;</span><br><span class="line">--查询索引</span><br><span class="line">	show index on psn2;</span><br><span class="line">--重建索引（建立索引之后必须重建索引才能生效）</span><br><span class="line">	ALTER INDEX t1_index ON psn2 REBUILD;</span><br><span class="line">--删除索引</span><br><span class="line">	DROP INDEX IF EXISTS t1_index ON psn2;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -407,7 +433,7 @@ hive分桶的抽样查询<figure class="highlight plaintext"><table><tr><td clas
 
 
 
-<script src="/js/comments.js"></script>
+
 </div>
   </main>
 
@@ -417,34 +443,44 @@ hive分桶的抽样查询<figure class="highlight plaintext"><table><tr><td clas
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Lemcoden</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
     </div>
   </footer>
 
   
-  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
 
 
 
-  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
-  <script src="/js/third-party/tags/mermaid.js"></script>
-
-  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
-  <script src="/js/third-party/nprogress.js"></script>
-
   
 
 
@@ -452,7 +488,7 @@ hive分桶的抽样查询<figure class="highlight plaintext"><table><tr><td clas
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

@@ -2,35 +2,32 @@
 <html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
-
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32*32.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16*16.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;lemcoden.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Pisces&quot;,&quot;version&quot;:&quot;8.4.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;Searching...&quot;,&quot;empty&quot;:&quot;We didn&#39;t find any results for the search: ${query}&quot;,&quot;hits_time&quot;:&quot;${hits} results found in ${time} ms&quot;,&quot;hits&quot;:&quot;${hits} results found&quot;}}</script>
-<meta name="description" content="发展历程数据库:表很大,性能下降?    如果表有索引,增删改变慢(需要维护索引)    查询速度会不会变慢:        1.一个或少量查询依然很快        2.并发大的时候会受硬盘带宽影响速度">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lemcoden.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="发展历程 数据库:表很大,性能下降? 如果表有索引,增删改变慢(需要维护索引) 查询速度会不会变慢: 1.一个或少量查询依然很快 2.并发大的时候会受硬盘带宽影响速度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis笔记01">
 <meta property="og:url" content="https://lemcoden.github.io/2020/11/12/redis%E7%AC%94%E8%AE%B001/index.html">
 <meta property="og:site_name" content="Lemcoden">
-<meta property="og:description" content="发展历程数据库:表很大,性能下降?    如果表有索引,增删改变慢(需要维护索引)    查询速度会不会变慢:        1.一个或少量查询依然很快        2.并发大的时候会受硬盘带宽影响速度">
+<meta property="og:description" content="发展历程 数据库:表很大,性能下降? 如果表有索引,增删改变慢(需要维护索引) 查询速度会不会变慢: 1.一个或少量查询依然很快 2.并发大的时候会受硬盘带宽影响速度">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-11-12T14:15:03.000Z">
-<meta property="article:modified_time" content="2021-01-24T08:46:35.000Z">
+<meta property="article:modified_time" content="2023-02-20T15:20:36.124Z">
 <meta property="article:author" content="Lemcoden">
 <meta property="article:tag" content="内存数据库">
 <meta name="twitter:card" content="summary">
@@ -40,14 +37,16 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-Hans&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;lemcoden.github.io&#x2F;2020&#x2F;11&#x2F;12&#x2F;redis%E7%AC%94%E8%AE%B001&#x2F;&quot;,&quot;path&quot;:&quot;2020&#x2F;11&#x2F;12&#x2F;redis笔记01&#x2F;&quot;,&quot;title&quot;:&quot;redis笔记01&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lemcoden.github.io/2020/11/12/redis%E7%AC%94%E8%AE%B001/","path":"2020/11/12/redis笔记01/","title":"redis笔记01"}</script>
 
-<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>redis笔记01 | Lemcoden</title><script src="/js/config.js"></script>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>redis笔记01 | Lemcoden</title>
   
 
-  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
-  <script async src="https://hm.baidu.com/hm.js?5559683623f16c6f10fe5b4f1cb2f062"></script>
+
+
+
+
 
 
 
@@ -60,13 +59,10 @@
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
     </div>
   </div>
 
@@ -74,42 +70,27 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Lemcoden</h1>
+      <p class="site-title">Lemcoden</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
     </div>
   </div>
 </div>
 
 
 
-<nav class="site-nav">
-  <ul class="main-menu menu">
-        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
-        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-  </ul>
-</nav>
 
 
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -125,23 +106,20 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">发展历程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E6%95%B0%E6%8D%AE%E5%BA%93-vs-%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">硬盘数据库 vs 内存数据库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85redis"><span class="nav-number">2.</span> <span class="nav-text">安装redis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">编译安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis-%E6%9C%8D%E5%8A%A1%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">redis 服务化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clinet%E7%AB%AF%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">Clinet端的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string%E7%B1%BB%E5%9E%8B-amp-bitmap%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">string类型&amp;bitmap类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E5%8F%AA%E6%8B%BF%E5%AD%97%E8%8A%82%E6%B5%81-%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%BC%9A%E8%A2%AB%E7%A0%B4%E5%9D%8F"><span class="nav-number">3.2.</span> <span class="nav-text">redis只拿字节流,数据不会被破坏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8bit%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E9%97%AE%E9%A2%98"><span class="nav-number">3.3.</span> <span class="nav-text">用bit解决用户登录问题</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text"> 发展历程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E6%95%B0%E6%8D%AE%E5%BA%93-vs-%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text"> 硬盘数据库 vs 内存数据库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85redis"><span class="nav-number">2.</span> <span class="nav-text"> 安装redis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text"> 下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text"> 编译安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis-%E6%9C%8D%E5%8A%A1%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text"> redis 服务化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text"> 原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clinet%E7%AB%AF%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text"> Clinet端的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string%E7%B1%BB%E5%9E%8Bbitmap%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text"> string类型&amp;bitmap类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E5%8F%AA%E6%8B%BF%E5%AD%97%E8%8A%82%E6%B5%81%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%BC%9A%E8%A2%AB%E7%A0%B4%E5%9D%8F"><span class="nav-number">3.2.</span> <span class="nav-text"> redis只拿字节流,数据不会被破坏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8bit%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E9%97%AE%E9%A2%98"><span class="nav-number">3.3.</span> <span class="nav-text"> 用bit解决用户登录问题</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Lemcoden"
-      src="http://picture.lemcoden.xyz/avater.jpeg">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Lemcoden</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">51</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -150,36 +128,22 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
+          <a href="/tags/">
         <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
 
-
-
         </div>
       </div>
-        <div class="back-to-top animated" role="button" aria-label="Back to top">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
 
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -195,13 +159,18 @@
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2020/11/12/redis%E7%AC%94%E8%AE%B001/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="http://picture.lemcoden.xyz/avater.jpeg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Lemcoden">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="redis笔记01 | Lemcoden">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -218,13 +187,13 @@
 
       <time title="Created: 2020-11-12 22:15:03" itemprop="dateCreated datePublished" datetime="2020-11-12T22:15:03+08:00">2020-11-12</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-24 16:46:35" itemprop="dateModified" datetime="2021-01-24T16:46:35+08:00">2021-01-24</time>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
       </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
+    </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -245,65 +214,69 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h3><p>数据库:表很大,性能下降?<br>    如果表有索引,增删改变慢(需要维护索引)<br>    查询速度会不会变慢:<br>        1.一个或少量查询依然很快<br>        2.并发大的时候会受硬盘带宽影响速度</p>
+        <h3 id="发展历程"><a class="markdownIt-Anchor" href="#发展历程"></a> 发展历程</h3>
+<p>数据库:表很大,性能下降?<br />
+如果表有索引,增删改变慢(需要维护索引)<br />
+查询速度会不会变慢:<br />
+1.一个或少量查询依然很快<br />
+2.并发大的时候会受硬盘带宽影响速度</p>
 <span id="more"></span>
-
-<h4 id="硬盘数据库-vs-内存数据库"><a href="#硬盘数据库-vs-内存数据库" class="headerlink" title="硬盘数据库 vs 内存数据库"></a>硬盘数据库 vs 内存数据库</h4><p>ps:SAP HANA 数据库:内存级别的关系型数据库 2T</p>
+<h4 id="硬盘数据库-vs-内存数据库"><a class="markdownIt-Anchor" href="#硬盘数据库-vs-内存数据库"></a> 硬盘数据库 vs 内存数据库</h4>
+<p>ps:SAP HANA 数据库:内存级别的关系型数据库 2T</p>
 <p>数据在内存和磁盘体积不一样</p>
 <p>磁盘没有指针概念 索引与数据本身冗余 数据胀出</p>
 <p>?内存存储更少</p>
-<p>内存级买不起,磁盘特别慢?  </p>
+<p>内存级买不起,磁盘特别慢?</p>
 <p>2个基础设施:1.冯诺伊曼体系的硬件2.以太网,tcp/ip的网络 (限制原因)</p>
 <p>折衷方案缓存 (redis memorycache)</p>
-<p><a target="_blank" rel="noopener" href="http://db-engines.com/">http://db-engines.com</a> - 数据库引擎排名网站</p>
-<p>​                注意点: 分类 - —关系型 ,key-value……..</p>
-<p>​                            细节:systems-redies-分区方式,支持系统,,支持语言,分布式,冗余方式:主从复制,事务,一致性支持程度                        不要破坏数据库本身特征</p>
+<p><a target="_blank" rel="noopener" href="http://db-engines.com">http://db-engines.com</a> - 数据库引擎排名网站</p>
+<p>​				注意点: 分类 - —关系型 ,key-value…</p>
+<p>​							细节:systems-redies-分区方式,支持系统,支持语言,分布式,冗余方式:主从复制,事务,一致性支持程度						不要破坏数据库本身特征</p>
 <p>1.5M ops/sec 可以达到秒级十万操作</p>
 <p>一般数据库 : 千级别</p>
 <p>redis的介绍:引用自官网</p>
 <p>Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。 它支持多种<font color='#00ff00'>value类型</font>的数据结构，如 <font color='#00ff00'>字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets） 与范围查询， bitmaps， hyperloglogs 和 地理空间（geospatial）</font> 索引半径查询。 Redis 内置了 复制（replication），LUA脚本（Lua scripting）， LRU驱动事件（LRU eviction），事务（transactions） 和不同级别的 磁盘持久化（persistence）， 并通过 Redis哨兵（Sentinel）和自动 分区（Cluster）提供高可用性（high availability）。</p>
 <p>memcahed 为什么被取代</p>
-<p>​            </p>
+<p>​</p>
 <p>value 没有类型的概念</p>
 <p>json:表示很复杂的数据</p>
 <p>世界上有三种数据表示</p>
 <p>k = a k  = 1</p>
 <p>k = [1,2,3] k = [a,x,f]</p>
 <p>k=(x=y) k = [{},{}]</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">id[如果客户端想通过一个缓存系统取回value中的某一个元素] --&gt; id1( memeorycache 将所有的value返回,需要server 网卡IO 客户端自己写解析方法)</span><br><span class="line">id --&gt; id2(类型不是很重要,redis中对每种类型都有自己的方法 index Ipop)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="安装redis"><a href="#安装redis" class="headerlink" title="安装redis"></a>安装redis</h3><h4 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-6.0.6.tar.gz</span><br><span class="line">tar xzf redis-6.0.6.tar.gz</span><br><span class="line">cd redis-6.0.6</span><br></pre></td></tr></table></figure>
-
-<h4 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h4><p>阅读README</p>
+<pre class="mermaid">graph LR
+id[如果客户端想通过一个缓存系统取回value中的某一个元素] --> id1( memeorycache 将所有的value返回,需要server 网卡IO 客户端自己写解析方法)
+id --> id2(类型不是很重要,redis中对每种类型都有自己的方法 index Ipop)</pre>
+<h3 id="安装redis"><a class="markdownIt-Anchor" href="#安装redis"></a> 安装redis</h3>
+<h4 id="下载"><a class="markdownIt-Anchor" href="#下载"></a> 下载</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-6.0.6.tar.gz</span><br><span class="line">tar xzf redis-6.0.6.tar.gz</span><br><span class="line">cd redis-6.0.6</span><br></pre></td></tr></table></figure>
+<h4 id="编译安装"><a class="markdownIt-Anchor" href="#编译安装"></a> 编译安装</h4>
+<p>阅读README</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
-
 <p>如果编译失败运行一下 make distclean</p>
 <p>企业还需要 make test 测试一下编译流程</p>
 <p>安装(实际就是将可执行程序迁入目标目录)</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install PREFIX = /opt/bigdata/module/redis5</span><br></pre></td></tr></table></figure>
-
 <p>配置环境变量,REDIS_HOME=/opt/bigdata/module/redis5</p>
-<h4 id="redis-服务化"><a href="#redis-服务化" class="headerlink" title="redis 服务化"></a>redis 服务化</h4><p>安装包内服务:</p>
+<h4 id="redis-服务化"><a class="markdownIt-Anchor" href="#redis-服务化"></a> redis 服务化</h4>
+<p>安装包内服务:</p>
 <p>进入到解压后的 <code>src</code> 目录，通过如下命令启动Redis:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">src/redis-server</span><br></pre></td></tr></table></figure>
-
 <p>服务常驻化:</p>
 <p>进入redis的</p>
 <p>在utils文件夹里面有install_server执行</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Please select the redis port for this instance: [6379] </span><br><span class="line">Please select the redis config file name [/etc/redis/6379.conf] </span><br><span class="line">Please select the redis log file name [/var/log/redis_6379.log] </span><br><span class="line">Please select the data directory for this instance [/var/lib/redis/6379]</span><br><span class="line">Please select the redis executable path [] </span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Installing service...</span><br><span class="line">Successfully added to chkconfig!</span><br><span class="line">Successfully added to runlevels 345!</span><br><span class="line">Starting Redis server...</span><br><span class="line">Installation successful!</span><br></pre></td></tr></table></figure>
-
 <p>验证</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ps -fe | grep redis</span><br><span class="line"></span><br><span class="line">root      9726     1  0 21:40 ?        00:00:04 /opt/bigdata/module/redis5/bin/redis-server 127.0.0.1:6379</span><br><span class="line"></span><br><span class="line">su root </span><br><span class="line"></span><br><span class="line">cd /proc/9726/fd</span><br><span class="line"></span><br><span class="line">lrwx------. 1 root root 64 11月 14 22:10 0 -&gt; /dev/null</span><br><span class="line">lrwx------. 1 root root 64 11月 14 22:10 1 -&gt; /dev/null</span><br><span class="line">lrwx------. 1 root root 64 11月 14 22:10 2 -&gt; /dev/null</span><br><span class="line">lr-x------. 1 root root 64 11月 14 22:10 3 -&gt; pipe:[45538]</span><br><span class="line">l-wx------. 1 root root 64 11月 14 22:10 4 -&gt; pipe:[45538]</span><br><span class="line">lrwx------. 1 root root 64 11月 14 22:10 5 -&gt; anon_inode:[eventpoll]</span><br><span class="line">lrwx------. 1 root root 64 11月 14 22:10 6 -&gt; socket:[45541]</span><br></pre></td></tr></table></figure>
-
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>闲篇:内存是线性地址空间,虚拟地址MMU</p>
-<p>?????多线程切换有开销,但是在数据一致性面前代价是值得的</p>
+<h4 id="原理"><a class="markdownIt-Anchor" href="#原理"></a> 原理</h4>
+<p>闲篇:内存是线性地址空间,虚拟地址MMU</p>
+<p>???多线程切换有开销,但是在数据一致性面前代价是值得的</p>
 <p>mysql是BIO,多个请求来的时候,IO总线会阻塞</p>
 <p>mysql也会缓存数据,好像逼近redis性能</p>
 <p>缓存内存空间的占用返而减缓mysql的处理sql的速度</p>
 <p>一个redis服务是一个单进程 提供一个线程处理请求,redis通过epoll 获取数据</p>
-<p>(每连接内命令”顺序”的)</p>
+<p>(每连接内命令&quot;顺序&quot;的)</p>
 <blockquote>
 <p>JVM:一个线程的成本:1MB</p>
 </blockquote>
@@ -321,65 +294,62 @@
 <p>client 没收到 阻塞,其他线程收到时,kernel也不会返回, 同步阻塞时期</p>
 <p>NIO</p>
 <p>kernel 返回fd可判断是否有数据 同步非阻塞时期</p>
-<p>轮训发生在用户空间 </p>
+<p>轮训发生在用户空间</p>
 <p>如果有1000fd 代表用户进程轮询调用1000次kernel 成本问题</p>
 <p>kenel增加一个系统调用 select,select 返回所有fd,让用户程序去轮询(多路复用NIO)</p>
 <p>,减少用户内核态用户态切换</p>
 <p>调用kernel 的create方法返回epfd,epoll会准备一个mmap,维护一个红黑树,所有链接注册到红黑树</p>
-<p>????用户会调用(ctl add del socketfd),wait(),epoll等待</p>
+<p>???用户会调用(ctl add del socketfd),wait(),epoll等待</p>
 <p>通过mmap系统调用共享空间.直接把fd放到共享空间当中(fd)</p>
-<p>man 可以看八种类型的文档 </p>
+<p>man 可以看八种类型的文档</p>
 <p>系统调用 为 二类文档</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">man 2 socket</span><br><span class="line">man 2 select </span><br><span class="line">man 2 epoll</span><br></pre></td></tr></table></figure>
-
-
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install man man-pages</span><br><span class="line">socket</span><br><span class="line">fd nonblock</span><br></pre></td></tr></table></figure>
-
-<p>零拷贝 调用内核sendfile方法 </p>
-<h3 id="Clinet端的使用"><a href="#Clinet端的使用" class="headerlink" title="Clinet端的使用"></a>Clinet端的使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli</span><br><span class="line">	-h&lt;host&gt;</span><br><span class="line">	-p&lt;port&gt;</span><br><span class="line">	-a&lt;password&gt;</span><br><span class="line">	-n&lt;db&gt;</span><br></pre></td></tr></table></figure>
-
+<p>零拷贝 调用内核sendfile方法</p>
+<h3 id="clinet端的使用"><a class="markdownIt-Anchor" href="#clinet端的使用"></a> Clinet端的使用</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli</span><br><span class="line">	-h&lt;host&gt;</span><br><span class="line">	-p&lt;port&gt;</span><br><span class="line">	-a&lt;password&gt;</span><br><span class="line">	-n&lt;db&gt;</span><br></pre></td></tr></table></figure>
 <p>redis默认的16个库</p>
-<p>​                                    命令  表名:key value</p>
+<p>​									命令  表名:key value</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k380:1 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k380:1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; select 8</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[8]&gt; get k380:1</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379[8]&gt; </span><br></pre></td></tr></table></figure>
-
 <p>help,按tab键补全</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">help @&lt;group&gt;</span><br><span class="line">help &lt;command&gt;</span><br><span class="line">help &lt;tab&gt;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">keys</span><br><span class="line">flushdb 清库不常用 一般企业别名</span><br></pre></td></tr></table></figure>
-
-<h4 id="string类型-amp-bitmap类型"><a href="#string类型-amp-bitmap类型" class="headerlink" title="string类型&amp;bitmap类型"></a>string类型&amp;bitmap类型</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">	id0[key type:value  encoding] --&gt; id[value]</span><br><span class="line">	id --&gt; id1[string  byte] </span><br><span class="line">	id1 --&gt; id2[字符串]</span><br><span class="line">	id1 --&gt; id3[数值]</span><br><span class="line">	id1  --&gt; id8[bitmap]</span><br><span class="line">	id2 --&gt; id4(set&lt;br/&gt;get&lt;br/&gt; append &lt;br/&gt;setrange &lt;br/&gt;getrange)</span><br><span class="line">	id3 --&gt; id5(incr&lt;br/&gt; 抢购 秒杀 详情页, 点赞 ,评论&lt;br/&gt; 规避并发下的对数据库的事务操作)</span><br><span class="line">	id6[二进制安全]</span><br><span class="line">	id7[正反向索引] </span><br><span class="line">	id8 --&gt; id9(setbit&lt;br/&gt; bitpos &lt;br/&gt;bitcount &lt;br/&gt;bitop)</span><br><span class="line">	id8 --&gt; id10(1.用户系统,&lt;br/&gt;统计用户登录天数,&lt;br/&gt;且窗口随机)</span><br><span class="line">	id8 --&gt; id11(2.京东618做活动,送礼物,&lt;br/&gt;&lt;br/&gt;备多少礼物&lt;br/&gt;2E用户&lt;br/&gt;僵尸用户&lt;br/&gt;冷用户/忠诚用户&lt;br/&gt;&lt;br/&gt; 活跃用户统计!随机窗口&lt;br/&gt;比如 1-3号登录去重)</span><br></pre></td></tr></table></figure>
-
+<h4 id="string类型bitmap类型"><a class="markdownIt-Anchor" href="#string类型bitmap类型"></a> string类型&amp;bitmap类型</h4>
+<pre class="mermaid">graph LR
+	id0[key type:value  encoding] --> id[value]
+	id --> id1[string  byte] 
+	id1 --> id2[字符串]
+	id1 --> id3[数值]
+	id1  --> id8[bitmap]
+	id2 --> id4(set<br/>get<br/> append <br/>setrange <br/>getrange)
+	id3 --> id5(incr<br/> 抢购 秒杀 详情页, 点赞 ,评论<br/> 规避并发下的对数据库的事务操作)
+	id6[二进制安全]
+	id7[正反向索引] 
+	id8 --> id9(setbit<br/> bitpos <br/>bitcount <br/>bitop)
+	id8 --> id10(1.用户系统,<br/>统计用户登录天数,<br/>且窗口随机)
+	id8 --> id11(2.京东618做活动,送礼物,<br/><br/>备多少礼物<br/>2E用户<br/>僵尸用户<br/>冷用户/忠诚用户<br/><br/> 活跃用户统计!随机窗口<br/>比如 1-3号登录去重)</pre>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1 </span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; help set</span><br><span class="line"></span><br><span class="line">  SET key value [expiration EX seconds|PX milliseconds] [NX|XX]</span><br><span class="line">  summary: Set the string value of a key</span><br><span class="line">  since: 1.0.0</span><br><span class="line">  group: string</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; set k1 ooxx nx  \\nx如果存在,不插入 分布式锁的时候使用</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; set k2 hello xx \\xx只能更新</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">(nil)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; mset k3 a k4 b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k3 </span><br><span class="line">&quot;a&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k4 </span><br><span class="line">&quot;b&quot;</span><br><span class="line">127.0.0.1:6379&gt; mget k3 k4</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; append k1 &quot; world&quot;</span><br><span class="line">(integer) 11</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;hello world&quot;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; getrange k1 6 10</span><br><span class="line">&quot;world</span><br><span class="line">127.0.0.1:6379&gt; getrange k1 6 -1</span><br><span class="line">&quot;world&quot;</span><br><span class="line">127.0.0.1:6379&gt; setrange k1 6 mashibing</span><br><span class="line">(integer) 15</span><br><span class="line">127.0.0.1:6379&gt; get k1 </span><br><span class="line">&quot;hello mashibing&quot;</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k1</span><br><span class="line">(integer) 15</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;hello mashibing&quot;</span><br></pre></td></tr></table></figure>
-
 <p>type</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; type k1</span><br><span class="line">string</span><br><span class="line">127.0.0.1:6379&gt; set k2 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; type k2 </span><br><span class="line">string</span><br><span class="line">127.0.0.1:6379&gt; object help</span><br><span class="line">1) OBJECT &lt;subcommand&gt; arg arg ... arg. Subcommands are:</span><br><span class="line">2) ENCODING &lt;key&gt; -- Return the kind of internal representation used in order to store the value associated with a key.</span><br><span class="line">3) FREQ &lt;key&gt; -- Return the access frequency index of the key. The returned integer is proportional to the logarithm of the recent access frequency of the key.</span><br><span class="line">4) IDLETIME &lt;key&gt; -- Return the idle time of the key, that is the approximated number of seconds elapsed since the last access to the key.</span><br><span class="line">5) REFCOUNT &lt;key&gt; -- Return the number of references of the value associated with the specified key.</span><br><span class="line">127.0.0.1:6379&gt; object encoding k2</span><br><span class="line">&quot;embstr&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; object encoding k1</span><br><span class="line">&quot;int&quot;</span><br><span class="line">127.0.0.1:6379&gt; incr k1</span><br><span class="line">(integer) 100</span><br><span class="line">127.0.0.1:6379&gt; incrby k1 22</span><br><span class="line">(integer) 122</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;122&quot;</span><br><span class="line">127.0.0.1:6379&gt; decr k1</span><br><span class="line">(integer) 121</span><br><span class="line">127.0.0.1:6379&gt; decrby k1 22</span><br><span class="line">(integer) 99</span><br><span class="line">127.0.0.1:6379&gt; incrbyfloat k1 0.5</span><br><span class="line">&quot;99.5&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;99.5&quot;</span><br><span class="line">127.0.0.1:6379&gt; set k3 jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding k3</span><br><span class="line">&quot;embstr&quot;</span><br><span class="line">127.0.0.1:6379&gt; append k3 jjjjj</span><br><span class="line">(integer) 45</span><br><span class="line">127.0.0.1:6379&gt; object encoding k3</span><br><span class="line">&quot;raw&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; FLUSHALL</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k1</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; set k2 9</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; OBJECT encoding k2</span><br><span class="line">&quot;int&quot;</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; APPEND k2 999</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; get k2 </span><br><span class="line">&quot;9999&quot;</span><br><span class="line">127.0.0.1:6379&gt; object encoding k2</span><br><span class="line">&quot;raw&quot;</span><br><span class="line">127.0.0.1:6379&gt; INCR k2 </span><br><span class="line">(integer) 10000</span><br><span class="line">127.0.0.1:6379&gt; OBJECT encoding k2</span><br><span class="line">&quot;int&quot;</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k2</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; set k3 a</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k3 </span><br><span class="line">&quot;a&quot;</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k3</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; APPEND k3 中</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k3</span><br><span class="line">(integer) 4</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="redis只拿字节流-数据不会被破坏"><a href="#redis只拿字节流-数据不会被破坏" class="headerlink" title="redis只拿字节流,数据不会被破坏"></a>redis只拿字节流,数据不会被破坏</h4><p>如果是字符流,各个客户端对数据宽度的理解是不一样的,宽度不一致可能导致溢出问题</p>
+<h4 id="redis只拿字节流数据不会被破坏"><a class="markdownIt-Anchor" href="#redis只拿字节流数据不会被破坏"></a> redis只拿字节流,数据不会被破坏</h4>
+<p>如果是字符流,各个客户端对数据宽度的理解是不一样的,宽度不一致可能导致溢出问题</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 99999</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k1</span><br><span class="line">(integer) 5</span><br></pre></td></tr></table></figure>
-
 <p>即使是int值,redis也是编码成字节,如果对其调用INCR方法,它会先把字节转换成int值,</p>
 <p>再进行INCR,如果incr成功了,然后再将其encoding成int</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k2 中</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k2</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
-
 <p>终端与redis的编码类型是UTF-8</p>
 <p>如果改成GBK会变成2了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">&quot;\xe4\xb8\xad&quot;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[lemcoden@hadoop01 ~]$ redis-cli --raw</span><br><span class="line">127.0.0.1:6379&gt; get k3</span><br><span class="line">涓</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">中</span><br></pre></td></tr></table></figure>
-
 <p>–raw 编码集的格式化,默认utf-8</p>
 <p>和Hbase一样是二进制安全的</p>
 <p><strong>!!一定要沟通好数据的编码和解码</strong></p>
 <p>成本问题</p>
 <p>get和set是两个请求,getset减少一次IO通信</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">hello</span><br><span class="line">127.0.0.1:6379&gt; GETSET k1 mashbing</span><br><span class="line">hello</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">mashbing</span><br></pre></td></tr></table></figure>
-
 <p>原子性的操作</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; MSETNX k1 a k2 b</span><br><span class="line">1</span><br><span class="line">127.0.0.1:6379&gt; mget k1 k2</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">127.0.0.1:6379&gt; MSETNX k2 c k3 d</span><br><span class="line">0</span><br><span class="line">127.0.0.1:6379&gt; mget k1 k2 k3</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>面向字节有索引</p>
 <p>面向二进制位也有索引</p>
 <p>字符集 ascii</p>
@@ -390,22 +360,17 @@
 <p>1开头,看开头有几个1,有几个1读几个字节编码成扩展字符集</p>
 <p>11100000</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit k1 1 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; GET k1</span><br><span class="line">@</span><br><span class="line">127.0.0.1:6379&gt; setbit k1 7 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; STRLEN k1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">A</span><br><span class="line">127.0.0.1:6379&gt; set k1 9 1</span><br><span class="line">(error) ERR syntax error</span><br><span class="line">127.0.0.1:6379&gt; setbit k1 9 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">A@</span><br></pre></td></tr></table></figure>
-
 <p>?bitpos  寻找二进制位第一次出现的位置</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; help bitpos</span><br><span class="line"> BITPOS key bit [start] [end]</span><br><span class="line">  summary: Find first bit set or clear in a string</span><br><span class="line">  since: 2.8.7</span><br><span class="line">  group: string</span><br><span class="line">127.0.0.1:6379&gt; bitpos k1 1 0 0</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitpos k1 1 1 1</span><br><span class="line">(integer) 9</span><br><span class="line">127.0.0.1:6379&gt; bitpos k1 1 0 1</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-
 <p>bitcount 统计bit出现几次</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; bitcount k1 0 1</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; bitcount k1 1 1</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-
-<p>bitop and or </p>
+<p>bitop and or</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit k1 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit k1 7 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;A&quot;</span><br><span class="line">127.0.0.1:6379&gt; setbit k2 6 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">&quot;B&quot;</span><br><span class="line">127.0.0.1:6379&gt; bitop and  andkey  k1 k2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get andkey</span><br><span class="line">&quot;@&quot;</span><br><span class="line">127.0.0.1:6379&gt; bitop or orkey k1 k2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get orkey</span><br><span class="line">&quot;C&quot;</span><br></pre></td></tr></table></figure>
-
-<h4 id="用bit解决用户登录问题"><a href="#用bit解决用户登录问题" class="headerlink" title="用bit解决用户登录问题"></a>用bit解决用户登录问题</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit sean 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sean 364 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; STRLEN sean</span><br><span class="line">(integer) 46</span><br><span class="line">127.0.0.1:6379&gt; BITCOUNT sean -2 -1 </span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-
+<h4 id="用bit解决用户登录问题"><a class="markdownIt-Anchor" href="#用bit解决用户登录问题"></a> 用bit解决用户登录问题</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit sean 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit sean 364 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; STRLEN sean</span><br><span class="line">(integer) 46</span><br><span class="line">127.0.0.1:6379&gt; BITCOUNT sean -2 -1 </span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
 <p>位图旋转</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit 20190101 1 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190102 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190102 7 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitop or destkey 20190101 20190102</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get destkey</span><br><span class="line">&quot;A&quot;</span><br><span class="line">127.0.0.1:6379&gt; bitcount destkey</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; bitcount destkey 0 -1</span><br><span class="line">(integer) 2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>db-engines —–&gt; Encyclopedia(仔细看里面的类别)</p>
+<p>db-engines -----&gt; Encyclopedia(仔细看里面的类别)</p>
 
     </div>
 
@@ -440,7 +405,7 @@
 
 
 
-<script src="/js/comments.js"></script>
+
 </div>
   </main>
 
@@ -450,34 +415,44 @@
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Lemcoden</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
     </div>
   </footer>
 
   
-  <script size="300" alpha="0.6" zIndex="0" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
 
 
 
-  <script class="next-config" data-name="mermaid" type="application/json">{&quot;enable&quot;:true,&quot;theme&quot;:&quot;forest&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mermaid@8.9.3&#x2F;dist&#x2F;mermaid.min.js&quot;,&quot;integrity&quot;:&quot;sha256-OyJHvRcZHaRR6Ig73ppxF4QXk8HzvfgTprRWkulCkfY&#x3D;&quot;}}</script>
-  <script src="/js/third-party/tags/mermaid.js"></script>
-
-  <script class="next-config" data-name="nprogress" type="application/json">{&quot;enable&quot;:true,&quot;spinner&quot;:true}</script>
-  <script src="/js/third-party/nprogress.js"></script>
-
   
 
 
@@ -485,7 +460,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{&quot;enable&quot;:true,&quot;tags&quot;:&quot;none&quot;,&quot;js&quot;:{&quot;url&quot;:&quot;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@3.1.4&#x2F;es5&#x2F;tex-mml-chtml.js&quot;,&quot;integrity&quot;:&quot;sha256-ncNI9OXOS5Ek4tzVYiOMmN&#x2F;KKCPZ6V0Cpv2P&#x2F;zHntiA&#x3D;&quot;}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
