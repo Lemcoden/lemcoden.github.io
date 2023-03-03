@@ -19,23 +19,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"lemcoden.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Lemcoden">
-<meta property="og:url" content="https://lemcoden.github.io/index.html">
+    <meta name="description" content="spark源码分析资源层分析-1 上回我们整体分析spark源码整个Master与Worker角色之间的RPC调用启动流程，这次我们接着上回的从scheduled方法开始继续分析，具体分析Work是如何进行分配计算资源给Executor的 我们首先进入schedule方法当中 123456789101112131415161718192021222324252627  private def s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark源码分析资源层分析-1">
+<meta property="og:url" content="https://lemcoden.github.io/2023/02/20/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1/index.html">
 <meta property="og:site_name" content="Lemcoden">
+<meta property="og:description" content="spark源码分析资源层分析-1 上回我们整体分析spark源码整个Master与Worker角色之间的RPC调用启动流程，这次我们接着上回的从scheduled方法开始继续分析，具体分析Work是如何进行分配计算资源给Executor的 我们首先进入schedule方法当中 123456789101112131415161718192021222324252627  private def s">
 <meta property="og:locale">
+<meta property="article:published_time" content="2023-02-20T12:03:03.000Z">
+<meta property="article:modified_time" content="2023-03-03T14:27:32.000Z">
 <meta property="article:author" content="Lemcoden">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="大数据计算框架">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://lemcoden.github.io/">
+<link rel="canonical" href="https://lemcoden.github.io/2023/02/20/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-Hans","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://lemcoden.github.io/2023/02/20/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1/","path":"2023/02/20/spark源码分析资源层分析-1/","title":"spark源码分析资源层分析-1"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Lemcoden</title>
+<title>spark源码分析资源层分析-1 | Lemcoden</title>
   
 
 
@@ -65,7 +71,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Lemcoden</h1>
+      <p class="site-title">Lemcoden</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">来自于大数据攻城狮的分享</p>
@@ -88,7 +94,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -101,6 +107,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1"><span class="nav-number">1.</span> <span class="nav-text"> spark源码分析资源层分析-1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%BB%99worker%E5%88%86%E9%85%8Dexecutor"><span class="nav-number">1.0.1.</span> <span class="nav-text"> 如何给Worker分配Executor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%BF%9B%E8%A1%8C%E8%B5%84%E6%BA%90%E8%A7%84%E5%88%92"><span class="nav-number">1.0.1.1.</span> <span class="nav-text"> 开始进行资源规划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%B1%E8%BF%91%E5%8E%9F%E5%88%99"><span class="nav-number">1.0.1.2.</span> <span class="nav-text"> 就近原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%92%E5%AE%8C%E6%88%90%E5%BC%80%E5%A7%8B%E5%88%86%E9%85%8D"><span class="nav-number">1.0.1.3.</span> <span class="nav-text"> 规划完成，开始分配</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -139,16 +146,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2023/02/20/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -162,13 +170,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
+      <meta itemprop="name" content="spark源码分析资源层分析-1 | Lemcoden">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/20/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E8%B5%84%E6%BA%90%E5%B1%82%E5%88%86%E6%9E%90-1/" class="post-title-link" itemprop="url">spark源码分析资源层分析-1</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          spark源码分析资源层分析-1
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -198,7 +206,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="spark源码分析资源层分析-1"><a class="markdownIt-Anchor" href="#spark源码分析资源层分析-1"></a> spark源码分析资源层分析-1</h1>
+        <h1 id="spark源码分析资源层分析-1"><a class="markdownIt-Anchor" href="#spark源码分析资源层分析-1"></a> spark源码分析资源层分析-1</h1>
 <p>上回我们整体分析spark源码整个Master与Worker角色之间的RPC调用启动流程，这次我们接着上回的从scheduled方法开始继续分析，具体分析<font color= #FFA500>Work是如何进行分配计算资源给Executor的</font></p>
 <p>我们首先进入schedule方法当中</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">schedule</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (state != <span class="type">RecoveryState</span>.<span class="type">ALIVE</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Drivers take strict precedence over executors</span></span><br><span class="line">    <span class="keyword">val</span> shuffledAliveWorkers = <span class="type">Random</span>.shuffle(workers.toSeq.filter(_.state == <span class="type">WorkerState</span>.<span class="type">ALIVE</span>))</span><br><span class="line">    <span class="keyword">val</span> numWorkersAlive = shuffledAliveWorkers.size</span><br><span class="line">    <span class="keyword">var</span> curPos = <span class="number">0</span></span><br><span class="line">→   <span class="keyword">for</span> (driver &lt;- waitingDrivers.toList) &#123; <span class="comment">// iterate over a copy of waitingDrivers</span></span><br><span class="line">      <span class="comment">// We assign workers to each waiting driver in a round-robin fashion. For each driver, we</span></span><br><span class="line">      <span class="comment">// start from the last worker that was assigned a driver, and continue onwards until we have</span></span><br><span class="line">      <span class="comment">// explored all alive workers.</span></span><br><span class="line">      <span class="keyword">var</span> launched = <span class="literal">false</span></span><br><span class="line">      <span class="keyword">var</span> numWorkersVisited = <span class="number">0</span></span><br><span class="line">      <span class="keyword">while</span> (numWorkersVisited &lt; numWorkersAlive &amp;&amp; !launched) &#123;</span><br><span class="line">        <span class="keyword">val</span> worker = shuffledAliveWorkers(curPos)</span><br><span class="line">        numWorkersVisited += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (worker.memoryFree &gt;= driver.desc.mem &amp;&amp; worker.coresFree &gt;= driver.desc.cores) &#123;</span><br><span class="line">          launchDriver(worker, driver)</span><br><span class="line">          waitingDrivers -= driver</span><br><span class="line">          launched = <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        curPos = (curPos + <span class="number">1</span>) % numWorkersAlive</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">→  startExecutorsOnWorkers()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
@@ -257,7 +265,6 @@
 <p>其实就是给worker以及Worker的driver发送启动Executor的命令</p>
 <p>好了这次的源码分析就到这里，下期见 Bye<sub>Bye</sub></p>
 
-      
     </div>
 
     
@@ -265,369 +272,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          <div class="post-tags">
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%AE%A1%E7%AE%97%E6%A1%86%E6%9E%B6/" rel="tag"># 大数据计算框架</a>
+          </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2022/01/12/%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%8D%E5%88%86%E7%A6%BB%E8%B8%A9%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/12/%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%8D%E5%88%86%E7%A6%BB%E8%B8%A9%E5%9D%91/" class="post-title-link" itemprop="url">前后端不分离踩坑（嵌入式）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-01-12 14:27:35" itemprop="dateCreated datePublished" datetime="2022-01-12T14:27:35+08:00">2022-01-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:23:00" itemprop="dateModified" datetime="2023-02-20T23:23:00+08:00">2023-02-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="背景描述"><a class="markdownIt-Anchor" href="#背景描述"></a> 背景描述</h3>
-<p>接了一个简单的项目，我们直接以前端嵌入spring的方式开发，vue的前端工程师打好包，我们直接放入到resourcse/static目录下,在这样的情况下踩了一些坑</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/12/%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%8D%E5%88%86%E7%A6%BB%E8%B8%A9%E5%9D%91/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/11/06/ubuntu-server20-04-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E7%9A%84dhpc%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%94%B9%E9%80%A0%E8%B7%AF%E7%94%B1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/11/06/ubuntu-server20-04-%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E7%9A%84dhpc%E6%9C%8D%E5%8A%A1%E5%99%A8-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%94%B9%E9%80%A0%E8%B7%AF%E7%94%B1%E5%99%A8/" class="post-title-link" itemprop="url">ubuntu server20.04-如何打造一个自己的dhpc服务器(服务器改造路由器)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-11-06 20:54:40" itemprop="dateCreated datePublished" datetime="2021-11-06T20:54:40+08:00">2021-11-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="事情缘由"><a class="markdownIt-Anchor" href="#事情缘由"></a> 事情缘由</h3>
-<p>笔者最近要参加ECE(ElastickSearch Certificated Engineer)考试,但是遇到个问题</p>
-<p>我的电脑配置足够开es虚拟机集群但是公司的内网IP地址和家里的内网IP地址不同(公司是以10.72.33开头的网段,而家里的网段是以192.168.0开头的网段),导致如果在两地练习ES需要频繁的更改虚拟机的IP地址,这是让人很头疼的事.</p>
-<p>一种方法是自己买一个路由器,将自己的路由器的网关地址修改成公司的网关地址.然后我们的电脑连接自己的路由器就可以了.</p>
-<p>因为疫情缘故,买路由器快递有点慢,后来看到有将ubuntu改造成DHPC服务器的方法,正好自己曾经买了一个工控主机,所以就决心试一下</p>
-<h3 id="准备环境"><a class="markdownIt-Anchor" href="#准备环境"></a> 准备环境</h3>
-<p>首先需要ubuntu server20.04的系统,其他版本修改IP的方法,请自行百度</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/08/08/%E7%8E%A9%E8%BD%ACubuntu-%E3%80%87%E8%B4%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/08/08/%E7%8E%A9%E8%BD%ACubuntu-%E3%80%87%E8%B4%B0/" class="post-title-link" itemprop="url">玩转ubuntu-〇贰</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-08-08 13:24:43" itemprop="dateCreated datePublished" datetime="2021-08-08T13:24:43+08:00">2021-08-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="关于ubuntu办公软件"><a class="markdownIt-Anchor" href="#关于ubuntu办公软件"></a> 关于Ubuntu办公软件</h4>
-<p>原生的office套件着实让人头疼,不仅打开缓慢,UI界面也是90年代的风格</p>
-<p>所以还是WPS吧,适合国人的操作习惯,并且有原生的linux版本支持</p>
-<p>不需要再不断繁琐的调试wine这样的反人类的虚拟层</p>
-<h4 id="关于markdown编辑器"><a class="markdownIt-Anchor" href="#关于markdown编辑器"></a> 关于markdown编辑器</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/08/%E7%8E%A9%E8%BD%ACubuntu-%E3%80%87%E8%B4%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/12/%E5%89%8D%E5%90%8E%E7%AB%AF%E4%B8%8D%E5%88%86%E7%A6%BB%E8%B8%A9%E5%9D%91/" rel="prev" title="前后端不分离踩坑（嵌入式）">
+                  <i class="fa fa-chevron-left"></i> 前后端不分离踩坑（嵌入式）
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/07/19/es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/19/es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="post-title-link" itemprop="url">es踩坑日记(持续更新)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-07-19 11:52:37" itemprop="dateCreated datePublished" datetime="2021-07-19T11:52:37+08:00">2021-07-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/javaWeb%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">javaWeb组件</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="es踩坑日记持续更新"><a class="markdownIt-Anchor" href="#es踩坑日记持续更新"></a> es踩坑日记(持续更新…)</h1>
-<p>最近有接到es的开发任务,比较紧急,而我又是es小白,没时间系统化的学习,故记录一下自己的踩坑点,回头会将这些零碎知识真正系统化.</p>
-<p>提前说明:</p>
-<ol>
-<li>目前的两次踩坑基于Java的<font color= #FFA500>RestHighLevelClient</font></li>
-<li>本人是根据mysql的<font color= #FFA500>sql基础</font>进行从已知推未知,精通es开发的小伙伴可以略过</li>
-</ol>
-<h3 id="多条件查询前提"><a class="markdownIt-Anchor" href="#多条件查询前提"></a> 多条件查询前提</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/19/es%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
+            <div class="post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
 </div>
@@ -635,471 +295,7 @@
 
 
 
-    
 
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/" class="post-title-link" itemprop="url">从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-06-24 11:52:45" itemprop="dateCreated datePublished" datetime="2021-06-24T11:52:45+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="从linux内核函数角度java角度聊io发展史并叙述netty"><a class="markdownIt-Anchor" href="#从linux内核函数角度java角度聊io发展史并叙述netty"></a> 从linux内核函数角度,JAVA角度聊IO发展史,并叙述netty</h1>
-<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
-<p>前些天一直在看netty,感觉网络博客少有从内核函数的角度直接剖析io到nio的发展,并和java的netty框架结合起来的,导致很多人对netty的概念仅仅停留在抽象的角度,就损失很多细节方面的东西以及对io模型的整体把控,所以写了这一篇博客,希望读者读后能发现新的东西,以及有一个系统的知识,当然因为时间问题,本篇博客会写的简单一些,后期可能会写出更加细节系统化的系列.</p>
-<h2 id="先聊linux"><a class="markdownIt-Anchor" href="#先聊linux"></a> 先聊linux</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/%E4%BB%8Elinux%E5%86%85%E6%A0%B8%E5%87%BD%E6%95%B0%E8%A7%92%E5%BA%A6-JAVA%E8%A7%92%E5%BA%A6%E8%81%8AIO%E5%8F%91%E5%B1%95%E5%8F%B2-%E5%B9%B6%E5%8F%99%E8%BF%B0netty/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/06/06/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/06/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-2/" class="post-title-link" itemprop="url">spark源码分析RPC篇-2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-06-06 14:59:21" itemprop="dateCreated datePublished" datetime="2021-06-06T14:59:21+08:00">2021-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-25 12:19:38" itemprop="dateModified" datetime="2023-02-25T12:19:38+08:00">2023-02-25</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="书接上文"><a class="markdownIt-Anchor" href="#书接上文"></a> 书接上文</h2>
-<p>上次源码分析之后,笔者自己通读了一遍,发现有些地方,有些问题没有说明白,所以就上篇博客遗留的问题做一个回答</p>
-<h3 id="序列化器在哪用到了"><a class="markdownIt-Anchor" href="#序列化器在哪用到了"></a> 序列化器在哪用到了?</h3>
-<p>上此聊到RPCEnv对象创建的时候,会创建序列化器,2.3.4版本使用Java默认的序列化器,然后在哪里用呢?</p>
-<p>这里先给出<font color= #FFA500>NettyRpcHandler recive</font>的代码(怎么找到的?请看上篇博客)</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>(</span><br><span class="line">      client: <span class="type">TransportClient</span>,</span><br><span class="line">→       message: <span class="type">ByteBuffer</span>,</span><br><span class="line">      callback: <span class="type">RpcResponseCallback</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">→   <span class="keyword">val</span> messageToDispatch = internalReceive(client, message)</span><br><span class="line">    dispatcher.postRemoteMessage(messageToDispatch, callback)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>我们看到message原本是字节缓存,通过<font color= #FFA500>internalReceive</font>方法组装成<font color= #FFA500>RequestMessage</font>对象</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/06/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-2/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/05/29/hexo%E5%8D%87%E7%BA%A7-travis-ci%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/29/hexo%E5%8D%87%E7%BA%A7-travis-ci%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="post-title-link" itemprop="url">hexo升级,travis ci失效的问题解决</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-29 21:13:14" itemprop="dateCreated datePublished" datetime="2021-05-29T21:13:14+08:00">2021-05-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BB%BA%E7%AB%99/" itemprop="url" rel="index"><span itemprop="name">建站</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="问题陈述"><a class="markdownIt-Anchor" href="#问题陈述"></a> 问题陈述</h3>
-<p>前两天准备更新一篇源码阅读相关的博客,但是使用hexo d部署到github上面之后页面死活不更新</p>
-<p>详细查看后发现,之前看hexo官网的<a href="github-pages">中文文档</a>,所使用持续集成功能所托管的网站,travis-ci.org网站搬迁到travis-ci.com并且集成服务也做了一些修改,更加的定制化.</p>
-<p>不想看中间流程的同学可以直接进入到最后一个标题</p>
-<h3 id="尝试解决问题"><a class="markdownIt-Anchor" href="#尝试解决问题"></a> 尝试解决问题</h3>
-<p>我尝试在新的travis-ci.com上托管持续集成的功能,发现会发生很多的错误,并且新的持续集成功能定制化的功能很多,这导致我需要一步一步把travics-ci的官方文档看一边,才知道哪些流程出错了,哪些定制化开发流程需要重新配置.</p>
-<p>但是,对于我一个node.js一点都不懂的java工程师而言,这样的学习成本很高,并且程序员都比较繁忙,很难抽出空来再去学习本专业无关的事.(仅指nodejs语言,非集成部署方式)</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/29/hexo%E5%8D%87%E7%BA%A7-travis-ci%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/" class="post-title-link" itemprop="url">spark源码分析RPC篇-1</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-26 19:30:26" itemprop="dateCreated datePublished" datetime="2021-05-26T19:30:26+08:00">2021-05-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="spark-core源码分析01rpc环境"><a class="markdownIt-Anchor" href="#spark-core源码分析01rpc环境"></a> spark-core源码分析01(RPC环境)</h1>
-<p>本篇源码分析,主要就Spark Standlone(spark2.3.4版本)资源管理的RPC调用部分进行总结</p>
-<h3 id="rpc调用概述"><a class="markdownIt-Anchor" href="#rpc调用概述"></a> RPC调用概述</h3>
-<p>RPC调用其实并不是很高深,它特指某类通信技术,它的应用其实特别广泛,我们经常所说的http协议也是一种特殊RPC调用,http协议就定义了请求的方式方法post,get,delete,update</p>
-<p>而通过看源码我们会发现,spark中Master和Worker之间也定义了相似的消息投递规则即<font color= #FFA500>send,ask,recive,reciveAndReply</font></p>
-<p>RPC的原理很简单,但是落地到实际生产环境中需要做的细活很多,比如拆包粘包问题,动态代理库的使用,线程池,链接池,传输层的封装等等</p>
-<p>这里简单给出RPC框架的简单架构</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/26/spark%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90RPC%E7%AF%87-1/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://lemcoden.github.io/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Lemcoden">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Lemcoden">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">ubuntu20.04LTS:amule低ID问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-09 16:29:15" itemprop="dateCreated datePublished" datetime="2021-05-09T16:29:15+08:00">2021-05-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-20 23:20:36" itemprop="dateModified" datetime="2023-02-20T23:20:36+08:00">2023-02-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="起因"><a class="markdownIt-Anchor" href="#起因"></a> 起因</h3>
-<p>作为ubuntu开源爱好者,迅雷那样的流氓软件当然能不使用就不使用</p>
-<p>那么,我们使用什么开源软件的进行下载呢?</p>
-<p>首先我们看一下都有哪些下载协议</p>
-<p><strong>第一种thunder://QUFtYWduZXQ6P3h0PXVybjpidGloOjAzRjYxODA0RTFFQzFCMTQyQzU0RERCNUQ3QjhCRUQ2OUIxREY2MzhaWg==</strong></p>
-<p>不得不说这完全是迅雷自己yy出来的一种协议,其实就是其他协议中包了个壳子,只要将协议后面的等号去掉,将中间的一堆乱码,base64解码一下就可以出来,比如上面的协议解码出来是这样子</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//在unbuntu中通过<span class="built_in">base64</span>命令,将代码解码,解码出来的数据去掉开头的AA和结尾的ZZ就是真正的下载url</span><br><span class="line">lemcoden@unbuntu:~$ <span class="built_in">echo</span> <span class="string">&quot;QUFtYWduZXQ6P3h0PXVybjpidGloOjAzRjYxODA0RTFFQzFCMTQyQzU0RERCNUQ3QjhCRUQ2OUIxREY2MzhaWg==&quot;</span> | <span class="built_in">base64</span> -d </span><br><span class="line">AAmagnet:?xt=urn:btih:03F61804E1EC1B142C54DDB5D7B8BED69B1DF638ZZ</span><br></pre></td></tr></table></figure>
-<p>解码出来如果是http就用浏览器直接下载,如果不是,像上面这种的BT种子协议,我们用trasmission</p>
-<p><strong>第二种</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/09/ubuntu20-04LTS-amule%E4%BD%8EID%E9%97%AE%E9%A2%98/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
 
 </div>
   </main>
